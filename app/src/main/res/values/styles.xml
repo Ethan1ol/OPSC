@@ -57,6 +57,11 @@
         <item name="cornerSize">@dimen/radius_sheet</item>
     </style>
 
+    <style name="ShapeAppearance.Battle.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
     <!-- ===== Buttons (48dp tall, 12dp corners) ===== -->
     <style name="Widget.Battle.Button" parent="Widget.Material3.Button">
         <item name="android:minHeight">@dimen/min_touch_target</item>

@@ -15,7 +15,7 @@ Battle Fitness ("the app") is a fitness tracking and friendly-competition app ma
 | Username, first name, surname, birth date (email sign-up only), country, height, weight, preferred language and units | To run your profile, show you in leaderboards, and show measurements in your units. |
 | Workouts you log (exercise, sets, reps, duration, notes, time) | To show your progress. Stored on your phone and synced to your account. |
 | Clubs, fixtures, scores and proof photos or videos you upload | To run leagues between friends. |
-| Profile picture and banner image you upload | To show on your profile. |
+| Profile picture and banner image you upload, and proof photos referees attach to a match | To show on your profile and in your clubs. They are shrunk, compressed and stored in the app's database (Cloud Firestore), and a copy is kept on your phone. |
 | A notification token (Firebase Cloud Messaging) | To send you notifications you have turned on. |
 
 We do not collect your location, contacts or advertising ID. The app has no advertising and no analytics.

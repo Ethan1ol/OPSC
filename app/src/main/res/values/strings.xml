@@ -280,4 +280,62 @@
     <string name="result_rules">Win = 3 points, draw = 1 each, loss = 0. You cannot change a result after confirming it.</string>
     <string name="result_err_score">Enter a score from 0 to 999</string>
     <string name="btn_verify_result">Confirm result</string>
+
+    <!-- Features 8 and 9: profile pictures, proof photos, notifications -->
+    <string name="btn_copy_push_token" translatable="false">Copy push token (debug)</string>
+    <string name="msg_token_copied" translatable="false">Push token copied</string>
+    <string name="notif_result_body" translatable="false">%1$s: %2$s %3$s\u2013%4$s %5$s</string>
+    <string name="profile_banner_description">Profile banner</string>
+    <string name="profile_avatar_description">Profile picture</string>
+    <string name="stat_workouts">Workouts</string>
+    <string name="stat_wins">Wins</string>
+    <string name="stat_clubs">Clubs</string>
+    <string name="btn_edit_profile">Edit profile</string>
+    <string name="edit_banner">Banner</string>
+    <string name="edit_avatar">Profile picture</string>
+    <string name="edit_details">About you</string>
+    <string name="btn_change_banner">Change banner</string>
+    <string name="btn_change_photo">Change photo</string>
+    <string name="field_bio">Bio (optional)</string>
+    <string name="source_gallery">Choose from gallery</string>
+    <string name="source_camera">Take a photo</string>
+    <string name="source_remove">Remove picture</string>
+    <string name="upload_working">Saving picture\u2026</string>
+    <string name="msg_picture_saved">Picture saved</string>
+    <string name="msg_picture_removed">Picture removed</string>
+    <string name="msg_profile_saved">Profile saved</string>
+    <string name="err_picture_unreadable">Could not read that picture. Try another one.</string>
+    <string name="err_picture_upload">Could not save the picture. Check your connection.</string>
+    <string name="err_no_camera">No camera app is available on this phone.</string>
+    <string name="err_bio_long">Bio can be at most 150 characters</string>
+    <string name="profile_load_error">Your profile could not be loaded.</string>
+    <string name="result_attach_proof">Attach proof photo (optional)</string>
+    <string name="btn_remove_proof">Remove photo</string>
+    <string name="proof_description">Proof photo</string>
+    <string name="proof_title">Proof photo</string>
+    <string name="proof_load_error">The proof photo could not be loaded.</string>
+    <string name="dialog_close">Close</string>
+    <string name="fixture_view_proof">Tap to view the proof photo</string>
+    <string name="club_err_proof">The proof photo could not be saved. Try again, or confirm without it.</string>
+    <string name="channel_fixtures">Fixtures</string>
+    <string name="channel_referee">Referee requests</string>
+    <string name="channel_leaderboard">Leaderboard</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="notif_fixtures_title">League started</string>
+    <string name="notif_fixtures_body">%1$s: %2$s fixtures have been scheduled.</string>
+    <string name="notif_referee_title">You are a referee</string>
+    <string name="notif_referee_body">In %1$s you will referee %2$s matches.</string>
+    <string name="notif_result_title">Result confirmed</string>
+    <string name="notif_leaderboard_title">Leaderboard updated</string>
+    <string name="notif_leaderboard_body">%1$s: the table changed after a result.</string>
+    <string name="notif_unread">Unread</string>
+    <string name="notif_empty">No notifications yet.</string>
+    <string name="notif_load_error">Notifications could not be loaded.</string>
+    <string name="btn_mark_all_read">Mark all as read</string>
+    <string name="push_prompt_title">Stay in the loop</string>
+    <string name="push_prompt_body">Turn on notifications to hear when a league starts, when you are the referee, and when a result changes the table.</string>
+    <string name="btn_not_now">Not now</string>
+    <string name="btn_turn_on">Turn on</string>
+    <string name="push_denied">Notifications are off. You can turn them on in your phone\'s settings.</string>
+    <string name="btn_open_settings">Open settings</string>
 </resources>

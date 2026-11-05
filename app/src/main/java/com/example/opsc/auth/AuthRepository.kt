@@ -57,6 +57,14 @@ data class UserProfile(
     val units: String = "metric",
     /** Workouts per month the user aims for (1 to 100). */
     val monthlyGoal: Int = 12,
+    /** A short "about me" (up to 150 characters). */
+    val bio: String = "",
+    /** Changes when the profile picture changes, so other phones know to download it again (0 = none). */
+    val avatarVersion: Long = 0,
+    val bannerVersion: Long = 0,
+    /** This phone's Firebase Cloud Messaging token (set while push notifications are on). */
+    val fcmToken: String = "",
+    val fcmUpdatedAt: Long = 0,
     @ServerTimestamp val createdAt: Date? = null
 )
 

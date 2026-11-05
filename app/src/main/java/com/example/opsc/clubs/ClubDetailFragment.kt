@@ -1,6 +1,15 @@
 package com.example.opsc.clubs
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
+import coil3.load
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.io.File
+import android.widget.ImageView
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,7 +54,7 @@ class ClubDetailFragment : Fragment(R.layout.fragment_club_detail) {
         val tabs = view.findViewById<TabLayout>(R.id.detailTabs)
         val tabViews = listOf<View>(view.findViewById(R.id.tabLeaderboard), view.findViewById(R.id.tabFixtures), view.findViewById(R.id.tabMembers))
 
-        fixtures = FixtureAdapter { item -> openResultSheet(item) }
+        fixtures = FixtureAdapter({ item -> openResultSheet(item) }, { item -> openProof(item) })
         setUpList(view.findViewById(R.id.leaderboardList), standings)
         setUpList(view.findViewById(R.id.fixturesList), fixtures)
         setUpList(view.findViewById(R.id.membersList), members)
@@ -141,6 +150,13 @@ class ClubDetailFragment : Fragment(R.layout.fragment_club_detail) {
         startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply { type = "text/plain"; putExtra(Intent.EXTRA_TEXT, text) }, getString(R.string.btn_share)))
     }
 
+    private fun openProof(item: FixtureView) {
+        val club = viewModel.state.value.club ?: return
+        if (childFragmentManager.findFragmentByTag(PROOF_TAG) == null) {
+            ProofDialogFragment.newInstance(club.id, item.fixture.id).show(childFragmentManager, PROOF_TAG)
+        }
+    }
+
     private fun openResultSheet(item: FixtureView) {
         if (childFragmentManager.findFragmentByTag(RESULT_TAG) != null) return
         ResultSheet.newInstance(item).show(childFragmentManager, RESULT_TAG)
@@ -148,20 +164,31 @@ class ClubDetailFragment : Fragment(R.layout.fragment_club_detail) {
 
     private companion object {
         const val RESULT_TAG = "result_sheet"
+        const val PROOF_TAG = "proof_dialog"
     }
 }
 
 /**
- * Bottom sheet where the assigned referee enters both scores and confirms the result. Only the
- * referee is offered this sheet (the security rules also stop players from changing results).
+ * Bottom sheet where the assigned referee enters both scores, optionally attaches a proof photo
+ * (gallery or camera), and confirms the result. Only the referee is offered this sheet (the
+ * security rules also stop players from changing results).
  */
 class ResultSheet : BottomSheetDialogFragment() {
     private val viewModel: ClubDetailViewModel by viewModels(ownerProducer = { requireParentFragment() })
+    private var proofUri: Uri? = null
+    private var cameraUri: Uri? = null
+    private var thumbnail: ImageView? = null
+    private var removeButton: View? = null
+
+    private val pickProof = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri -> if (uri != null) setProof(uri) }
+    private val takeProof = registerForActivityResult(ActivityResultContracts.TakePicture()) { saved -> if (saved) cameraUri?.let { setProof(it) } }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.sheet_result, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        proofUri = savedInstanceState?.getParcelable(STATE_PROOF)
+        cameraUri = savedInstanceState?.getParcelable(STATE_CAMERA)
         val args = requireArguments()
         val fixtureId = args.getString(ARG_ID).orEmpty()
         val name1 = args.getString(ARG_NAME1).orEmpty()
@@ -175,17 +202,60 @@ class ResultSheet : BottomSheetDialogFragment() {
         score1.doAfterTextChanged { layout1.error = null }
         score2.doAfterTextChanged { layout2.error = null }
 
+        thumbnail = view.findViewById(R.id.resultProofThumb)
+        removeButton = view.findViewById<View>(R.id.resultProofRemove).apply { setOnClickListener { proofUri = null; showProof() } }
+        view.findViewById<View>(R.id.resultProofAttach).setOnClickListener { chooseProofSource() }
+        showProof()
+
         fun save() {
             val s1 = score1.text.toString().trim().toIntOrNull()
             val s2 = score2.text.toString().trim().toIntOrNull()
             layout1.error = if (LeagueEngine.isValidScore(s1)) null else getString(R.string.result_err_score)
             layout2.error = if (LeagueEngine.isValidScore(s2)) null else getString(R.string.result_err_score)
             if (s1 == null || s2 == null || layout1.error != null || layout2.error != null) return
-            viewModel.saveResult(fixtureId, s1, s2)
+            viewModel.saveResult(fixtureId, s1, s2, proofUri)
             dismiss()
         }
         view.findViewById<MaterialButton>(R.id.resultSave).setOnClickListener { save() }
         score2.setOnEditorActionListener { _, _, _ -> save(); true }
+    }
+
+    private fun setProof(uri: Uri) {
+        proofUri = uri
+        showProof()
+    }
+
+    private fun showProof() {
+        val uri = proofUri
+        thumbnail?.visibility = if (uri == null) View.GONE else View.VISIBLE
+        removeButton?.visibility = if (uri == null) View.GONE else View.VISIBLE
+        if (uri != null) thumbnail?.load(uri)
+    }
+
+    private fun chooseProofSource() {
+        val labels = arrayOf(getString(R.string.source_gallery), getString(R.string.source_camera))
+        MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.result_attach_proof).setItems(labels) { _, which ->
+            if (which == 0) {
+                pickProof.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            } else {
+                val directory = File(requireContext().cacheDir, "camera").apply { mkdirs() }
+                val uri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.fileprovider", File.createTempFile("proof_", ".jpg", directory))
+                cameraUri = uri
+                try { takeProof.launch(uri) } catch (e: ActivityNotFoundException) { view?.let { UiMessages.error(it, R.string.err_no_camera) } }
+            }
+        }.show()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(STATE_PROOF, proofUri)
+        outState.putParcelable(STATE_CAMERA, cameraUri)
+    }
+
+    override fun onDestroyView() {
+        thumbnail = null
+        removeButton = null
+        super.onDestroyView()
     }
 
     override fun onStart() {
@@ -197,6 +267,8 @@ class ResultSheet : BottomSheetDialogFragment() {
         private const val ARG_ID = "fixtureId"
         private const val ARG_NAME1 = "name1"
         private const val ARG_NAME2 = "name2"
+        private const val STATE_PROOF = "proofUri"
+        private const val STATE_CAMERA = "cameraUri"
 
         fun newInstance(item: FixtureView) = ResultSheet().apply {
             arguments = bundleOf(ARG_ID to item.fixture.id, ARG_NAME1 to item.player1Name, ARG_NAME2 to item.player2Name)

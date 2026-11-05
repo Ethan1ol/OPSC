@@ -89,3 +89,25 @@ Firebase (2026) *Security Rules: usage and limits (access calls per request)*. A
 
 Material Components for Android (2026) *Tabs and filter chips*. Available at: https://github.com/material-components/material-components-android/tree/master/docs/components (Accessed: 5 November 2026).
 
+Firebase (2026) *Set up a Firebase Cloud Messaging client app on Android*. Available at: https://firebase.google.com/docs/cloud-messaging/android/client (Accessed: 5 November 2026).
+
+Firebase (2026) *Send a test message to a specific device with the Firebase console*. Available at: https://firebase.google.com/docs/cloud-messaging/android/first-message (Accessed: 5 November 2026).
+
+Android Developers (2026) *Notification runtime permission (Android 13+)*. Available at: https://developer.android.com/develop/ui/views/notifications/notification-permission (Accessed: 5 November 2026).
+
+Android Developers (2026) *Create and manage notification channels*. Available at: https://developer.android.com/develop/ui/views/notifications/channels (Accessed: 5 November 2026).
+
+Android Developers (2026) *Photo picker*. Available at: https://developer.android.com/training/data-storage/shared/photo-picker (Accessed: 5 November 2026).
+
+Android Developers (2026) *FileProvider: share a file with other apps (camera capture)*. Available at: https://developer.android.com/reference/androidx/core/content/FileProvider (Accessed: 5 November 2026).
+
+Android Developers (2026) *ExifInterface: read image metadata and orientation*. Available at: https://developer.android.com/reference/androidx/exifinterface/media/ExifInterface (Accessed: 5 November 2026).
+
+Android Developers (2026) *Load large bitmaps efficiently (inSampleSize)*. Available at: https://developer.android.com/topic/performance/graphics/load-bitmap (Accessed: 5 November 2026).
+
+Coil Contributors (2026) *Coil 3: image loading for Android and Kotlin Multiplatform*. Available at: https://coil-kt.github.io/coil/ (Accessed: 5 November 2026).
+
+Firebase (2026) *Cloud Firestore data types (Blob) and document size limit (1 MiB)*. Available at: https://firebase.google.com/docs/firestore/quotas (Accessed: 5 November 2026).
+
+Material Components for Android (2026) *Badges*. Available at: https://github.com/material-components/material-components-android/blob/master/docs/components/BadgeDrawable.md (Accessed: 5 November 2026).
+

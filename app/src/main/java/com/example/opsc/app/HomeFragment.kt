@@ -1,6 +1,11 @@
 package com.example.opsc.app
 
+import android.Manifest
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
+import com.example.opsc.notifications.NotificationPrefs
+import com.example.opsc.notifications.PushPermission
+import com.example.opsc.notifications.PushTokenManager
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -35,6 +40,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel: WorkoutsViewModel by activityViewModels()
     private val clubsViewModel: ClubsViewModel by activityViewModels()
 
+    // Registered here (before the fragment starts), as Android requires.
+    private val requestPush = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        view?.findViewById<View>(R.id.pushPromptCard)?.visibility = View.GONE
+        NotificationPrefs.dismissPrompt(requireContext())
+        if (granted) {
+            NotificationPrefs.setEnabled(requireContext(), true)
+            viewLifecycleOwner.lifecycleScope.launch { PushTokenManager.register(requireContext().applicationContext) }
+        } else {
+            view?.let { UiMessages.info(it, R.string.push_denied) }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val user = auth.currentUser ?: return
         val greeting = view.findViewById<TextView>(R.id.textGreeting)
@@ -44,6 +61,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (profile.username.isNotEmpty()) greeting.text = getString(R.string.home_greeting, profile.username)
             // Restore the language saved in the profile (e.g. after logging in on a new phone).
             if (profile.language.isNotEmpty()) LanguageManager.apply(profile.language)
+            // The notification switch follows the profile (so it is the same on every phone).
+            NotificationPrefs.setEnabled(requireContext(), profile.pushEnabled)
+        }
+
+        // Sensible moment to ask for the notification permission: after login, once, with an explanation.
+        val pushCard = view.findViewById<View>(R.id.pushPromptCard)
+        val showPrompt = PushPermission.needsRuntimePermission() && !PushPermission.isGranted(requireContext()) && !NotificationPrefs.promptDismissed(requireContext())
+        pushCard.visibility = if (showPrompt) View.VISIBLE else View.GONE
+        view.findViewById<View>(R.id.pushPromptAllow).setOnClickListener { requestPush.launch(Manifest.permission.POST_NOTIFICATIONS) }
+        view.findViewById<View>(R.id.pushPromptLater).setOnClickListener {
+            NotificationPrefs.dismissPrompt(requireContext())
+            pushCard.visibility = View.GONE
         }
 
         view.findViewById<View>(R.id.dashLogWorkout).setOnClickListener { showLogSheet(null) }

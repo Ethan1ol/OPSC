@@ -3,6 +3,9 @@ package com.example.opsc.clubs
 import android.util.Log
 import androidx.annotation.StringRes
 import com.example.opsc.R
+import com.example.opsc.media.MediaRepository
+import com.example.opsc.notifications.NotificationRepository
+import com.example.opsc.notifications.NotificationType
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
@@ -47,7 +50,9 @@ data class Fixture(
     val status: FixtureStatus,
     val player1Score: Int?,
     val player2Score: Int?,
-    val winnerId: String?
+    val winnerId: String?,
+    /** Set when the referee attached a proof photo (the photo itself is stored separately). */
+    val proofUrl: String? = null
 )
 
 /** Why a club action failed. Each has a translated message. */
@@ -59,6 +64,7 @@ enum class ClubFailure(@StringRes val messageRes: Int) {
     CLUB_FULL(R.string.club_err_full),
     NOT_ENOUGH_MEMBERS(R.string.club_err_not_enough),
     NOT_ALLOWED(R.string.club_err_not_allowed),
+    PROOF_FAILED(R.string.club_err_proof),
     UNKNOWN(R.string.club_err_unknown)
 }
 
@@ -74,7 +80,27 @@ sealed interface ClubResult<out T> {
  * Actions that must not be queued for later (create, join, start, verify) need a connection.
  */
 class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getInstance()) {
+    private val notifications = NotificationRepository(db)
+    private val media = MediaRepository.get(FirebaseFirestore.getInstance().app.applicationContext)
+
     private fun clubs() = db.collection("clubs")
+
+    /** How many verified fixtures the user won, across the given clubs. Returns what it can if some reads fail. */
+    suspend fun countWins(uid: String, clubIds: List<String>): Int {
+        var total = 0
+        for (id in clubIds) {
+            try {
+                total += withTimeoutOrNull(10_000L) {
+                    clubs().document(id).collection("fixtures").whereEqualTo("winnerId", uid).get().await().size()
+                } ?: 0
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not count wins in $id", e)
+            }
+        }
+        return total
+    }
 
     // ---------------------------------------------------------------- live data
 
@@ -196,6 +222,13 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
                 )
             }
             last.update(clubs().document(club.id), "status", Club.STATUS_ACTIVE)
+            // Tell every member the fixtures are ready, and tell each referee how many matches they have.
+            club.memberIds.forEach { member ->
+                notifications.queue(last, member, uid, NotificationType.FIXTURES_SCHEDULED, club.id, club.name, listOf(specs.size.toString()))
+            }
+            specs.groupingBy { it.refereeId }.eachCount().forEach { (referee, count) ->
+                notifications.queue(last, referee, uid, NotificationType.REFEREE_ASSIGNED, club.id, club.name, listOf(count.toString()))
+            }
             last.commit().await()
             Log.i(TAG, "League started for ${club.id}: ${specs.size} fixtures")
             ClubResult.Success(Unit)
@@ -207,13 +240,21 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
      * updates the standings of the two players. Reads the current fixtures from the server first so
      * the table is always worked out from the real data.
      */
-    suspend fun verifyFixture(club: Club, fixtureId: String, player1Score: Int, player2Score: Int): ClubResult<Unit> {
+    suspend fun verifyFixture(
+        club: Club, fixtureId: String, player1Score: Int, player2Score: Int,
+        proof: ByteArray? = null, names: Map<String, String> = emptyMap(), refereeUid: String = ""
+    ): ClubResult<Unit> {
         if (!LeagueEngine.isValidScore(player1Score) || !LeagueEngine.isValidScore(player2Score)) return ClubResult.Failure(ClubFailure.UNKNOWN)
         return guarded("verifyFixture") {
             val fixtureRef = clubs().document(club.id).collection("fixtures").document(fixtureId)
             val all = clubs().document(club.id).collection("fixtures").get(Source.SERVER).await().documents.mapNotNull { it.toFixture() }
             val target = all.firstOrNull { it.id == fixtureId } ?: return@guarded ClubResult.Failure(ClubFailure.NOT_FOUND)
             if (target.status == FixtureStatus.VERIFIED) return@guarded ClubResult.Failure(ClubFailure.NOT_ALLOWED)
+
+            // Save the proof photo first, so a result is never confirmed with its proof missing.
+            if (proof != null && media.upload(MediaRepository.proofPath(club.id, fixtureId), proof, 1L) == null) {
+                return@guarded ClubResult.Failure(ClubFailure.PROOF_FAILED)
+            }
 
             val updated = all.map { if (it.id == fixtureId) it.copy(status = FixtureStatus.VERIFIED, player1Score = player1Score, player2Score = player2Score) else it }
             val table = LeagueEngine.computeStandings(
@@ -225,8 +266,19 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
                     "player1Score" to player1Score, "player2Score" to player2Score,
                     "winnerId" to LeagueEngine.winnerId(target.player1Id, target.player2Id, player1Score, player2Score),
                     "status" to FixtureStatus.VERIFIED.name, "verifiedAt" to FieldValue.serverTimestamp()
-                )
+                ) + (if (proof != null) mapOf("proofUrl" to "inline") else emptyMap())
             )
+            // Players hear about their result; everyone else hears the table changed.
+            val p1 = names[target.player1Id].orEmpty()
+            val p2 = names[target.player2Id].orEmpty()
+            club.memberIds.filter { it != refereeUid }.forEach { member ->
+                if (member == target.player1Id || member == target.player2Id) {
+                    notifications.queue(batch, member, refereeUid, NotificationType.RESULT_VERIFIED, club.id, club.name,
+                        listOf(p1, player1Score.toString(), player2Score.toString(), p2))
+                } else {
+                    notifications.queue(batch, member, refereeUid, NotificationType.LEADERBOARD_CHANGED, club.id, club.name, emptyList())
+                }
+            }
             // Only the two players' rows can change.
             table.filter { it.uid == target.player1Id || it.uid == target.player2Id }.forEach { row ->
                 batch.set(
@@ -279,7 +331,8 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
             refereeId = getString("refereeId").orEmpty(),
             status = runCatching { FixtureStatus.valueOf(getString("status").orEmpty()) }.getOrDefault(FixtureStatus.SCHEDULED),
             player1Score = getLong("player1Score")?.toInt(), player2Score = getLong("player2Score")?.toInt(),
-            winnerId = getString("winnerId")
+            winnerId = getString("winnerId"),
+            proofUrl = getString("proofUrl")
         )
     }
 

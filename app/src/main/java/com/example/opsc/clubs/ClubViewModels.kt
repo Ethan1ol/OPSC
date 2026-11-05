@@ -1,6 +1,9 @@
 package com.example.opsc.clubs
 
 import android.app.Application
+import android.net.Uri
+import com.example.opsc.media.ImageProcessor
+import com.example.opsc.media.ImageSpec
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -99,7 +102,9 @@ class ClubsViewModel(application: Application) : AndroidViewModel(application) {
 data class RankedRow(val rank: Int, val row: StandingRow, val name: String, val isMe: Boolean)
 
 /** One fixture with all names resolved, and whether the signed-in user may enter its result. */
-data class FixtureView(val fixture: Fixture, val player1Name: String, val player2Name: String, val refereeName: String, val canReferee: Boolean)
+data class FixtureView(val fixture: Fixture, val player1Name: String, val player2Name: String, val refereeName: String, val canReferee: Boolean) {
+    val hasProof get() = !fixture.proofUrl.isNullOrBlank()
+}
 
 /** A member of the club. */
 data class MemberView(val uid: String, val name: String, val isOwner: Boolean, val isMe: Boolean)
@@ -173,9 +178,12 @@ class ClubDetailViewModel(application: Application, savedStateHandle: SavedState
         }
     }
 
-    fun saveResult(fixtureId: String, player1Score: Int, player2Score: Int) = act {
+    fun saveResult(fixtureId: String, player1Score: Int, player2Score: Int, proof: Uri? = null) = act {
         val club = state.value.club ?: return@act ClubDetailEvent.Failed(ClubFailure.NOT_FOUND)
-        when (val result = repository.verifyFixture(club, fixtureId, player1Score, player2Score)) {
+        // Shrink the proof photo first (a Firestore document is limited to 1 MiB).
+        val proofBytes = proof?.let { ImageProcessor.process(getApplication(), it, ImageSpec.PROOF) }
+        if (proof != null && proofBytes == null) return@act ClubDetailEvent.Failed(ClubFailure.PROOF_FAILED)
+        when (val result = repository.verifyFixture(club, fixtureId, player1Score, player2Score, proofBytes, names.value, myUid)) {
             is ClubResult.Success -> ClubDetailEvent.ResultSaved
             is ClubResult.Failure -> ClubDetailEvent.Failed(result.failure)
         }

@@ -92,7 +92,8 @@ class AuthActivity : AppCompatActivity() {
 
     private fun openApp(remember: Boolean) {
         if (remember) AuthRepository().currentUser?.uid?.let { ProfileGate.markComplete(this, it) }
-        startActivity(Intent(this, AppActivity::class.java))
+        // Keep any extras (a tapped notification may say which club to open).
+        startActivity(Intent(this, AppActivity::class.java).apply { intent?.extras?.let { putExtras(it) } })
         finish()
     }
 

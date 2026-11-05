@@ -78,7 +78,7 @@ sealed interface FixtureItem {
 }
 
 /** Fixtures grouped by round (1 to 3) with a status badge on each. Only the referee can open an unfinished match. */
-class FixtureAdapter(private val onReferee: (FixtureView) -> Unit) : ListAdapter<FixtureItem, RecyclerView.ViewHolder>(Diff) {
+class FixtureAdapter(private val onReferee: (FixtureView) -> Unit, private val onProof: (FixtureView) -> Unit) : ListAdapter<FixtureItem, RecyclerView.ViewHolder>(Diff) {
 
     class HeaderHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(item: FixtureItem.Header) {
@@ -93,7 +93,7 @@ class FixtureAdapter(private val onReferee: (FixtureView) -> Unit) : ListAdapter
         private val referee: TextView = view.findViewById(R.id.fixtureReferee)
         private val action: TextView = view.findViewById(R.id.fixtureAction)
 
-        fun bind(item: FixtureView, onReferee: (FixtureView) -> Unit) {
+        fun bind(item: FixtureView, onReferee: (FixtureView) -> Unit, onProof: (FixtureView) -> Unit) {
             val context = itemView.context
             val fixture = item.fixture
             title.text = context.getString(R.string.fixture_title, item.player1Name, item.player2Name)
@@ -116,11 +116,13 @@ class FixtureAdapter(private val onReferee: (FixtureView) -> Unit) : ListAdapter
             status.backgroundTintList = ColorStateList.valueOf(MaterialColors.getColor(itemView, backgroundAttr))
             status.setTextColor(MaterialColors.getColor(itemView, textAttr))
 
-            action.visibility = if (item.canReferee) View.VISIBLE else View.GONE
+            val actionable = item.canReferee || item.hasProof
+            action.setText(if (item.canReferee) R.string.fixture_tap_to_enter else R.string.fixture_view_proof)
+            action.visibility = if (actionable) View.VISIBLE else View.GONE
             val card = itemView as MaterialCardView
-            card.isClickable = item.canReferee
-            card.isFocusable = item.canReferee
-            card.setOnClickListener(if (item.canReferee) View.OnClickListener { onReferee(item) } else null)
+            card.isClickable = actionable
+            card.isFocusable = actionable
+            card.setOnClickListener(if (actionable) View.OnClickListener { if (item.canReferee) onReferee(item) else onProof(item) } else null)
         }
     }
 
@@ -135,7 +137,7 @@ class FixtureAdapter(private val onReferee: (FixtureView) -> Unit) : ListAdapter
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
             is FixtureItem.Header -> (holder as HeaderHolder).bind(item)
-            is FixtureItem.Match -> (holder as MatchHolder).bind(item.view, onReferee)
+            is FixtureItem.Match -> (holder as MatchHolder).bind(item.view, onReferee, onProof)
         }
     }
 

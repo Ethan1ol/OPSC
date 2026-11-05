@@ -47,6 +47,12 @@ service cloud.firestore {
         allow read, write: if isOwner(uid);
       }
 
+      // Pictures (avatar, banner) stored as small blobs: any signed-in user may view, only the owner may change.
+      match /media/{mediaId} {
+        allow read: if signedIn();
+        allow write: if isOwner(uid);
+      }
+
       // Notifications: the owner reads/clears them. With no Cloud Function on the
       // free plan, other signed-in users may create one addressed to this user,
       // but only if they put their own uid in fromUid.
@@ -93,6 +99,14 @@ service cloud.firestore {
               && request.auth.uid == resource.data.refereeId
               && request.resource.data.diff(resource.data).affectedKeys()
                    .hasOnly(['player1Score', 'player2Score', 'winnerId', 'status', 'proofUrl', 'verifiedAt']));
+      }
+
+      // The referee's proof photo for a fixture (a small blob). Members can view it; only that
+      // fixture's referee (who must be a member) can save it.
+      match /fixtures/{fixtureId}/proof/{proofId} {
+        allow read: if isClubMember(clubId);
+        allow write: if isClubMember(clubId)
+          && request.auth.uid == get(/databases/$(database)/documents/clubs/$(clubId)/fixtures/$(fixtureId)).data.refereeId;
       }
 
       // ---------- standings ----------

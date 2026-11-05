@@ -23,6 +23,58 @@
             android:text="@string/home_subtitle"
             android:textAppearance="@style/TextAppearance.Battle.Caption" />
 
+        <!-- Asks (once, with an explanation) to allow notifications on Android 13 and newer -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/pushPromptCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_md"
+            android:visibility="gone"
+            app:cardBackgroundColor="?attr/colorPrimaryContainer">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/push_prompt_title"
+                    android:textAppearance="@style/TextAppearance.Battle.Title"
+                    android:textColor="?attr/colorOnPrimaryContainer" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xs"
+                    android:text="@string/push_prompt_body"
+                    android:textAppearance="@style/TextAppearance.Battle.Body"
+                    android:textColor="?attr/colorOnPrimaryContainer" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/pushPromptLater"
+                        style="@style/Widget.Battle.Button.Text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btn_not_now" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/pushPromptAllow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btn_turn_on" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Quick stats -->
         <LinearLayout
             android:layout_width="match_parent"

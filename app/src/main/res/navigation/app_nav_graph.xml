@@ -35,7 +35,7 @@
         tools:layout="@layout/fragment_workouts" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.opsc.app.ProfileFragment"
+        android:name="com.example.opsc.profile.ProfileFragment"
         android:label="@string/nav_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
@@ -67,4 +67,14 @@
             android:name="exerciseId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.opsc.profile.EditProfileFragment"
+        android:label="@string/btn_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.opsc.notifications.NotificationsFragment"
+        android:label="@string/notifications_title"
+        tools:layout="@layout/fragment_notifications" />
 </navigation>

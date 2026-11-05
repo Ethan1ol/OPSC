@@ -1,7 +1,13 @@
 package com.example.opsc.settings
 
 import android.content.ActivityNotFoundException
+import android.Manifest
 import android.content.Intent
+import android.provider.Settings
+import androidx.activity.result.contract.ActivityResultContracts
+import com.example.opsc.notifications.NotificationPrefs
+import com.example.opsc.notifications.PushPermission
+import com.example.opsc.notifications.PushTokenManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -264,12 +270,44 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         weightLayout.hint = getString(if (metric) R.string.field_weight else R.string.field_weight_lb)
     }
 
+    /** Saves the choice, and starts or stops receiving push messages on this phone. */
+    private fun applyPush(enabled: Boolean) {
+        viewModel.pushEnabled = enabled
+        viewModel.savePreference(mapOf("pushEnabled" to enabled))
+        NotificationPrefs.setEnabled(requireContext(), enabled)
+        val context = requireContext().applicationContext
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (enabled) PushTokenManager.register(context) else PushTokenManager.unregister()
+        }
+    }
+
+    private val requestPush = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) {
+            applyPush(true)
+        } else {
+            // Not allowed: switch it back off and explain how to change it.
+            viewModel.pushEnabled = false
+            pushSwitch.setOnCheckedChangeListener(null)
+            pushSwitch.isChecked = false
+            setUpPush()
+            view?.let { root ->
+                UiMessages.error(root, R.string.push_denied).setAction(R.string.btn_open_settings) {
+                    startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName))
+                }
+            }
+        }
+    }
+
     private fun setUpPush() {
         pushSwitch.setOnCheckedChangeListener(null)
         pushSwitch.isChecked = viewModel.pushEnabled
         pushSwitch.setOnCheckedChangeListener { _, checked ->
-            viewModel.pushEnabled = checked
-            viewModel.savePreference(mapOf("pushEnabled" to checked))
+            if (checked && PushPermission.needsRuntimePermission() && !PushPermission.isGranted(requireContext())) {
+                // Android 13+: ask first. The switch stays on only if the user allows it.
+                requestPush.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                applyPush(checked)
+            }
         }
     }
 
