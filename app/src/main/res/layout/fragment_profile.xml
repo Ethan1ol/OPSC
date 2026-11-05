@@ -1,62 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.opsc.ui.StateLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/profileState"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:padding="@dimen/screen_padding">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:clipToPadding="false">
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profileBanner"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="?attr/colorPrimaryContainer"
+                android:contentDescription="@string/profile_banner_description"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="8:3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profileAvatar"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_marginStart="@dimen/screen_padding"
+                android:layout_marginTop="-48dp"
+                android:background="?attr/colorSurfaceContainerHigh"
+                android:contentDescription="@string/profile_avatar_description"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profileBanner"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Battle.Circle"
+                app:strokeColor="?android:attr/colorBackground"
+                app:strokeWidth="4dp" />
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/screen_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profileAvatar">
 
                 <TextView
-                    android:id="@+id/textProfileName"
+                    android:id="@+id/profileDisplayName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Battle.Title" />
+                    android:textAppearance="@style/TextAppearance.Battle.Headline" />
 
                 <TextView
-                    android:id="@+id/textProfileEmail"
+                    android:id="@+id/profileUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+                <TextView
+                    android:id="@+id/profileBio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:textAppearance="@style/TextAppearance.Battle.Body" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="@dimen/space_xs"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/profileStatWorkouts"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.Battle.Headline" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stat_workouts"
+                                android:textAppearance="@style/TextAppearance.Battle.Caption" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="@dimen/space_xs"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/profileStatWins"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.Battle.Headline" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stat_wins"
+                                android:textAppearance="@style/TextAppearance.Battle.Caption" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/space_xs"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/profileStatClubs"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.Battle.Headline" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stat_clubs"
+                                android:textAppearance="@style/TextAppearance.Battle.Caption" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonEditProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_lg"
+                    android:text="@string/btn_edit_profile" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonSettings"
+                    style="@style/Widget.Battle.Button.Secondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:text="@string/btn_settings" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonGallery"
+                    style="@style/Widget.Battle.Button.Secondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:text="@string/btn_design_gallery"
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonCopyToken"
+                    style="@style/Widget.Battle.Button.Secondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:text="@string/btn_copy_push_token"
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonLogout"
+                    style="@style/Widget.Battle.Button.Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:text="@string/btn_logout" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonSettings"
-            style="@style/Widget.Battle.Button.Secondary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_lg"
-            android:text="@string/btn_settings" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonGallery"
-            style="@style/Widget.Battle.Button.Secondary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_sm"
-            android:text="@string/btn_design_gallery"
-            android:visibility="gone" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonLogout"
-            style="@style/Widget.Battle.Button.Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_sm"
-            android:text="@string/btn_logout" />
-    </LinearLayout>
-</ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</com.example.opsc.ui.StateLayout>
