@@ -1,0 +1,59 @@
+rules_version = '2';
+
+// Battle Fitness - Firebase Storage security rules.
+// Paths the app uses (Pieces 6 and 7 must follow these):
+//   users/{uid}/avatar.jpg                          profile picture
+//   users/{uid}/banner.jpg                          profile banner
+//   clubs/{clubId}/proofs/{fixtureId}/{fileName}    referee proof (photo or video)
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ---------- helpers ----------
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    function isImageOrVideo() {
+      return request.resource.contentType.matches('image/.*')
+        || request.resource.contentType.matches('video/.*');
+    }
+
+    // Reads the club document in Firestore to check membership.
+    function isClubMember(clubId) {
+      return signedIn()
+        && request.auth.uid in firestore.get(/databases/(default)/documents/clubs/$(clubId)).data.memberIds;
+    }
+
+    // ---------- profile pictures and banners ----------
+    match /users/{uid}/{fileName} {
+      // Any signed-in user may view profile images (leaderboards, friend lists).
+      allow read: if signedIn();
+      // Only the owner may upload or delete, images only, max 5 MB.
+      allow write: if signedIn()
+        && request.auth.uid == uid
+        && (request.method == 'delete'
+            || (isImage() && request.resource.size < 5 * 1024 * 1024));
+    }
+
+    // ---------- referee proof media ----------
+    match /clubs/{clubId}/proofs/{fixtureId}/{fileName} {
+      // Only members of that club can see the proof.
+      allow read: if isClubMember(clubId);
+      // Club members can upload a photo or video, max 50 MB.
+      allow create: if isClubMember(clubId)
+        && isImageOrVideo()
+        && request.resource.size < 50 * 1024 * 1024;
+      allow delete: if isClubMember(clubId);
+    }
+
+    // Everything else is denied.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

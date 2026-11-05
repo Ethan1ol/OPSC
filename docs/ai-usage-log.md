@@ -27,3 +27,9 @@ Entries are appended after every piece.
 - **Bugs debugged:** duplicate name check, date picker never shown, wrong birth-date error text, password/username messages not matching their rules; a resource-compiler error from an apostrophe in a string; Firebase config package mismatch found by reading `google-services.json`.
 - **Images/text generated:** English error and message strings.
 
+
+## 2026-11-05 – Extra: storage.rules
+- **Generated:** `storage.rules` (Firebase Storage security rules for avatars, banners and proof media).
+- **Reviewed/changed by students:** (to be completed)
+- **Bugs debugged:** none. Not yet tested in the Firebase console.
+- **Images/text generated:** none.
