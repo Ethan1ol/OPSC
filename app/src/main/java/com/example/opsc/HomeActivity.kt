@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.opsc.auth.AuthRepository
 import com.example.opsc.auth.GoogleSignInHelper
+import com.example.opsc.profile.LanguageManager
 import kotlinx.coroutines.launch
 
 /**
@@ -44,9 +45,12 @@ class HomeActivity : AppCompatActivity() {
         welcome.text = getString(R.string.msg_welcome_user, user.displayName ?: user.email.orEmpty())
         lifecycleScope.launch {
             // Prefer the username saved in the Firestore profile once it loads.
-            repository.loadProfile(user.uid)?.username?.takeIf { it.isNotEmpty() }?.let {
+            val profile = repository.loadProfile(user.uid) ?: return@launch
+            profile.username.takeIf { it.isNotEmpty() }?.let {
                 welcome.text = getString(R.string.msg_welcome_user, it)
             }
+            // Restore the language saved in the profile (e.g. after logging in on a new phone).
+            if (profile.language.isNotEmpty()) LanguageManager.apply(profile.language)
         }
 
         findViewById<Button>(R.id.buttonSettings).setOnClickListener {

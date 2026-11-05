@@ -3,6 +3,7 @@ package com.example.opsc.auth
 import android.util.Log
 import androidx.annotation.StringRes
 import com.example.opsc.R
+import com.example.opsc.profile.LanguageManager
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -98,7 +99,8 @@ class AuthRepository(
                 username = data.username.trim(),
                 name = data.name.trim(),
                 surname = data.surname.trim(),
-                birthDate = data.birthDate
+                birthDate = data.birthDate,
+                language = LanguageManager.current()
             )
         )
         Log.i(TAG, "Registration succeeded for uid=${user.uid}")
@@ -196,7 +198,8 @@ class AuthRepository(
                 username = Validators.usernameFromEmail(email.ifEmpty { displayName }),
                 name = displayName.substringBefore(' '),
                 surname = displayName.substringAfter(' ', ""),
-                photoUrl = user.photoUrl?.toString().orEmpty()
+                photoUrl = user.photoUrl?.toString().orEmpty(),
+                language = LanguageManager.current()
             )
         )
     }
