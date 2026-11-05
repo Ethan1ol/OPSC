@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ServerTimestamp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
@@ -64,12 +65,14 @@ enum class AuthError(@StringRes val messageRes: Int) {
     TOO_MANY_REQUESTS(R.string.auth_err_too_many),
     GOOGLE_CANCELLED(R.string.auth_err_google_cancelled),
     GOOGLE_UNAVAILABLE(R.string.auth_err_google_unavailable),
+    PROFILE_SAVE_FAILED(R.string.auth_err_profile_save),
     UNKNOWN(R.string.auth_err_unknown)
 }
 
 /** The result of a login, registration or SSO attempt. Errors are values, so the UI never crashes. */
 sealed interface AuthOutcome {
-    data class Success(val isNewUser: Boolean) : AuthOutcome
+    /** [needsProfile] is true when the user is signed in but has no profile document yet (first Google sign-in). */
+    data class Success(val isNewUser: Boolean, val needsProfile: Boolean = false) : AuthOutcome
     data class Failure(val error: AuthError) : AuthOutcome
 }
 
@@ -122,9 +125,9 @@ class AuthRepository(
     suspend fun login(email: String, password: String): AuthOutcome = try {
         Log.d(TAG, "Logging in $email")
         val result = auth.signInWithEmailAndPassword(email.trim(), password).await()
-        result.user?.let { ensureProfile(it) }
-        Log.i(TAG, "Login succeeded for uid=${result.user?.uid}")
-        AuthOutcome.Success(isNewUser = false)
+        val needsProfile = result.user?.let { profileStatus(it.uid) == ProfileStatus.MISSING } ?: false
+        Log.i(TAG, "Login succeeded for uid=${result.user?.uid}, needsProfile=$needsProfile")
+        AuthOutcome.Success(isNewUser = false, needsProfile = needsProfile)
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
@@ -138,9 +141,9 @@ class AuthRepository(
         Log.d(TAG, "Exchanging Google ID token with Firebase")
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         val result = auth.signInWithCredential(credential).await()
-        result.user?.let { ensureProfile(it) }
-        Log.i(TAG, "Google sign-in succeeded for uid=${result.user?.uid}")
-        AuthOutcome.Success(isNewUser = result.additionalUserInfo?.isNewUser == true)
+        val needsProfile = result.user?.let { profileStatus(it.uid) == ProfileStatus.MISSING } ?: false
+        Log.i(TAG, "Google sign-in succeeded for uid=${result.user?.uid}, needsProfile=$needsProfile")
+        AuthOutcome.Success(isNewUser = result.additionalUserInfo?.isNewUser == true, needsProfile = needsProfile)
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
@@ -190,25 +193,64 @@ class AuthRepository(
             .addOnFailureListener { Log.e(TAG, "Profile save failed", it) }
     }
 
-    /** Creates a minimal profile if one is missing (e.g. first Google sign-in). Skips quietly if offline. */
-    private suspend fun ensureProfile(user: FirebaseUser) {
-        val exists = withTimeoutOrNull(PROFILE_CHECK_TIMEOUT_MS) {
-            runCatching { db.collection(USERS).document(user.uid).get().await().exists() }.getOrNull()
-        } ?: return
-        if (exists) return
+    /**
+     * Does the signed-in user have a profile document with a username? [ProfileStatus.UNKNOWN] means
+     * we could not find out (offline, timeout); callers then let the user in rather than trap them.
+     */
+    suspend fun profileStatus(uid: String): ProfileStatus = try {
+        val snapshot = withTimeoutOrNull(PROFILE_CHECK_TIMEOUT_MS) { db.collection(USERS).document(uid).get().await() }
+        when {
+            snapshot == null -> ProfileStatus.UNKNOWN
+            snapshot.exists() && !snapshot.getString("username").isNullOrBlank() -> ProfileStatus.EXISTS
+            else -> ProfileStatus.MISSING
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Log.w(TAG, "Could not check profile", e)
+        ProfileStatus.UNKNOWN
+    }
+
+    /** A starting point for the "finish your profile" screen, built from the Google account. */
+    fun suggestedProfile(): UserProfile? {
+        val user = auth.currentUser ?: return null
         val email = user.email.orEmpty()
         val displayName = user.displayName.orEmpty()
-        saveNewProfile(
-            UserProfile(
-                uid = user.uid,
-                email = email,
-                username = Validators.usernameFromEmail(email.ifEmpty { displayName }),
-                name = displayName.substringBefore(' '),
-                surname = displayName.substringAfter(' ', ""),
-                photoUrl = user.photoUrl?.toString().orEmpty(),
-                language = LanguageManager.current()
-            )
+        return UserProfile(
+            uid = user.uid,
+            email = email,
+            username = Validators.usernameFromEmail(email.ifEmpty { displayName }),
+            name = displayName.substringBefore(' '),
+            surname = displayName.substringAfter(' ', ""),
+            photoUrl = user.photoUrl?.toString().orEmpty(),
+            language = LanguageManager.current()
         )
+    }
+
+    /**
+     * Creates the profile document and waits for the server to accept it, so a rejected write
+     * (Firestore rules) or a missing connection is reported instead of silently lost.
+     */
+    suspend fun saveProfile(profile: UserProfile): AuthOutcome = try {
+        val done = withTimeoutOrNull(PROFILE_SAVE_TIMEOUT_MS) {
+            db.collection(USERS).document(profile.uid).set(profile).await()
+            true
+        }
+        if (done == true) {
+            Log.i(TAG, "Profile created for uid=${profile.uid}")
+            AuthOutcome.Success(isNewUser = true)
+        } else {
+            Log.w(TAG, "Profile save timed out (offline?)")
+            AuthOutcome.Failure(AuthError.NETWORK)
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: FirebaseFirestoreException) {
+        Log.e(TAG, "Profile save failed: ${e.code}", e)
+        AuthOutcome.Failure(if (e.code == FirebaseFirestoreException.Code.UNAVAILABLE) AuthError.NETWORK else AuthError.PROFILE_SAVE_FAILED)
+    } catch (e: Exception) {
+        Log.e(TAG, "Profile save failed", e)
+        AuthOutcome.Failure(AuthError.PROFILE_SAVE_FAILED)
     }
 
     /** Converts any Firebase exception into one of our friendly [AuthError]s. */
@@ -228,6 +270,7 @@ class AuthRepository(
     private companion object {
         const val TAG = "AuthRepository"
         const val USERS = "users"
-        const val PROFILE_CHECK_TIMEOUT_MS = 4000L
+        const val PROFILE_CHECK_TIMEOUT_MS = 5000L
+        const val PROFILE_SAVE_TIMEOUT_MS = 10000L
     }
 }

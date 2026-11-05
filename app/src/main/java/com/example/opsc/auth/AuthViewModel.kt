@@ -13,14 +13,15 @@ import kotlinx.coroutines.launch
 
 /** One-off results the screens react to (open the app, show an error, show the "email sent" message). */
 sealed interface AuthEvent {
-    data class LoggedIn(val isNewUser: Boolean) : AuthEvent
+    /** [needsProfile]: signed in, but the user must finish their profile first (first Google sign-in). */
+    data class LoggedIn(val isNewUser: Boolean, val needsProfile: Boolean = false) : AuthEvent
     data object ResetSent : AuthEvent
     data class Failed(val error: AuthError) : AuthEvent
 }
 
 /**
- * Shared by the login, sign-up and forgot-password screens. It runs the Firebase calls in
- * [viewModelScope], so a request is not lost when the phone is rotated, and it remembers
+ * Shared by the login, sign-up, finish-profile and forgot-password screens. It runs the Firebase
+ * calls in [viewModelScope], so a request is not lost when the phone is rotated, and it remembers
  * the answers from sign-up step 1 while the user fills in step 2.
  */
 class AuthViewModel : ViewModel() {
@@ -41,7 +42,7 @@ class AuthViewModel : ViewModel() {
     var pendingEmail = ""
     var pendingPassword = ""
 
-    /** The country picked on sign-up step 2 (ISO code), kept across rotation. */
+    /** The country picked on a profile screen (ISO code), kept across rotation. */
     var selectedCountry = DEFAULT_COUNTRY
 
     /** Set when registration failed because the email is taken, so step 1 can show it inline. */
@@ -50,9 +51,24 @@ class AuthViewModel : ViewModel() {
     /** True once a reset email has been requested, so the forgot-password screen keeps showing the result. */
     var resetSent = false
 
+    /** True while the Google account picker is open. */
+    var googleInFlight = false
+        private set
+
     fun login(email: String, password: String) = run("login") { repository.login(email, password) }
 
     fun register(data: RegistrationData) = run("register") { repository.register(data) }
+
+    /** Creates the profile for a signed-in user who has none (first Google sign-in). */
+    fun finishProfile(username: String, heightCm: Double?, weightKg: Double?, country: String) {
+        val base = repository.suggestedProfile()
+        if (base == null) {
+            _events.trySend(AuthEvent.Failed(AuthError.UNKNOWN))
+            return
+        }
+        val profile = base.copy(username = username, heightCm = heightCm, weightKg = weightKg, country = country)
+        run("finishProfile") { repository.saveProfile(profile) }
+    }
 
     fun sendPasswordReset(email: String) {
         if (_loading.value) return
@@ -72,17 +88,20 @@ class AuthViewModel : ViewModel() {
 
     /** Marks a Google sign-in as started (the account picker runs in the screen, not here). */
     fun googleStarted() {
+        googleInFlight = true
         _loading.value = true
     }
 
     /** Hands the result of Google sign-in (or its cancellation) back to the screens. */
     fun googleFinished(outcome: AuthOutcome) {
+        googleInFlight = false
         _loading.value = false
         _events.trySend(outcome.toEvent())
     }
 
     /** Clears the busy flag, for example if a screen is destroyed while the Google picker is open. */
     fun googleAbandoned() {
+        googleInFlight = false
         _loading.value = false
     }
 
@@ -98,7 +117,7 @@ class AuthViewModel : ViewModel() {
     }
 
     private fun AuthOutcome.toEvent(): AuthEvent = when (this) {
-        is AuthOutcome.Success -> AuthEvent.LoggedIn(isNewUser)
+        is AuthOutcome.Success -> AuthEvent.LoggedIn(isNewUser, needsProfile)
         is AuthOutcome.Failure -> AuthEvent.Failed(error)
     }
 
