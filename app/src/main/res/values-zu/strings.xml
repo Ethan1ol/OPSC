@@ -98,4 +98,8 @@
     <string name="placeholder_workouts">Incwadi yokulogela izivivinyo isakhiwa kabusha futhi izovela lapha maduzane.</string>
     <string name="logout_title">Phuma?</string>
     <string name="logout_message">Kuzodingeka ungene futhi ukuze usebenzise uhlelo.</string>
+    <string name="appearance_title">Ukubukeka</string>
+    <string name="theme_dark">Mnyama</string>
+    <string name="theme_light">Khanyayo</string>
+    <string name="theme_system">Isistimu</string>
 </resources>

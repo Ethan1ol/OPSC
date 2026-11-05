@@ -98,4 +98,8 @@
     <string name="placeholder_workouts">Die oefenlogboek word herbou en sal binnekort hier verskyn.</string>
     <string name="logout_title">Teken uit?</string>
     <string name="logout_message">Jy sal weer moet inteken om die program te gebruik.</string>
+    <string name="appearance_title">Voorkoms</string>
+    <string name="theme_dark">Donker</string>
+    <string name="theme_light">Lig</string>
+    <string name="theme_system">Stelsel</string>
 </resources>

@@ -68,7 +68,10 @@
         <item name="android:textAppearance">@style/TextAppearance.Battle.Label</item>
     </style>
 
-    <style name="Widget.Battle.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+    <!-- Secondary = tonal: filled with the soft orange container colour (clearer than a thin outline) -->
+    <style name="Widget.Battle.Button.Secondary" parent="Widget.Material3.Button.TonalButton">
+        <item name="backgroundTint">?attr/colorPrimaryContainer</item>
+        <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
         <item name="android:minHeight">@dimen/min_touch_target</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>

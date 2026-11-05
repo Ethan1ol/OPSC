@@ -113,4 +113,8 @@
     <string name="logout_title">Log out?</string>
     <string name="logout_message">You will need to log in again to use the app.</string>
     <string name="btn_design_gallery" translatable="false">Design gallery (debug)</string>
+    <string name="appearance_title">Appearance</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_system">System</string>
 </resources>
