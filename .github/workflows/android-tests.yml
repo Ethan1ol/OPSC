@@ -1,13 +1,14 @@
-name: Android CI - Automated Tests
+name: Android CI - Build and Test
 
+# Runs on every push to the main branches and the part3 branch, and on pull requests.
 on:
   push:
-    branches: [ "main", "master", "dev" ]
+    branches: [ "main", "master", "dev", "part3" ]
   pull_request:
     branches: [ "main", "master" ]
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,23 +21,49 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+      - name: Setup Gradle (with dependency cache)
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Decode google-services.json
+      # google-services.json is never committed. It is stored as the GitHub secret
+      # GOOGLE_SERVICES_JSON (Settings > Secrets and variables > Actions).
+      - name: Create google-services.json from secret
         env:
           GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        run: echo "$GOOGLE_SERVICES" > app/google-services.json
+        run: |
+          if [ -z "$GOOGLE_SERVICES" ]; then
+            echo "::error::The GOOGLE_SERVICES_JSON secret is missing. Add it in the repository settings."
+            exit 1
+          fi
+          echo "$GOOGLE_SERVICES" > app/google-services.json
 
-      - name: Run Unit Tests
+      - name: Run unit tests
         run: ./gradlew testDebugUnitTest --continue
 
-      - name: Upload Test Report
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Run lint
+        run: ./gradlew lintDebug
+
+      - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-report
           path: app/build/reports/tests/testDebugUnitTest/
+
+      - name: Upload lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-report
+          path: app/build/reports/lint-results-debug.html
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: battle-fitness-debug-apk
+          path: app/build/outputs/apk/debug/*.apk

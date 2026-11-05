@@ -12,7 +12,7 @@ Rebuild plan (replaces Pieces 4 to 10 above where they overlap):
 - [x] 7 Clubs and league (UD4; built; needs 3-account test and republished Firestore rules)
 - [x] 8 Profile customisation (UD5; built on the free plan with Firestore blobs; needs real-phone test)
 - [x] 9 Push notifications (built; console-sent push for the demo; needs real-phone test)
-- [ ] 10 App icon and image assets
+- [x] 10 (icon, splash, store assets done; empty-state art uses existing icons) App icon and image assets
 - [ ] Then: tests and CI, README, Play Store prep, final checks and video script
 
 Original list (kept for history):

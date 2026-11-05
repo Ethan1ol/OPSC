@@ -109,3 +109,8 @@ Entries are appended after every piece.
 - **How it was tested:** build, lint (no errors) and 178 unit tests. Not tested on a device (the emulator is unusable): picking and cropping a photo, the camera, uploads, the profile screens, FCM tokens, the permission flow, notifications arriving, or tap-to-open.
 - **Images/text generated:** all Afrikaans and isiZulu text. No images.
 
+## 2026-11-05 – Feature 10: App icon, splash screen and store assets
+- **Generated:** a Python (Pillow) script that built the adaptive launcher icon (foreground and monochrome layers) from the team logo, the legacy icons for older phones, the 512x512 Play Store icon and the 1024x500 feature graphic; the splash-screen theme; a rewritten GitHub Actions workflow (tests, lint, debug APK, uploaded reports).
+- **Reviewed/changed by students:** (to be completed)
+- **How it was tested:** build, lint and unit tests pass. The icon and splash were not seen on a device.
+

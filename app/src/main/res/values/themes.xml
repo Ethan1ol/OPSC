@@ -64,4 +64,15 @@
         <item name="textInputStyle">@style/Widget.Battle.TextInputLayout</item>
         <item name="materialCardViewStyle">@style/Widget.Battle.Card</item>
     </style>
+
+    <!--
+      Cold-start splash (androidx core-splashscreen). Always the dark brand background, so a phone
+      set to light mode does not flash white before the app applies its own (dark by default) theme.
+      Hands over to Theme.BattleFitness when the first screen is ready.
+    -->
+    <style name="Theme.BattleFitness.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/ic_launcher_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.BattleFitness</item>
+    </style>
 </resources>

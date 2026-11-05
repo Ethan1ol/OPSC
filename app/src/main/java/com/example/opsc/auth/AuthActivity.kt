@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +29,8 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Must run before super.onCreate: swaps the splash theme for the real one.
+        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         // Session persistence: Firebase remembers the user between launches. If we already know this
