@@ -12,8 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.opsc.R
-import com.example.opsc.ui.UiMessages
-import com.example.opsc.ui.openMainApp
 import com.example.opsc.ui.setBusy
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -27,7 +25,6 @@ import kotlinx.coroutines.launch
  */
 class LoginFragment : Fragment(R.layout.fragment_login) {
     private val viewModel: AuthViewModel by activityViewModels()
-    private var googlePending = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val emailLayout = view.findViewById<TextInputLayout>(R.id.loginEmailLayout)
@@ -66,16 +63,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             findNavController().navigate(R.id.signUpAccountFragment)
         }
 
-        googleButton.setOnClickListener {
-            if (viewModel.loading.value) return@setOnClickListener
-            googlePending = true
-            viewModel.googleStarted()
-            viewLifecycleOwner.lifecycleScope.launch {
-                val outcome = GoogleSignInHelper.signIn(requireActivity(), viewModel.repository)
-                googlePending = false
-                viewModel.googleFinished(outcome)
-            }
-        }
+        bindGoogleButton(googleButton, viewModel)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -88,7 +76,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 launch {
                     viewModel.events.collect { event ->
                         when (event) {
-                            is AuthEvent.LoggedIn -> openMainApp()
+                            is AuthEvent.LoggedIn -> handleLoggedIn(event)
                             is AuthEvent.Failed -> showError(view, passwordLayout, event.error)
                             AuthEvent.ResetSent -> Unit
                         }
@@ -103,17 +91,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             // Firebase does not say whether the email or the password was wrong (so accounts cannot be probed).
             passwordLayout.error = getString(error.messageRes)
         } else {
-            UiMessages.error(root, error.messageRes)
+            showAuthFailure(root, error)
         }
-    }
-
-    override fun onDestroyView() {
-        // If the screen is destroyed while the Google picker is open, do not leave the form stuck on "busy".
-        if (googlePending) {
-            googlePending = false
-            viewModel.googleAbandoned()
-        }
-        super.onDestroyView()
     }
 
     private companion object {

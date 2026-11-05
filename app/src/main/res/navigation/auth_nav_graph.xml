@@ -21,6 +21,11 @@
         android:label="@string/btn_create_account"
         tools:layout="@layout/fragment_signup_profile" />
     <fragment
+        android:id="@+id/finishProfileFragment"
+        android:name="com.example.opsc.auth.FinishProfileFragment"
+        android:label="@string/finish_profile_title"
+        tools:layout="@layout/fragment_finish_profile" />
+    <fragment
         android:id="@+id/forgotPasswordFragment"
         android:name="com.example.opsc.auth.ForgotPasswordFragment"
         android:label="@string/forgot_title"

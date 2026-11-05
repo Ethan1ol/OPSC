@@ -118,4 +118,12 @@
     <string name="btn_send_reset">Stuur terugstelskakel</string>
     <string name="btn_back_to_login">Terug na aanmelding</string>
     <string name="msg_sending">Stuur tans…</string>
+
+    <string name="auth_err_profile_save">Ons kon nie jou profiel stoor nie. Probeer asseblief weer.</string>
+    <string name="finish_profile_title">Voltooi jou profiel</string>
+    <string name="finish_profile_headline">Amper klaar</string>
+    <string name="finish_profile_subtitle">Aangemeld as %1$s. Kies \'n gebruikersnaam en vertel ons bietjie van jouself.</string>
+    <string name="btn_finish_profile">Gaan voort</string>
+    <string name="btn_other_account">Gebruik \'n ander rekening</string>
+    <string name="msg_saving">Stoor tans\u2026</string>
 </resources>

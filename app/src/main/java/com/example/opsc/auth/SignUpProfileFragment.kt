@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.opsc.R
 import com.example.opsc.ui.UiMessages
 import com.example.opsc.ui.countryList
-import com.example.opsc.ui.openMainApp
 import com.example.opsc.ui.setBusy
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.CalendarConstraints
@@ -135,7 +134,7 @@ class SignUpProfileFragment : Fragment(R.layout.fragment_signup_profile) {
                         when (event) {
                             is AuthEvent.LoggedIn -> {
                                 viewModel.pendingPassword = ""
-                                openMainApp()
+                                handleLoggedIn(event)
                             }
                             is AuthEvent.Failed -> handleFailure(view, event.error)
                             AuthEvent.ResetSent -> Unit

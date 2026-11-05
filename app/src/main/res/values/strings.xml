@@ -132,4 +132,13 @@
     <string name="btn_send_reset">Send reset link</string>
     <string name="btn_back_to_login">Back to log in</string>
     <string name="msg_sending">Sending…</string>
+
+    <!-- Feature 2: Google sign-in -->
+    <string name="auth_err_profile_save">We could not save your profile. Please try again.</string>
+    <string name="finish_profile_title">Finish your profile</string>
+    <string name="finish_profile_headline">Almost there</string>
+    <string name="finish_profile_subtitle">Signed in as %1$s. Choose a username and tell us a little about you.</string>
+    <string name="btn_finish_profile">Continue</string>
+    <string name="btn_other_account">Use a different account</string>
+    <string name="msg_saving">Saving\u2026</string>
 </resources>

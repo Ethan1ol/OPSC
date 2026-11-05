@@ -66,3 +66,11 @@ Entries are appended after every piece.
 - **How it was tested:** installed on the emulator and driven with adb: session persistence (opened straight into the app), log out with confirmation, login screen, sign-up step 1 validation errors and strength bar, step 2 form, date picker limits, back navigation. Not tested: real registration, login, password-reset email and Google sign-in against Firebase.
 - **Images/text generated:** no images. Screenshots in `docs/images/f1-*.png` are real emulator captures.
 
+## 2026-11-05 – Feature 2: Google single sign-on
+- **Generated:** `FinishProfileFragment` and layout; `ProfileGate.kt` (profile status, the routing decision and a per-phone "profile confirmed" flag) with 3 unit tests; changes to `AuthRepository` (profile check, awaited profile save, suggested profile from the Google account; removed the automatic minimal profile); `AuthViewModel`, `AuthNavigation.kt` (shared Google button and sign-in handling), a launch gate in `AuthActivity`, a Google button on sign-up step 1; English, Afrikaans and isiZulu strings.
+- **Reviewed/changed by students:** (to be completed) Ethan specified the finish-profile fields and that returning Google users go straight to Home.
+- **Design decision:** the old code silently created a profile with a guessed username for Google users. That was replaced by an explicit finish-profile screen so the user picks their own username, and the app now also resumes that screen on the next launch if the user quits halfway.
+- **How it was tested:** build, lint and 79 unit tests; emulator launch with an existing session (the launch gate opened the app without errors). Not tested: the Google account picker, first-time Google sign-in, the finish-profile screen on a device, cancel and no-account paths, because they need a real Google account on a device.
+- **Bugs debugged:** none found in testing yet.
+- **Images/text generated:** none.
+

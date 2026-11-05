@@ -8,7 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navOptions
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -16,6 +18,7 @@ import com.example.opsc.R
 import com.example.opsc.app.AppActivity
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
+import kotlinx.coroutines.launch
 
 /**
  * The first screen of the app (launcher). If the user is already signed in it goes straight
@@ -27,11 +30,13 @@ class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Session persistence: Firebase remembers the user between launches.
-        if (AuthRepository().currentUser != null) {
-            Log.i(TAG, "Existing session found, opening the app")
-            startActivity(Intent(this, AppActivity::class.java))
-            finish()
+        // Session persistence: Firebase remembers the user between launches. If we already know this
+        // user's profile exists, go straight into the app; otherwise check it before showing anything.
+        val repository = AuthRepository()
+        val signedInUid = repository.currentUser?.uid
+        if (signedInUid != null && ProfileGate.isKnownComplete(this, signedInUid)) {
+            Log.i(TAG, "Existing session with a known profile, opening the app")
+            openApp(remember = false)
             return
         }
 
@@ -48,7 +53,7 @@ class AuthActivity : AppCompatActivity() {
 
         setSupportActionBar(findViewById<MaterialToolbar>(R.id.authToolbar))
         val navController = (supportFragmentManager.findFragmentById(R.id.authNavHost) as NavHostFragment).navController
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.loginFragment))
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.loginFragment, R.id.finishProfileFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         // The login screen has its own big title, so the top bar is only shown on the other screens.
@@ -56,6 +61,39 @@ class AuthActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             appBar.visibility = if (destination.id == R.id.loginFragment) View.GONE else View.VISIBLE
         }
+
+        // Signed in, but we have not confirmed the profile on this phone: check it, hiding the
+        // screen meanwhile so the login form does not flash.
+        if (signedInUid != null) {
+            val root = findViewById<View>(R.id.authRoot)
+            root.visibility = View.INVISIBLE
+            lifecycleScope.launch {
+                val status = repository.profileStatus(signedInUid)
+                val route = routeFor(status)
+                Log.i(TAG, "Profile check for launch: status=$status route=$route")
+                when (route) {
+                    ProfileRoute.OPEN_APP -> {
+                        // Remember it only when confirmed; an "unknown" result (offline) is retried next launch.
+                        openApp(remember = status == ProfileStatus.EXISTS)
+                    }
+                    ProfileRoute.FINISH_PROFILE -> {
+                        if (navController.currentDestination?.id != R.id.finishProfileFragment) {
+                            navController.navigate(
+                                R.id.finishProfileFragment, null,
+                                navOptions { popUpTo(R.id.loginFragment) { inclusive = true } }
+                            )
+                        }
+                        root.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
+
+    private fun openApp(remember: Boolean) {
+        if (remember) AuthRepository().currentUser?.uid?.let { ProfileGate.markComplete(this, it) }
+        startActivity(Intent(this, AppActivity::class.java))
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {

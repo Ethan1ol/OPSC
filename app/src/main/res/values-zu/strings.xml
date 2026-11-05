@@ -118,4 +118,12 @@
     <string name="btn_send_reset">Thumela isixhumanisi</string>
     <string name="btn_back_to_login">Buyela ekungeneni</string>
     <string name="msg_sending">Iyathumela…</string>
+
+    <string name="auth_err_profile_save">Asikwazanga ukulondoloza iphrofayela yakho. Sicela uzame futhi.</string>
+    <string name="finish_profile_title">Qeda iphrofayela yakho</string>
+    <string name="finish_profile_headline">Seduze kakhulu</string>
+    <string name="finish_profile_subtitle">Ungene nge-imeyili: %1$s. Khetha igama lomsebenzisi usitshele kancane ngawe.</string>
+    <string name="btn_finish_profile">Qhubeka</string>
+    <string name="btn_other_account">Sebenzisa enye i-akhawunti</string>
+    <string name="msg_saving">Iyalondoloza\u2026</string>
 </resources>

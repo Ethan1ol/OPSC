@@ -7,9 +7,14 @@ import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.opsc.R
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
+import kotlinx.coroutines.launch
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -73,6 +78,24 @@ class SignUpAccountFragment : Fragment(R.layout.fragment_signup_account) {
         }
         view.findViewById<View>(R.id.signupNext).setOnClickListener { next() }
         confirm.setOnEditorActionListener { _, _, _ -> next(); true }
+
+        // Google sign-up uses the same flow as login: a new Google user finishes their profile next.
+        val googleButton = view.findViewById<MaterialButton>(R.id.signupGoogle)
+        bindGoogleButton(googleButton, viewModel)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.loading.collect { busy -> googleButton.isEnabled = !busy } }
+                launch {
+                    viewModel.events.collect { event ->
+                        when (event) {
+                            is AuthEvent.LoggedIn -> handleLoggedIn(event)
+                            is AuthEvent.Failed -> showAuthFailure(view, event.error)
+                            AuthEvent.ResetSent -> Unit
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /** Updates the strength bar (red, orange, green) and the hint text under the password field. */

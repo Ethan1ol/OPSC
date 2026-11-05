@@ -97,5 +97,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_lg"
             android:text="@string/btn_next" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/space_md"
+            android:gravity="center"
+            android:text="@string/login_or"
+            android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signupGoogle"
+            style="@style/Widget.Battle.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_continue_google"
+            app:icon="@drawable/google"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/space_sm"
+            app:iconTint="@null" />
     </LinearLayout>
 </ScrollView>
