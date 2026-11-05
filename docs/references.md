@@ -1,0 +1,16 @@
+# References (Harvard style)
+
+Running list of sources that code, configuration or guidance was adapted from.
+Each adapted file also carries an inline `// Adapted from:` comment.
+
+Android Developers (2026) *Android Gradle plugin 9.0 release notes (built-in Kotlin)*. Available at: https://developer.android.com/build/releases/gradle-plugin (Accessed: 5 November 2026).
+
+Firebase (2026) *Add Firebase to your Android project*. Available at: https://firebase.google.com/docs/android/setup (Accessed: 5 November 2026).
+
+Firebase (2026) *Firebase Android BoM*. Available at: https://firebase.google.com/docs/android/learn-more#bom (Accessed: 5 November 2026).
+
+Google for Developers (2026) *Authenticate your client (SHA-1 certificate fingerprint)*. Available at: https://developers.google.com/android/guides/client-auth (Accessed: 5 November 2026).
+
+Gradle Inc. (2026) *Version catalogs*. Available at: https://docs.gradle.org/current/userguide/version_catalogs.html (Accessed: 5 November 2026).
+
+Git (2026) *gitattributes documentation*. Available at: https://git-scm.com/docs/gitattributes (Accessed: 5 November 2026).
