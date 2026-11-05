@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.opsc.auth.AuthOutcome
+import com.example.opsc.app.AppActivity
 import com.example.opsc.auth.AuthRepository
 import com.example.opsc.auth.GoogleSignInHelper
 import com.example.opsc.auth.Validators
@@ -155,7 +156,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToHome() {
-        val intent = Intent(this, HomeActivity::class.java).apply {
+        val intent = Intent(this, AppActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         startActivity(intent)

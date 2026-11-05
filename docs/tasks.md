@@ -1,5 +1,22 @@
 # Part 3 task list
 
+Rebuild plan (replaces Pieces 4 to 10 above where they overlap):
+
+- [x] Step A: design system and app shell
+- [ ] 1 Register and log in
+- [ ] 2 Google SSO
+- [ ] 3 Settings and languages
+- [ ] 4 Offline mode with sync
+- [ ] 5 Workout Logger and Dashboard
+- [ ] 6 REST API exercise library
+- [ ] 7 Clubs and league
+- [ ] 8 Profile customisation
+- [ ] 9 Push notifications
+- [ ] 10 App icon and image assets
+- [ ] Then: tests and CI, README, Play Store prep, final checks and video script
+
+Original list (kept for history):
+
 - [x] Piece 0 – Recon and plan
 - [x] Piece 1 – Build foundation
 - [x] Piece 2 – Authentication and SSO

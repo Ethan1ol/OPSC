@@ -75,14 +75,27 @@
     <string name="btn_save">Londoloza izinguquko</string>
     <string name="btn_back">Emuva</string>
     <string name="msg_saved">Izilungiselelo zilondoloziwe. Ziyovumelanisa uma usubuyele ku-inthanethi.</string>
-
-    <string name="home_subtitle">Ungathanda ukwenzani namuhla?</string>
-    <string name="tile_workouts">Izivivinyo</string>
-    <string name="tile_exercises">Ukuzivocavoca</string>
-    <string name="tile_clubs">Amaklabhu</string>
-    <string name="tile_profile">Iphrofayela</string>
-    <string name="tile_notifications">Izaziso</string>
-    <string name="coming_soon">Kuyeza maduzane</string>
-    <string name="coming_soon_message">Lesi sici sisakhiwa futhi sizofika ekuvuseleleni kwakamuva.</string>
     <string name="confirm_password_label">Qinisekisa iphasiwedi:</string>
+
+    <string name="nav_home">Ikhaya</string>
+    <string name="nav_clubs">Amaklabhu</string>
+    <string name="nav_workouts">Izivivinyo</string>
+    <string name="nav_profile">Iphrofayela</string>
+    <string name="nav_up">Buyela emuva</string>
+    <string name="state_loading">Iyalayisha</string>
+    <string name="action_retry">Zama futhi</string>
+    <string name="action_undo">Hlehlisa</string>
+    <string name="dialog_cancel">Khansela</string>
+    <string name="dialog_confirm">Kulungile</string>
+    <string name="error_generic">Kukhona okungahambanga kahle. Sicela uzame futhi.</string>
+    <string name="error_offline">Awuxhunyiwe ku-inthanethi. Hlola uxhumo lwakho uzame futhi.</string>
+    <string name="offline_banner">Awuxhunyiwe ku-inthanethi. Izinguquko ziyovumelanisa uma uxhuma futhi.</string>
+    <string name="home_greeting">Sawubona, %1$s</string>
+    <string name="home_subtitle">Ungathanda ukwenzani namuhla?</string>
+    <string name="home_placeholder_title">Ibhodi lakho</string>
+    <string name="home_placeholder_body">Izibalo zakho, amaklabhu nomdlalo olandelayo kuzovela lapha njengoba isici ngasinye siphothulwa.</string>
+    <string name="placeholder_clubs">Amaklabhu asakhiwa kabusha futhi azovela lapha maduzane.</string>
+    <string name="placeholder_workouts">Incwadi yokulogela izivivinyo isakhiwa kabusha futhi izovela lapha maduzane.</string>
+    <string name="logout_title">Phuma?</string>
+    <string name="logout_message">Kuzodingeka ungene futhi ukuze usebenzise uhlelo.</string>
 </resources>

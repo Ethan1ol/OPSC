@@ -11,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.opsc.auth.AuthOutcome
+import com.example.opsc.app.AppActivity
 import com.example.opsc.auth.AuthRepository
 import com.example.opsc.auth.FormField
 import com.example.opsc.auth.RegistrationData
@@ -118,7 +119,7 @@ class signUpDetailsActivity : AppCompatActivity() {
             when (outcome) {
                 is AuthOutcome.Success -> {
                     Toast.makeText(this@signUpDetailsActivity, getString(R.string.msg_welcome_user, data.username), Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this@signUpDetailsActivity, HomeActivity::class.java).apply {
+                    startActivity(Intent(this@signUpDetailsActivity, AppActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     })
                     finish()

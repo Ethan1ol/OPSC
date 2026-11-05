@@ -75,14 +75,27 @@
     <string name="btn_save">Stoor veranderinge</string>
     <string name="btn_back">Terug</string>
     <string name="msg_saved">Instellings gestoor. Dit sal sinkroniseer wanneer jy weer aanlyn is.</string>
-
-    <string name="home_subtitle">Wat wil jy vandag doen?</string>
-    <string name="tile_workouts">Oefensessies</string>
-    <string name="tile_exercises">Oefeninge</string>
-    <string name="tile_clubs">Klubs</string>
-    <string name="tile_profile">Profiel</string>
-    <string name="tile_notifications">Kennisgewings</string>
-    <string name="coming_soon">Binnekort</string>
-    <string name="coming_soon_message">Hierdie funksie word nog gebou en sal in \'n latere opdatering beskikbaar wees.</string>
     <string name="confirm_password_label">Bevestig wagwoord:</string>
+
+    <string name="nav_home">Tuis</string>
+    <string name="nav_clubs">Klubs</string>
+    <string name="nav_workouts">Oefensessies</string>
+    <string name="nav_profile">Profiel</string>
+    <string name="nav_up">Gaan terug</string>
+    <string name="state_loading">Laai tans</string>
+    <string name="action_retry">Probeer weer</string>
+    <string name="action_undo">Ontdoen</string>
+    <string name="dialog_cancel">Kanselleer</string>
+    <string name="dialog_confirm">OK</string>
+    <string name="error_generic">Iets het verkeerd gegaan. Probeer asseblief weer.</string>
+    <string name="error_offline">Jy is aflyn. Kontroleer jou verbinding en probeer weer.</string>
+    <string name="offline_banner">Jy is aflyn. Veranderinge sal sinkroniseer wanneer jy weer koppel.</string>
+    <string name="home_greeting">Hallo, %1$s</string>
+    <string name="home_subtitle">Wat wil jy vandag doen?</string>
+    <string name="home_placeholder_title">Jou kontrolepaneel</string>
+    <string name="home_placeholder_body">Jou statistiek, klubs en volgende wedstryd sal hier verskyn namate elke funksie voltooi word.</string>
+    <string name="placeholder_clubs">Klubs word herbou en sal binnekort hier verskyn.</string>
+    <string name="placeholder_workouts">Die oefenlogboek word herbou en sal binnekort hier verskyn.</string>
+    <string name="logout_title">Teken uit?</string>
+    <string name="logout_message">Jy sal weer moet inteken om die program te gebruik.</string>
 </resources>

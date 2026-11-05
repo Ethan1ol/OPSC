@@ -31,3 +31,15 @@ Android Developers (2026) *Per-app language preferences*. Available at: https://
 
 Android Developers (2026) *Localize your app*. Available at: https://developer.android.com/guide/topics/resources/localization (Accessed: 5 November 2026).
 
+Google Fonts (2026) *Poppins* (SIL Open Font License 1.1). Available at: https://fonts.google.com/specimen/Poppins (Accessed: 5 November 2026).
+
+Google (2026) *Material Design 3: Color roles*. Available at: https://m3.material.io/styles/color/roles (Accessed: 5 November 2026).
+
+Material Components for Android (2026) *Theming guide*. Available at: https://github.com/material-components/material-components-android/tree/master/docs/theming (Accessed: 5 November 2026).
+
+W3C (2023) *Web Content Accessibility Guidelines (WCAG) 2.2: Success Criterion 1.4.3 Contrast (Minimum)*. Available at: https://www.w3.org/TR/WCAG22/#contrast-minimum (Accessed: 5 November 2026).
+
+Android Developers (2026) *Navigation component: Get started*. Available at: https://developer.android.com/guide/navigation (Accessed: 5 November 2026).
+
+Android Developers (2026) *Fonts in XML*. Available at: https://developer.android.com/develop/ui/views/text-and-emoji/fonts-in-xml (Accessed: 5 November 2026).
+

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Navigation graph for the main app. The four top-level tabs are listed here;
+  detail screens (club detail, exercise detail, ...) are added as features are built.
+-->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.opsc.app.HomeFragment"
+        android:label="@string/nav_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/clubsFragment"
+        android:name="com.example.opsc.app.ClubsFragment"
+        android:label="@string/nav_clubs"
+        tools:layout="@layout/fragment_state_placeholder" />
+    <fragment
+        android:id="@+id/workoutsFragment"
+        android:name="com.example.opsc.app.WorkoutsFragment"
+        android:label="@string/nav_workouts"
+        tools:layout="@layout/fragment_state_placeholder" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.opsc.app.ProfileFragment"
+        android:label="@string/nav_profile"
+        tools:layout="@layout/fragment_profile" />
+</navigation>

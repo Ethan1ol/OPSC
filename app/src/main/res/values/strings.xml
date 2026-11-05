@@ -88,19 +88,29 @@
     <string name="msg_saved">Settings saved. They will sync when you are back online.</string>
 
     <!-- Dashboard -->
-    <string name="icon_workouts" translatable="false">&#x1F3CB;</string>
-    <string name="icon_exercises" translatable="false">&#x1F4CB;</string>
-    <string name="icon_clubs" translatable="false">&#x1F3C6;</string>
-    <string name="icon_profile" translatable="false">&#x1F464;</string>
-    <string name="icon_notifications" translatable="false">&#x1F514;</string>
-    <string name="icon_settings" translatable="false">&#x2699;</string>
-    <string name="home_subtitle">What would you like to do today?</string>
-    <string name="tile_workouts">Workouts</string>
-    <string name="tile_exercises">Exercises</string>
-    <string name="tile_clubs">Clubs</string>
-    <string name="tile_profile">Profile</string>
-    <string name="tile_notifications">Notifications</string>
-    <string name="coming_soon">Coming soon</string>
-    <string name="coming_soon_message">This feature is still being built and will arrive in a later update.</string>
     <string name="confirm_password_label">Confirm Password:</string>
+
+    <!-- Design system, navigation and shared states -->
+    <string name="nav_home">Home</string>
+    <string name="nav_clubs">Clubs</string>
+    <string name="nav_workouts">Workouts</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_up">Navigate up</string>
+    <string name="state_loading">Loading</string>
+    <string name="action_retry">Try again</string>
+    <string name="action_undo">Undo</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_confirm">OK</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_offline">You are offline. Check your connection and try again.</string>
+    <string name="offline_banner">You are offline. Changes will sync when you reconnect.</string>
+    <string name="home_greeting">Hello, %1$s</string>
+    <string name="home_subtitle">What would you like to do today?</string>
+    <string name="home_placeholder_title">Your dashboard</string>
+    <string name="home_placeholder_body">Your stats, clubs and next fixture will appear here as each feature is completed.</string>
+    <string name="placeholder_clubs">Clubs are being rebuilt and will appear here soon.</string>
+    <string name="placeholder_workouts">The workout logger is being rebuilt and will appear here soon.</string>
+    <string name="logout_title">Log out?</string>
+    <string name="logout_message">You will need to log in again to use the app.</string>
+    <string name="btn_design_gallery" translatable="false">Design gallery (debug)</string>
 </resources>

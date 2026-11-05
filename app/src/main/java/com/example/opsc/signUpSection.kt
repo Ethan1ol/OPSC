@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.opsc.auth.AuthOutcome
+import com.example.opsc.app.AppActivity
 import com.example.opsc.auth.AuthRepository
 import com.example.opsc.auth.GoogleSignInHelper
 import com.example.opsc.auth.Validators
@@ -66,7 +67,7 @@ class signUpSection : AppCompatActivity() {
                 googleLoginButton.isEnabled = true
                 when (outcome) {
                     is AuthOutcome.Success -> {
-                        startActivity(Intent(this@signUpSection, HomeActivity::class.java).apply {
+                        startActivity(Intent(this@signUpSection, AppActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         })
                         finish()

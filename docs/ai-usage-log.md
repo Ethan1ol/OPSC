@@ -46,3 +46,9 @@ Entries are appended after every piece.
 - **Bugs debugged:** surname field had `inputType="textPassword"`; labels and boxes drifted apart because of fragile ConstraintLayout bias offsets; an apostrophe escape lost in the Afrikaans string caused a resource compile error.
 - **Images/text generated:** new UI text and translations; dashboard tile icons are Unicode emoji characters, not generated images.
 
+## 2026-11-05 – Step A: Design system and app shell
+- **Generated:** colour tokens (light and dark), Material 3 theme, type scale, shapes and spacing; component styles; `StateLayout`, `UiMessages`, `ConfirmDialog`, `ConnectivityMonitor`; custom stroke icons; `AppActivity` with Navigation component and bottom navigation; four tab fragments; debug-only Design Gallery; `DesignContrastTest`; `docs/design-system.md`; translations of the new strings (Afrikaans, isiZulu).
+- **Reviewed/changed by students:** (to be completed) Ethan asked for the rebuild and set the design requirements (orange primary, Material 3, bottom navigation, light and dark mode).
+- **Bugs debugged:** (1) lint errors for `lineHeight` and `textFontWeight` needing API 28; (2) gallery content touching the screen edge because `fitsSystemWindows` replaced the padding; (3) all text weights rendering as Regular and chips as Roboto. Found by installing on the emulator, screenshotting, and measuring stroke thickness against the Poppins font files; root cause was a theme-level `android:fontFamily` overriding the text styles and Material's parent styles setting the app-namespace `fontFamily`. (4) a missing `style` parent causing an AAPT link error.
+- **Images/text generated:** no images. Icons are hand-written vector paths. Screenshots in `docs/images` are real emulator screenshots of the app, not generated.
+
