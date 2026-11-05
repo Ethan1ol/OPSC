@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/34450155/README.md)
 
 # Battle Fitness (OPSC Mobile Application)
 
