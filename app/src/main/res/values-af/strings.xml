@@ -312,4 +312,7 @@
     <string name="btn_turn_on">Skakel aan</string>
     <string name="push_denied">Kennisgewings is af. Jy kan dit in jou foon se instellings aanskakel.</string>
     <string name="btn_open_settings">Maak instellings oop</string>
+    <string name="member_profile_title">Lid se profiel</string>
+    <string name="member_open">Sien profiel van %1$s</string>
+    <string name="member_load_error">Hierdie profiel kon nie gelaai word nie.</string>
 </resources>

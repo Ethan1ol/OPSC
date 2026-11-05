@@ -338,4 +338,7 @@
     <string name="btn_turn_on">Turn on</string>
     <string name="push_denied">Notifications are off. You can turn them on in your phone\'s settings.</string>
     <string name="btn_open_settings">Open settings</string>
+    <string name="member_profile_title">Member profile</string>
+    <string name="member_open">View profile of %1$s</string>
+    <string name="member_load_error">This profile could not be loaded.</string>
 </resources>

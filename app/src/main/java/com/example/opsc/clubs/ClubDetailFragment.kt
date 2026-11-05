@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
+import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -46,7 +47,9 @@ import kotlinx.coroutines.launch
 class ClubDetailFragment : Fragment(R.layout.fragment_club_detail) {
     private val viewModel: ClubDetailViewModel by viewModels()
     private val standings = StandingAdapter()
-    private val members = MemberAdapter()
+    private val members = MemberAdapter { member ->
+        findNavController().navigate(R.id.memberProfileFragment, bundleOf("uid" to member.uid))
+    }
     private lateinit var fixtures: FixtureAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

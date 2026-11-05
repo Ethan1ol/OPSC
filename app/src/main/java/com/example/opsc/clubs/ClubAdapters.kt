@@ -162,15 +162,17 @@ fun groupByRound(fixtures: List<FixtureView>): List<FixtureItem> =
         listOf<FixtureItem>(FixtureItem.Header(round)) + list.map { FixtureItem.Match(it) }
     }
 
-/** The member list. */
-class MemberAdapter : ListAdapter<MemberView, MemberAdapter.Holder>(Diff) {
+/** The member list. Tapping a member opens their profile. */
+class MemberAdapter(private val onClick: (MemberView) -> Unit) : ListAdapter<MemberView, MemberAdapter.Holder>(Diff) {
 
     class Holder(view: View) : RecyclerView.ViewHolder(view) {
         private val name: TextView = view.findViewById(R.id.memberName)
         private val role: TextView = view.findViewById(R.id.memberRole)
 
-        fun bind(member: MemberView) {
+        fun bind(member: MemberView, onClick: (MemberView) -> Unit) {
             val context = itemView.context
+            itemView.setOnClickListener { onClick(member) }
+            itemView.contentDescription = context.getString(R.string.member_open, member.name)
             name.text = if (member.isMe) context.getString(R.string.name_you, member.name) else member.name
             role.text = if (member.isOwner) context.getString(R.string.member_owner) else ""
         }
@@ -179,7 +181,7 @@ class MemberAdapter : ListAdapter<MemberView, MemberAdapter.Holder>(Diff) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_member, parent, false))
 
-    override fun onBindViewHolder(holder: Holder, position: Int) = holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: Holder, position: Int) = holder.bind(getItem(position), onClick)
 
     private object Diff : DiffUtil.ItemCallback<MemberView>() {
         override fun areItemsTheSame(a: MemberView, b: MemberView) = a.uid == b.uid

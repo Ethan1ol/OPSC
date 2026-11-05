@@ -114,3 +114,8 @@ Entries are appended after every piece.
 - **Reviewed/changed by students:** (to be completed)
 - **How it was tested:** build, lint and unit tests pass. The icon and splash were not seen on a device.
 
+## 2026-11-05 – Member profiles from a club's member list
+- **Generated:** a read-only member profile screen (reuses the profile layout, hides the numbers and edit buttons), its view model, a tappable member row with a chevron, the navigation entry and English, Afrikaans and isiZulu text.
+- **Reviewed/changed by students:** (to be completed)
+- **How it was tested:** build, lint and unit tests pass. Not tested on a device. Workout counts are hidden because the security rules keep workouts private to their owner.
+

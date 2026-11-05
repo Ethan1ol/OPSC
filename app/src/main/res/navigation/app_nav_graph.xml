@@ -68,6 +68,15 @@
             app:argType="integer" />
     </fragment>
     <fragment
+        android:id="@+id/memberProfileFragment"
+        android:name="com.example.opsc.profile.MemberProfileFragment"
+        android:label="@string/member_profile_title"
+        tools:layout="@layout/fragment_profile">
+        <argument
+            android:name="uid"
+            app:argType="string" />
+    </fragment>
+    <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.opsc.profile.EditProfileFragment"
         android:label="@string/btn_edit_profile"

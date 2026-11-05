@@ -312,4 +312,7 @@
     <string name="btn_turn_on">Vula</string>
     <string name="push_denied">Izaziso zivaliwe. Ungazivula ezilungiselelweni zefoni yakho.</string>
     <string name="btn_open_settings">Vula izilungiselelo</string>
+    <string name="member_profile_title">Iphrofayela yelungu</string>
+    <string name="member_open">Buka iphrofayela ka-%1$s</string>
+    <string name="member_load_error">Le phrofayela ayikwazanga ukulayishwa.</string>
 </resources>

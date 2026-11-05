@@ -13,6 +13,7 @@ import androidx.core.content.FileProvider
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -88,6 +89,44 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     view.findViewById<TextView>(R.id.profileStatWorkouts).text = state.workouts.toString()
                     view.findViewById<TextView>(R.id.profileStatWins).text = state.wins.toString()
                     view.findViewById<TextView>(R.id.profileStatClubs).text = state.clubs.toString()
+                    view.findViewById<ShapeableImageView>(R.id.profileAvatar).showPicture(state.avatar, avatar = true)
+                    view.findViewById<ShapeableImageView>(R.id.profileBanner).showPicture(state.banner, avatar = false)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Another member's profile (opened by tapping a member in a club). It shows the banner, picture,
+ * name, username and bio. Workout counts are private (the security rules only let the owner read
+ * workouts), so the numbers and the edit buttons are hidden. Pictures are downloaded once and cached.
+ */
+class MemberProfileFragment : Fragment(R.layout.fragment_profile) {
+    private val viewModel: MemberProfileViewModel by viewModels()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val stateLayout = view.findViewById<StateLayout>(R.id.profileState)
+        listOf(R.id.profileStatsRow, R.id.buttonEditProfile, R.id.buttonSettings, R.id.buttonLogout)
+            .forEach { view.findViewById<View>(it).visibility = View.GONE }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    val profile = state.profile
+                    when {
+                        state.loading -> { stateLayout.showLoading(); return@collect }
+                        profile == null -> { stateLayout.showError(R.string.member_load_error) { viewModel.load() }; return@collect }
+                    }
+                    profile!!
+                    stateLayout.showContent()
+                    val fullName = "${profile.name} ${profile.surname}".trim()
+                    view.findViewById<TextView>(R.id.profileDisplayName).text = fullName.ifEmpty { profile.username }
+                    view.findViewById<TextView>(R.id.profileUsername).text = "@${profile.username}"
+                    view.findViewById<TextView>(R.id.profileBio).apply {
+                        text = profile.bio
+                        visibility = if (profile.bio.isBlank()) View.GONE else View.VISIBLE
+                    }
                     view.findViewById<ShapeableImageView>(R.id.profileAvatar).showPicture(state.avatar, avatar = true)
                     view.findViewById<ShapeableImageView>(R.id.profileBanner).showPicture(state.banner, avatar = false)
                 }
