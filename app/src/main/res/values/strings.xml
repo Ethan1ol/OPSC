@@ -25,4 +25,42 @@
     <string name="name">Name:</string>
     <string name="email_sisplay">Email:</string>
     <string name="already_a_member">Already a member?</string>
+
+    <!-- Validation errors (Piece 2) -->
+    <string name="err_email_empty">Please enter your email</string>
+    <string name="err_email_invalid">That email address does not look right</string>
+    <string name="err_password_empty">Please enter your password</string>
+    <string name="err_password_short">Password must be at least 6 characters</string>
+    <string name="err_password_mismatch">Passwords do not match</string>
+    <string name="err_name_empty">Please enter your name</string>
+    <string name="err_name_invalid">Use letters only (2 to 30 characters)</string>
+    <string name="err_surname_empty">Please enter your surname</string>
+    <string name="err_surname_invalid">Use letters only (2 to 30 characters)</string>
+    <string name="err_username_empty">Please enter a username</string>
+    <string name="err_username_short">Username must be at least 3 characters</string>
+    <string name="err_username_long">Username can be at most 20 characters</string>
+    <string name="err_username_chars">Username may only use letters, numbers and _</string>
+    <string name="err_birth_empty">Please pick your birth date</string>
+    <string name="err_birth_invalid">That birth date is not valid</string>
+    <string name="err_birth_future">Birth date cannot be in the future</string>
+    <string name="err_birth_young">You must be at least 13 years old</string>
+
+    <!-- Authentication errors and messages (Piece 2) -->
+    <string name="auth_err_network">No internet connection. Check your network and try again.</string>
+    <string name="auth_err_wrong_credentials">Incorrect email or password.</string>
+    <string name="auth_err_email_in_use">An account with that email already exists. Try logging in.</string>
+    <string name="auth_err_weak_password">That password is too weak. Choose a stronger one.</string>
+    <string name="auth_err_disabled">This account has been disabled.</string>
+    <string name="auth_err_too_many">Too many attempts. Please wait a moment and try again.</string>
+    <string name="auth_err_google_cancelled">Google sign-in was cancelled.</string>
+    <string name="auth_err_google_unavailable">No Google account available on this phone. Add one in Settings and try again.</string>
+    <string name="auth_err_unknown">Something went wrong. Please try again.</string>
+    <string name="msg_logging_in">Logging in…</string>
+    <string name="msg_signing_up">Creating account…</string>
+    <string name="msg_reset_sent">If an account exists for that email, a password reset link has been sent.</string>
+    <string name="msg_enter_email_first">Enter your email above first, then tap Forgot Password.</string>
+    <string name="msg_welcome_user">Welcome, %1$s!</string>
+    <string name="btn_logout">Log out</string>
+    <string name="btn_settings">Settings</string>
+    <string name="pick_birth_date">Tap to pick your birth date</string>
 </resources>
