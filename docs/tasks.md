@@ -3,7 +3,7 @@
 Rebuild plan (replaces Pieces 4 to 10 above where they overlap):
 
 - [x] Step A: design system and app shell
-- [ ] 1 Register and log in
+- [x] 1 Register and log in (built; needs real-phone test of register/reset)
 - [ ] 2 Google SSO
 - [ ] 3 Settings and languages
 - [ ] 4 Offline mode with sync

@@ -43,3 +43,13 @@ Android Developers (2026) *Navigation component: Get started*. Available at: htt
 
 Android Developers (2026) *Fonts in XML*. Available at: https://developer.android.com/develop/ui/views/text-and-emoji/fonts-in-xml (Accessed: 5 November 2026).
 
+Material Components for Android (2026) *Date pickers*. Available at: https://github.com/material-components/material-components-android/blob/master/docs/components/DatePicker.md (Accessed: 5 November 2026).
+
+Material Components for Android (2026) *Text fields (password toggle, dropdown menu, error text)*. Available at: https://github.com/material-components/material-components-android/blob/master/docs/components/TextField.md (Accessed: 5 November 2026).
+
+Android Developers (2026) *ViewModel overview*. Available at: https://developer.android.com/topic/libraries/architecture/viewmodel (Accessed: 5 November 2026).
+
+Android Developers (2026) *Handle keyboard (IME) insets when using edge-to-edge*. Available at: https://developer.android.com/develop/ui/views/layout/edge-to-edge (Accessed: 5 November 2026).
+
+Firebase (2026) *Email enumeration protection*. Available at: https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection (Accessed: 5 November 2026).
+

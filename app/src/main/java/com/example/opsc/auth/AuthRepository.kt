@@ -27,7 +27,11 @@ data class RegistrationData(
     val name: String,
     val surname: String,
     val username: String,
-    val birthDate: String
+    val birthDate: String,
+    val heightCm: Double? = null,
+    val weightKg: Double? = null,
+    /** ISO 3166 country code such as "ZA". */
+    val country: String = ""
 )
 
 /**
@@ -100,6 +104,9 @@ class AuthRepository(
                 name = data.name.trim(),
                 surname = data.surname.trim(),
                 birthDate = data.birthDate,
+                heightCm = data.heightCm,
+                weightKg = data.weightKg,
+                country = data.country,
                 language = LanguageManager.current()
             )
         )

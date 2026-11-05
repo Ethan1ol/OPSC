@@ -15,7 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.opsc.MainActivity
+import com.example.opsc.auth.AuthActivity
 import com.example.opsc.R
 import com.example.opsc.auth.AuthRepository
 import com.example.opsc.ui.ConnectivityMonitor
@@ -37,7 +37,7 @@ class AppActivity : AppCompatActivity() {
         // Without a signed-in user there is nothing to show: go to the login screen.
         if (AuthRepository().currentUser == null) {
             Log.w(TAG, "No signed-in user, returning to login")
-            startActivity(Intent(this, MainActivity::class.java).apply {
+            startActivity(Intent(this, AuthActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             })
             finish()

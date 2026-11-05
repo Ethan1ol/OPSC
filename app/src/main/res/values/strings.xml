@@ -1,38 +1,18 @@
 <resources>
     <!-- Not translated -->
     <string name="app_name" translatable="false">BATTLE FITNESS</string>
-    <string name="email_hint" translatable="false">Example@gmail.com</string>
-    <string name="_28_09_2026" translatable="false">2000-01-31</string>
     <string name="lang_english" translatable="false">English</string>
     <string name="lang_afrikaans" translatable="false">Afrikaans</string>
     <string name="lang_zulu" translatable="false">isiZulu</string>
 
     <!-- Login and sign-up -->
-    <string name="password_hint">Enter Password</string>
-    <string name="forgot_password">Forgot Password?</string>
-    <string name="signUp_link">Sign Up</string>
-    <string name="login_link">Log In</string>
-    <string name="login">Login</string>
-    <string name="signupButton">Sign Up</string>
-    <string name="logo_name">Welcome to Battle Fitness</string>
-    <string name="login_with_google">Login With Google</string>
-    <string name="welcome_message">a fitness application that allows fitness tracking and friendly competition and interaction.</string>
-    <string name="terms_privacy_policy">By signing up, you agree to Battles\n<font color="#5B95F9">Terms of Use</font> and <font color="#5B95F9">Privacy Policy</font></string>
-    <string name="confirm_password">Confirm Password</string>
+    <string name="terms_privacy_policy">By signing up, you agree to the Battle Fitness\n<font color="#5B95F9">Terms of Use</font> and <font color="#5B95F9">Privacy Policy</font></string>
     <string name="enter_username">Enter Username</string>
     <string name="enter_surname">Enter Surname</string>
-    <string name="password">Password</string>
     <string name="enter_name">Enter Name</string>
-    <string name="email">Email</string>
     <string name="username">Username:</string>
-    <string name="birth_date">Birth Date:</string>
     <string name="surname">Surname:</string>
-    <string name="password_display">Password:</string>
     <string name="name">Name:</string>
-    <string name="email_sisplay">Email:</string>
-    <string name="already_a_member">Already a member?</string>
-    <string name="login_title">Account Login</string>
-    <string name="no_account_yet">Don\'t have an account yet?</string>
 
     <!-- Validation errors -->
     <string name="err_email_empty">Please enter your email</string>
@@ -69,7 +49,6 @@
     <string name="msg_logging_in">Logging in…</string>
     <string name="msg_signing_up">Creating account…</string>
     <string name="msg_reset_sent">If an account exists for that email, a password reset link has been sent.</string>
-    <string name="msg_enter_email_first">Enter your email above first, then tap Forgot Password.</string>
     <string name="msg_welcome_user">Welcome, %1$s!</string>
     <string name="btn_logout">Log out</string>
     <string name="btn_settings">Settings</string>
@@ -117,4 +96,40 @@
     <string name="theme_dark">Dark</string>
     <string name="theme_light">Light</string>
     <string name="theme_system">System</string>
+
+    <!-- Feature 1: login and sign-up -->
+    <string name="logo_description">Battle Fitness logo</string>
+    <string name="login_welcome_title">Welcome back</string>
+    <string name="login_welcome_subtitle">Log in to continue your training.</string>
+    <string name="field_email">Email</string>
+    <string name="field_password">Password</string>
+    <string name="field_confirm_password">Confirm password</string>
+    <string name="btn_login">Log in</string>
+    <string name="btn_continue_google">Continue with Google</string>
+    <string name="login_or">or</string>
+    <string name="login_forgot">Forgot password?</string>
+    <string name="login_new_here">New to Battle Fitness?</string>
+    <string name="btn_create_account">Create account</string>
+    <string name="signup_title">Create your account</string>
+    <string name="signup_step1">Step 1 of 2: your login</string>
+    <string name="signup_step2">Step 2 of 2: about you</string>
+    <string name="btn_next">Next</string>
+    <string name="strength_empty">Use at least 6 characters. Mix letters, numbers and symbols for a stronger password.</string>
+    <string name="strength_weak">Weak password</string>
+    <string name="strength_fair">Fair password</string>
+    <string name="strength_strong">Strong password</string>
+    <string name="field_username">Username</string>
+    <string name="field_first_name">First name</string>
+    <string name="field_surname">Surname</string>
+    <string name="field_birth_date">Birth date</string>
+    <string name="field_height">Height (cm)</string>
+    <string name="field_weight">Weight (kg)</string>
+    <string name="field_country">Country</string>
+    <string name="helper_birth">You must be at least 13 years old</string>
+    <string name="err_country_required">Please choose your country</string>
+    <string name="forgot_title">Reset your password</string>
+    <string name="forgot_subtitle">Enter your email and we will send you a link to choose a new password.</string>
+    <string name="btn_send_reset">Send reset link</string>
+    <string name="btn_back_to_login">Back to log in</string>
+    <string name="msg_sending">Sending…</string>
 </resources>

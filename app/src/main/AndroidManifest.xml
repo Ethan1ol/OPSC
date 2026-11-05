@@ -22,23 +22,16 @@
             android:name=".app.AppActivity"
             android:exported="false" />
 
-        <!-- Screens not rebuilt yet still use the legacy theme -->
+        <!-- Settings is not rebuilt yet and still uses the legacy theme -->
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
             android:theme="@style/Theme.BattleFitness.Legacy" />
+        <!-- Login, sign-up and password reset; the launcher screen -->
         <activity
-            android:name=".signUpDetailsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.BattleFitness.Legacy" />
-        <activity
-            android:name=".signUpSection"
-            android:exported="false"
-            android:theme="@style/Theme.BattleFitness.Legacy" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".auth.AuthActivity"
             android:exported="true"
-            android:theme="@style/Theme.BattleFitness.Legacy">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

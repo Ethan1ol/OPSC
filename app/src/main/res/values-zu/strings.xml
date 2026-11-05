@@ -1,30 +1,12 @@
 <resources>
     <!-- isiZulu -->
-    <string name="password_hint">Faka iphasiwedi</string>
-    <string name="forgot_password">Ukhohlwe iphasiwedi?</string>
-    <string name="signUp_link">Bhalisa</string>
-    <string name="login_link">Ngena</string>
-    <string name="login">Ngena</string>
-    <string name="signupButton">Bhalisa</string>
-    <string name="logo_name">Siyakwamukela ku-Battle Fitness</string>
-    <string name="login_with_google">Ngena nge-Google</string>
-    <string name="welcome_message">uhlelo lokulandelela ukuzivocavoca nokuncintisana nokuxhumana ngobungane.</string>
-    <string name="terms_privacy_policy">Ngokubhalisa, uyavuma ku-Battle\n<font color="#5B95F9">Imigomo Yokusebenzisa</font> kanye <font color="#5B95F9">Nenqubomgomo Yobumfihlo</font></string>
-    <string name="confirm_password">Qinisekisa iphasiwedi</string>
+    <string name="terms_privacy_policy">Ngokubhalisa, uyavuma ku-Battle Fitness\n<font color="#5B95F9">Imigomo Yokusebenzisa</font> kanye <font color="#5B95F9">Nenqubomgomo Yobumfihlo</font></string>
     <string name="enter_username">Faka igama lomsebenzisi</string>
     <string name="enter_surname">Faka isibongo</string>
-    <string name="password">Iphasiwedi</string>
     <string name="enter_name">Faka igama</string>
-    <string name="email">I-imeyili</string>
     <string name="username">Igama lomsebenzisi:</string>
-    <string name="birth_date">Usuku lokuzalwa:</string>
     <string name="surname">Isibongo:</string>
-    <string name="password_display">Iphasiwedi:</string>
     <string name="name">Igama:</string>
-    <string name="email_sisplay">I-imeyili:</string>
-    <string name="already_a_member">Usulilungu kakade?</string>
-    <string name="login_title">Ukungena ku-akhawunti</string>
-    <string name="no_account_yet">Awunayo i-akhawunti okwamanje?</string>
 
     <string name="err_email_empty">Sicela ufake i-imeyili yakho</string>
     <string name="err_email_invalid">Leli kheli le-imeyili alibonakali lilungile</string>
@@ -59,7 +41,6 @@
     <string name="msg_logging_in">Iyangena…</string>
     <string name="msg_signing_up">Iyakha i-akhawunti…</string>
     <string name="msg_reset_sent">Uma i-akhawunti ikhona kuleyo imeyili, kuthunyelwe isixhumanisi sokusetha kabusha iphasiwedi.</string>
-    <string name="msg_enter_email_first">Qala ngokufaka i-imeyili yakho ngenhla, bese uthinta Ukhohlwe iphasiwedi.</string>
     <string name="msg_welcome_user">Siyakwamukela, %1$s!</string>
     <string name="btn_logout">Phuma</string>
     <string name="btn_settings">Izilungiselelo</string>
@@ -102,4 +83,39 @@
     <string name="theme_dark">Mnyama</string>
     <string name="theme_light">Khanyayo</string>
     <string name="theme_system">Isistimu</string>
+
+    <string name="logo_description">Uphawu lwe-Battle Fitness</string>
+    <string name="login_welcome_title">Siyakwamukela futhi</string>
+    <string name="login_welcome_subtitle">Ngena ukuze uqhubeke nokuzivocavoca kwakho.</string>
+    <string name="field_email">I-imeyili</string>
+    <string name="field_password">Iphasiwedi</string>
+    <string name="field_confirm_password">Qinisekisa iphasiwedi</string>
+    <string name="btn_login">Ngena</string>
+    <string name="btn_continue_google">Qhubeka nge-Google</string>
+    <string name="login_or">noma</string>
+    <string name="login_forgot">Ukhohlwe iphasiwedi?</string>
+    <string name="login_new_here">Umusha ku-Battle Fitness?</string>
+    <string name="btn_create_account">Dala i-akhawunti</string>
+    <string name="signup_title">Dala i-akhawunti yakho</string>
+    <string name="signup_step1">Isinyathelo 1 kwezi-2: ukungena kwakho</string>
+    <string name="signup_step2">Isinyathelo 2 kwezi-2: ngawe</string>
+    <string name="btn_next">Okulandelayo</string>
+    <string name="strength_empty">Sebenzisa okungenani izinhlamvu eziyi-6. Hlanganisa izinhlamvu, izinombolo nezimpawu ukuze iphasiwedi iqine.</string>
+    <string name="strength_weak">Iphasiwedi ebuthaka</string>
+    <string name="strength_fair">Iphasiwedi emaphakathi</string>
+    <string name="strength_strong">Iphasiwedi eqinile</string>
+    <string name="field_username">Igama lomsebenzisi</string>
+    <string name="field_first_name">Igama</string>
+    <string name="field_surname">Isibongo</string>
+    <string name="field_birth_date">Usuku lokuzalwa</string>
+    <string name="field_height">Ubude (cm)</string>
+    <string name="field_weight">Isisindo (kg)</string>
+    <string name="field_country">Izwe</string>
+    <string name="helper_birth">Kumele ube nezinyaka okungenani eziyi-13</string>
+    <string name="err_country_required">Sicela ukhethe izwe lakho</string>
+    <string name="forgot_title">Setha kabusha iphasiwedi yakho</string>
+    <string name="forgot_subtitle">Faka i-imeyili yakho sizokuthumelela isixhumanisi sokukhetha iphasiwedi entsha.</string>
+    <string name="btn_send_reset">Thumela isixhumanisi</string>
+    <string name="btn_back_to_login">Buyela ekungeneni</string>
+    <string name="msg_sending">Iyathumela…</string>
 </resources>

@@ -10,7 +10,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.opsc.BuildConfig
-import com.example.opsc.MainActivity
+import com.example.opsc.auth.AuthActivity
 import com.example.opsc.R
 import com.example.opsc.SettingsActivity
 import com.example.opsc.auth.AuthRepository
@@ -107,7 +107,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             Log.i(TAG, "User confirmed log out")
             auth.logout()
             GoogleSignInHelper.clearState(requireActivity())
-            startActivity(Intent(requireContext(), MainActivity::class.java).apply {
+            startActivity(Intent(requireContext(), AuthActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             })
             requireActivity().finish()

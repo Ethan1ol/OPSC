@@ -58,3 +58,11 @@ Entries are appended after every piece.
 - **Reviewed/changed by students:** Ethan asked for dark mode as the standard with an option to change back, and for the thin-bordered Profile buttons to be a different, clearer colour.
 - **Bugs debugged:** none.
 - **Images/text generated:** none (screenshot is a real emulator capture).
+
+## 2026-11-05 – Feature 1: Register and log in
+- **Generated:** `PasswordStrengthRater` and 10 unit tests; `AuthViewModel`; `AuthActivity` with a navigation graph; `LoginFragment`, `SignUpAccountFragment`, `SignUpProfileFragment`, `ForgotPasswordFragment` and their layouts; calendar icon; dropdown style; English, Afrikaans and isiZulu text for every new string. The old login and sign-up activities and layouts were deleted.
+- **Reviewed/changed by students:** (to be completed) Ethan specified the two-step sign-up, the fields, the minimum age of 13, the strength hint and the show/hide toggle.
+- **Bugs debugged:** unit labels (cm, kg) only showed once a field was focused, so they were moved into the field labels; a typo in the terms text ("Battles"); an unused-string clean-up that would have removed strings the Settings screen still needs (caught before building).
+- **How it was tested:** installed on the emulator and driven with adb: session persistence (opened straight into the app), log out with confirmation, login screen, sign-up step 1 validation errors and strength bar, step 2 form, date picker limits, back navigation. Not tested: real registration, login, password-reset email and Google sign-in against Firebase.
+- **Images/text generated:** no images. Screenshots in `docs/images/f1-*.png` are real emulator captures.
+

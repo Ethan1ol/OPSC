@@ -97,6 +97,15 @@
         <item name="android:layout_marginTop">@dimen/space_sm</item>
     </style>
 
+    <!-- Dropdown (exposed menu) version of the text input, used for country -->
+    <style name="Widget.Battle.TextInputLayout.Dropdown" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxCornerRadiusTopStart">@dimen/radius_control</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_control</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_control</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_control</item>
+        <item name="android:layout_marginTop">@dimen/space_sm</item>
+    </style>
+
     <!-- ===== Cards (16dp corners, subtle elevation) ===== -->
     <style name="Widget.Battle.Card" parent="Widget.Material3.CardView.Elevated">
         <item name="cardCornerRadius">@dimen/radius_card</item>

@@ -1,30 +1,12 @@
 <resources>
     <!-- Afrikaans -->
-    <string name="password_hint">Voer wagwoord in</string>
-    <string name="forgot_password">Wagwoord vergeet?</string>
-    <string name="signUp_link">Registreer</string>
-    <string name="login_link">Teken in</string>
-    <string name="login">Teken in</string>
-    <string name="signupButton">Registreer</string>
-    <string name="logo_name">Welkom by Battle Fitness</string>
-    <string name="login_with_google">Teken in met Google</string>
-    <string name="welcome_message">\'n fiksheidsprogram vir fiksheidsopsporing en vriendskaplike kompetisie en interaksie.</string>
-    <string name="terms_privacy_policy">Deur te registreer, stem jy in tot Battle se\n<font color="#5B95F9">Gebruiksvoorwaardes</font> en <font color="#5B95F9">Privaatheidsbeleid</font></string>
-    <string name="confirm_password">Bevestig wagwoord</string>
+    <string name="terms_privacy_policy">Deur te registreer, stem jy in tot Battle Fitness se\n<font color="#5B95F9">Gebruiksvoorwaardes</font> en <font color="#5B95F9">Privaatheidsbeleid</font></string>
     <string name="enter_username">Voer gebruikersnaam in</string>
     <string name="enter_surname">Voer van in</string>
-    <string name="password">Wagwoord</string>
     <string name="enter_name">Voer naam in</string>
-    <string name="email">E-pos</string>
     <string name="username">Gebruikersnaam:</string>
-    <string name="birth_date">Geboortedatum:</string>
     <string name="surname">Van:</string>
-    <string name="password_display">Wagwoord:</string>
     <string name="name">Naam:</string>
-    <string name="email_sisplay">E-pos:</string>
-    <string name="already_a_member">Reeds \'n lid?</string>
-    <string name="login_title">Rekeninginteken</string>
-    <string name="no_account_yet">Het jy nog nie \'n rekening nie?</string>
 
     <string name="err_email_empty">Voer asseblief jou e-pos in</string>
     <string name="err_email_invalid">Daardie e-posadres lyk nie reg nie</string>
@@ -59,7 +41,6 @@
     <string name="msg_logging_in">Teken tans in…</string>
     <string name="msg_signing_up">Skep tans rekening…</string>
     <string name="msg_reset_sent">As daar \'n rekening vir daardie e-pos bestaan, is \'n skakel om jou wagwoord terug te stel gestuur.</string>
-    <string name="msg_enter_email_first">Voer eers jou e-pos hierbo in en tik dan Wagwoord vergeet.</string>
     <string name="msg_welcome_user">Welkom, %1$s!</string>
     <string name="btn_logout">Teken uit</string>
     <string name="btn_settings">Instellings</string>
@@ -102,4 +83,39 @@
     <string name="theme_dark">Donker</string>
     <string name="theme_light">Lig</string>
     <string name="theme_system">Stelsel</string>
+
+    <string name="logo_description">Battle Fitness-logo</string>
+    <string name="login_welcome_title">Welkom terug</string>
+    <string name="login_welcome_subtitle">Teken in om met jou oefening voort te gaan.</string>
+    <string name="field_email">E-pos</string>
+    <string name="field_password">Wagwoord</string>
+    <string name="field_confirm_password">Bevestig wagwoord</string>
+    <string name="btn_login">Teken in</string>
+    <string name="btn_continue_google">Gaan voort met Google</string>
+    <string name="login_or">of</string>
+    <string name="login_forgot">Wagwoord vergeet?</string>
+    <string name="login_new_here">Nuut by Battle Fitness?</string>
+    <string name="btn_create_account">Skep rekening</string>
+    <string name="signup_title">Skep jou rekening</string>
+    <string name="signup_step1">Stap 1 van 2: jou aanmelding</string>
+    <string name="signup_step2">Stap 2 van 2: oor jou</string>
+    <string name="btn_next">Volgende</string>
+    <string name="strength_empty">Gebruik ten minste 6 karakters. Meng letters, syfers en simbole vir \'n sterker wagwoord.</string>
+    <string name="strength_weak">Swak wagwoord</string>
+    <string name="strength_fair">Redelike wagwoord</string>
+    <string name="strength_strong">Sterk wagwoord</string>
+    <string name="field_username">Gebruikersnaam</string>
+    <string name="field_first_name">Voornaam</string>
+    <string name="field_surname">Van</string>
+    <string name="field_birth_date">Geboortedatum</string>
+    <string name="field_height">Lengte (cm)</string>
+    <string name="field_weight">Gewig (kg)</string>
+    <string name="field_country">Land</string>
+    <string name="helper_birth">Jy moet ten minste 13 jaar oud wees</string>
+    <string name="err_country_required">Kies asseblief jou land</string>
+    <string name="forgot_title">Stel jou wagwoord terug</string>
+    <string name="forgot_subtitle">Voer jou e-pos in en ons stuur jou \'n skakel om \'n nuwe wagwoord te kies.</string>
+    <string name="btn_send_reset">Stuur terugstelskakel</string>
+    <string name="btn_back_to_login">Terug na aanmelding</string>
+    <string name="msg_sending">Stuur tans…</string>
 </resources>
