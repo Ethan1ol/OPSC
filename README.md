@@ -72,7 +72,8 @@ These screenshots are from the live Firebase console and show that the app reall
 
 **Clubs collection:** one club document with its invite code, the list of member ids (`memberIds`), the owner (`ownerId`) and the `status`, which is `active` because the league has started. The `fixtures` and `standings` sub-collections sit inside the club.
 
-![Cloud Firestore clubs collection](docs/images/firestore-clubs.png)
+![Cloud Firestore clubs collection]<img width="1351" height="997" alt="image" src="https://github.com/user-attachments/assets/5b2c8360-64ae-4f74-a061-b517b909d354" />
+
 
 **Users collection:** one document for each registered user, with the profile and settings (name, username, country, height, language, units, monthly goal, push switch and push token). The `workouts` and `notifications` sub-collections sit inside the user.
 
