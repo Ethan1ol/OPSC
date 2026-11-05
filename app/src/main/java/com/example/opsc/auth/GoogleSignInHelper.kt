@@ -15,14 +15,11 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import kotlinx.coroutines.CancellationException
 
-/**
- * Google single sign-on using Android Credential Manager. It shows the Google account picker,
- * gets a Google ID token, and hands it to [AuthRepository] to sign in to Firebase.
- */
+/** Google sign-in using Credential Manager. Gets a Google token and signs in to Firebase. */
 object GoogleSignInHelper {
     private const val TAG = "GoogleSignIn"
 
-    /** Result of showing the Google account picker. */
+    /** Result of the account picker. */
     sealed interface TokenResult {
         data class Token(val idToken: String) : TokenResult
         data class Error(val error: AuthError) : TokenResult
@@ -35,7 +32,7 @@ object GoogleSignInHelper {
         return try {
             val option = GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
-                // Generated at build time from google-services.json (the web OAuth client).
+                // Generated from google-services.json.
                 .setServerClientId(activity.getString(R.string.default_web_client_id))
                 .build()
             val request = GetCredentialRequest.Builder().addCredentialOption(option).build()
@@ -69,14 +66,14 @@ object GoogleSignInHelper {
         }
     }
 
-    /** Shows the picker, then signs in to Firebase with the chosen Google account. */
+    /** Shows the picker, then signs in to Firebase. */
     suspend fun signIn(activity: Activity, repository: AuthRepository): AuthOutcome =
         when (val result = fetchIdToken(activity)) {
             is TokenResult.Token -> repository.signInWithGoogleIdToken(result.idToken)
             is TokenResult.Error -> AuthOutcome.Failure(result.error)
         }
 
-    /** Forgets the chosen Google account so the picker appears again after logout. */
+    /** Forgets the Google account so the picker shows again. */
     suspend fun clearState(activity: Activity) {
         try {
             CredentialManager.create(activity).clearCredentialState(ClearCredentialStateRequest())

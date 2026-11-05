@@ -30,17 +30,13 @@ import com.example.opsc.workouts.WorkoutsViewModel
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.launch
 
-/**
- * Home tab (the dashboard): a greeting, this month's workouts, day streak and total reps, the
- * monthly goal, a prompt to join a club (club cards arrive with the clubs feature) and a shortcut
- * to log a workout. Numbers update live from the phone's database, so they work offline.
- */
+/** Home tab: greeting, this month's stats, monthly goal, club cards and a shortcut to log a workout. Works offline. */
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private val auth = AuthRepository()
     private val viewModel: WorkoutsViewModel by activityViewModels()
     private val clubsViewModel: ClubsViewModel by activityViewModels()
 
-    // Registered here (before the fragment starts), as Android requires.
+    // Must be registered before the fragment starts.
     private val requestPush = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         view?.findViewById<View>(R.id.pushPromptCard)?.visibility = View.GONE
         NotificationPrefs.dismissPrompt(requireContext())
@@ -59,13 +55,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewLifecycleOwner.lifecycleScope.launch {
             val profile = auth.loadProfile(user.uid) ?: return@launch
             if (profile.username.isNotEmpty()) greeting.text = getString(R.string.home_greeting, profile.username)
-            // Restore the language saved in the profile (e.g. after logging in on a new phone).
+            // Restore the saved language (for example on a new phone).
             if (profile.language.isNotEmpty()) LanguageManager.apply(profile.language)
-            // The notification switch follows the profile (so it is the same on every phone).
+            // Keep the notification switch the same on every phone.
             NotificationPrefs.setEnabled(requireContext(), profile.pushEnabled)
         }
 
-        // Sensible moment to ask for the notification permission: after login, once, with an explanation.
+        // Ask for notification permission once, after login.
         val pushCard = view.findViewById<View>(R.id.pushPromptCard)
         val showPrompt = PushPermission.needsRuntimePermission() && !PushPermission.isGranted(requireContext()) && !NotificationPrefs.promptDismissed(requireContext())
         pushCard.visibility = if (showPrompt) View.VISIBLE else View.GONE
@@ -85,7 +81,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val goalText = view.findViewById<TextView>(R.id.dashGoalText)
         val goalBar = view.findViewById<LinearProgressIndicator>(R.id.dashGoalBar)
 
-        // My clubs as horizontal cards (or the join-a-club prompt).
+        // Show my clubs as cards, or a prompt to join one.
         val clubsList = view.findViewById<RecyclerView>(R.id.dashClubsList)
         val clubsPrompt = view.findViewById<TextView>(R.id.dashClubsPrompt)
         val clubAdapter = ClubAdapter(R.layout.item_club_card) { openClub(it.id) }

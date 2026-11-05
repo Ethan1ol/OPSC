@@ -15,10 +15,7 @@ import java.util.Date
 import java.util.Locale
 import com.google.android.material.R as MaterialR
 
-/**
- * Shows the workout list. Each card has the exercise, sets x reps and minutes, optional notes,
- * the date, and a badge saying whether the workout is still waiting to sync or already synced.
- */
+/** The workout list. Each card shows the exercise, sets, reps, minutes, notes, date and a Pending or Synced badge. */
 class WorkoutAdapter : ListAdapter<Workout, WorkoutAdapter.Holder>(Diff) {
 
     class Holder(view: View) : RecyclerView.ViewHolder(view) {

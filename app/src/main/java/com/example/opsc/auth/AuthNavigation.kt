@@ -17,10 +17,7 @@ import kotlinx.coroutines.launch
 
 private const val TAG = "AuthNavigation"
 
-/**
- * Wires a "Continue with Google" button: opens the Google account picker, then hands the result to
- * the [AuthViewModel]. Used by both the login and the sign-up screens so they behave identically.
- */
+/** Sets up the Google button. Used by both login and sign-up. */
 fun Fragment.bindGoogleButton(button: MaterialButton, viewModel: AuthViewModel) {
     button.setOnClickListener {
         if (viewModel.loading.value) return@setOnClickListener
@@ -30,16 +27,13 @@ fun Fragment.bindGoogleButton(button: MaterialButton, viewModel: AuthViewModel) 
             viewModel.googleFinished(outcome)
         }
     }
-    // If the screen is destroyed while the account picker is open, do not leave the form stuck on "busy".
+    // If the screen closes while the picker is open, stop showing busy.
     viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
         if (event == Lifecycle.Event.ON_DESTROY && viewModel.googleInFlight) viewModel.googleAbandoned()
     })
 }
 
-/**
- * Called when a sign-in succeeded. A user with no profile yet goes to the "finish your profile"
- * screen; everyone else goes into the app.
- */
+/** After sign-in: new Google users finish their profile, everyone else enters the app. */
 fun Fragment.handleLoggedIn(event: AuthEvent.LoggedIn) {
     if (event.needsProfile) {
         Log.i(TAG, "Signed in but no profile yet: opening finish-profile")
@@ -54,7 +48,7 @@ fun Fragment.handleLoggedIn(event: AuthEvent.LoggedIn) {
     }
 }
 
-/** Signs out (and forgets the chosen Google account), then returns to the login screen. */
+/** Signs out and returns to login. */
 fun Fragment.logoutToLogin() {
     val activity = requireActivity()
     activity.lifecycleScope.launch {
@@ -67,10 +61,7 @@ fun Fragment.logoutToLogin() {
     }
 }
 
-/**
- * Shows a failure from the view model. Cancelling Google sign-in is not an error, so it gets a
- * plain message; other problems get a red one.
- */
+/** Shows an error. Cancelling Google sign-in gets a plain message. */
 fun showAuthFailure(root: View, error: AuthError) {
     if (error == AuthError.GOOGLE_CANCELLED) UiMessages.info(root, error.messageRes)
     else UiMessages.error(root, error.messageRes)

@@ -26,7 +26,7 @@ class StateLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    /** The state currently displayed. */
+    /** The state now shown. */
     enum class State { CONTENT, LOADING, EMPTY, ERROR }
 
     private val overlay: View = LayoutInflater.from(context).inflate(R.layout.view_state_overlay, this, false)
@@ -36,7 +36,7 @@ class StateLayout @JvmOverloads constructor(
     private val message: TextView = overlay.findViewById(R.id.stateMessage)
     private val action: MaterialButton = overlay.findViewById(R.id.stateAction)
 
-    /** The state last requested; useful for tests and for restoring a screen. */
+    /** The last requested state. */
     var state: State = State.CONTENT
         private set
 
@@ -49,13 +49,13 @@ class StateLayout @JvmOverloads constructor(
         overlay.visibility = GONE
     }
 
-    /** Shows the normal content views. */
+    /** Shows the normal content. */
     fun showContent() = apply(State.CONTENT)
 
-    /** Shows a spinner in place of the content. */
+    /** Shows a spinner instead of the content. */
     fun showLoading() = apply(State.LOADING)
 
-    /** Shows an icon with a short message, and an optional action button (for example "Create a club"). */
+    /** Shows an icon and message, with an optional action button. */
     fun showEmpty(
         @DrawableRes iconRes: Int,
         @StringRes messageRes: Int,
@@ -66,13 +66,13 @@ class StateLayout @JvmOverloads constructor(
         apply(State.EMPTY)
     }
 
-    /** Shows an error message with a Retry button. */
+    /** Shows an error with a Retry button. */
     fun showError(@StringRes messageRes: Int = R.string.error_generic, onRetry: () -> Unit) {
         bindMessage(R.drawable.ic_state_error, context.getString(messageRes), R.string.action_retry, onRetry)
         apply(State.ERROR)
     }
 
-    /** Shows the "you are offline" error, with Retry. */
+    /** Shows the offline error with Retry. */
     fun showOffline(onRetry: () -> Unit) {
         bindMessage(R.drawable.ic_state_offline, context.getString(R.string.error_offline), R.string.action_retry, onRetry)
         apply(State.ERROR)

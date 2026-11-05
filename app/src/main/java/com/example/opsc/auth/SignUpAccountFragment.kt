@@ -19,11 +19,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-/**
- * Sign-up step 1 of 2: email, password and confirmation. Shows a live strength hint while the
- * user types. The Firebase account is only created at the end of step 2, so abandoning the
- * sign-up leaves nothing behind.
- */
+/** Sign-up step 1 of 2: email, password and confirmation, with a live strength hint. The account is only created at the end of step 2. */
 class SignUpAccountFragment : Fragment(R.layout.fragment_signup_account) {
     private val viewModel: AuthViewModel by activityViewModels()
 
@@ -37,14 +33,14 @@ class SignUpAccountFragment : Fragment(R.layout.fragment_signup_account) {
         val strengthBar = view.findViewById<LinearProgressIndicator>(R.id.signupStrengthBar)
         val strengthText = view.findViewById<TextView>(R.id.signupStrengthText)
 
-        // Coming back from step 2 (or rotating): refill from the saved answers.
+        // Refill the fields when coming back from step 2 or after rotation.
         if (email.text.isNullOrEmpty() && viewModel.pendingEmail.isNotEmpty()) email.setText(viewModel.pendingEmail)
         if (password.text.isNullOrEmpty() && viewModel.pendingPassword.isNotEmpty()) {
             password.setText(viewModel.pendingPassword)
             confirm.setText(viewModel.pendingPassword)
         }
 
-        // Step 2 reported that the email is already taken.
+        // Step 2 said the email is already taken.
         if (viewModel.emailAlreadyUsed) {
             emailLayout.error = getString(R.string.auth_err_email_in_use)
             viewModel.emailAlreadyUsed = false
@@ -79,7 +75,7 @@ class SignUpAccountFragment : Fragment(R.layout.fragment_signup_account) {
         view.findViewById<View>(R.id.signupNext).setOnClickListener { next() }
         confirm.setOnEditorActionListener { _, _, _ -> next(); true }
 
-        // Google sign-up uses the same flow as login: a new Google user finishes their profile next.
+        // Google sign-up works like login: a new Google user finishes their profile next.
         val googleButton = view.findViewById<MaterialButton>(R.id.signupGoogle)
         bindGoogleButton(googleButton, viewModel)
         viewLifecycleOwner.lifecycleScope.launch {
@@ -98,7 +94,7 @@ class SignUpAccountFragment : Fragment(R.layout.fragment_signup_account) {
         }
     }
 
-    /** Updates the strength bar (red, orange, green) and the hint text under the password field. */
+    /** Updates the strength bar and the hint under the password field. */
     private fun showStrength(root: View, bar: LinearProgressIndicator, text: TextView, strength: PasswordStrength) {
         val (progress, colorAttr, label) = when (strength) {
             PasswordStrength.EMPTY -> Triple(0, com.google.android.material.R.attr.colorOutline, R.string.strength_empty)

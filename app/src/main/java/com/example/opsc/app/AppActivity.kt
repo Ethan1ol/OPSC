@@ -35,12 +35,7 @@ import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 
-/**
- * The main shell of the app after login: a top app bar (with the notification bell and its unread
- * badge), an offline banner, the current screen (a fragment hosted by the Navigation component) and
- * a bottom navigation bar with Home, Clubs, Workouts and Profile. Back always returns to Home first,
- * then exits. It also opens the right screen when a notification is tapped.
- */
+/** Main screen after login: top bar with a notification bell, offline banner, the current page and the bottom tabs. Also opens the right page when a notification is tapped. */
 @androidx.annotation.OptIn(ExperimentalBadgeUtils::class)
 class AppActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -51,7 +46,7 @@ class AppActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Without a signed-in user there is nothing to show: go to the login screen.
+        // Not signed in: go to the login screen.
         if (AuthRepository().currentUser == null) {
             Log.w(TAG, "No signed-in user, returning to login")
             startActivity(Intent(this, AuthActivity::class.java).apply {
@@ -67,7 +62,7 @@ class AppActivity : AppCompatActivity() {
 
         val navHost = supportFragmentManager.findFragmentById(R.id.navHost) as NavHostFragment
         navController = navHost.navController
-        // The four tabs are "top level": they show a title but no back arrow.
+        // The four tabs have no back arrow.
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.homeFragment, R.id.clubsFragment, R.id.workoutsFragment, R.id.profileFragment)
         )
@@ -76,10 +71,10 @@ class AppActivity : AppCompatActivity() {
 
         watchConnectivity(findViewById(R.id.offlineBanner))
 
-        // Keep this phone's push token on the user's profile (when notifications are on).
+        // Save this phone's push token on the user's profile.
         lifecycleScope.launch { PushTokenManager.register(this@AppActivity) }
 
-        // Opened by tapping a notification? Go to the right screen.
+        // If opened from a notification, go to that page.
         if (savedInstanceState == null) handleNotificationIntent(intent)
     }
 
@@ -89,7 +84,7 @@ class AppActivity : AppCompatActivity() {
         handleNotificationIntent(intent)
     }
 
-    /** A tapped notification carries the club id (open that club) or just a type (open the list). */
+    /** Opens the club (or the notification list) from a tapped notification. */
     private fun handleNotificationIntent(intent: Intent?) {
         val clubId = intent?.getStringExtra(NotificationHelper.EXTRA_CLUB_ID)
         val type = intent?.getStringExtra(NotificationHelper.EXTRA_TYPE)
@@ -104,7 +99,7 @@ class AppActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.app_toolbar_menu, menu)
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-        // The badge can only be attached after the toolbar has laid out its menu.
+        // Add the unread badge once the toolbar menu is ready.
         toolbar.post {
             val newBadge = BadgeDrawable.create(this)
             BadgeUtils.attachBadgeDrawable(newBadge, toolbar, R.id.action_notifications)
@@ -131,7 +126,7 @@ class AppActivity : AppCompatActivity() {
         else -> super.onOptionsItemSelected(item)
     }
 
-    /** Shows the offline banner whenever the phone has no internet. */
+    /** Shows a banner when there is no internet. */
     private fun watchConnectivity(banner: TextView) {
         val monitor = ConnectivityMonitor(this)
         lifecycleScope.launch {

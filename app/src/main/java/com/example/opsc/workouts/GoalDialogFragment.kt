@@ -12,7 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-/** Small dialog to change the monthly workout goal (1 to 100). It survives rotation. */
+/** Dialog to change the monthly goal (1 to 100). Survives rotation. */
 class GoalDialogFragment : DialogFragment() {
     private val viewModel: WorkoutsViewModel by activityViewModels()
 

@@ -2,10 +2,10 @@ package com.example.opsc.clubs
 
 import kotlin.random.Random
 
-/** One match to be played: two players and the member who referees it. */
+/** One match to play: two players and a referee. */
 data class FixtureSpec(val round: Int, val player1Id: String, val player2Id: String, val refereeId: String)
 
-/** A finished match as the standings calculation sees it. Scores are null until a referee has verified the result. */
+/** A finished match for the standings. Scores are null until the referee confirms. */
 data class MatchResult(val player1Id: String, val player2Id: String, val player1Score: Int?, val player2Score: Int?, val verified: Boolean)
 
 /** One member's row in the league table. */
@@ -14,11 +14,7 @@ data class StandingRow(val uid: String, val played: Int, val won: Int, val drawn
 /** How a match ended. */
 enum class Outcome { PLAYER1_WIN, PLAYER2_WIN, DRAW }
 
-/**
- * The rules of the Battle Fitness league, in pure Kotlin so they can be unit tested:
- * every member plays every other member three times, a member who is not playing referees,
- * a win is 3 points, a draw 1 each, a loss 0, and most points when all fixtures are verified wins.
- */
+/** The league rules, in plain Kotlin so they can be unit tested. Everyone plays everyone three times, a member not playing is the referee, a win is 3 points, a draw 1 each, a loss 0. Most points at the end wins. */
 object LeagueEngine {
     const val ROUNDS = 3
     const val POINTS_WIN = 3
@@ -28,22 +24,18 @@ object LeagueEngine {
     const val MAX_MEMBERS = 12
     const val MAX_SCORE = 999
 
-    /** A league can start with at least 3 members (two players plus a referee) and at most [MAX_MEMBERS]. */
+    /** A league needs 3 to MAX_MEMBERS members (two players and a referee). */
     fun canStart(memberCount: Int): Boolean = memberCount in MIN_MEMBERS..MAX_MEMBERS
 
-    /** How many fixtures a league of [memberCount] members has: every pair, three times. */
+    /** Number of fixtures: every pair, three times. */
     fun fixtureCount(memberCount: Int): Int = ROUNDS * memberCount * (memberCount - 1) / 2
 
-    /**
-     * Creates every fixture: for each of the 3 rounds, every pair of members plays once (home and
-     * away swap each round). The referee is a member who is not in the match, chosen to spread the
-     * refereeing evenly.
-     */
+    /** Creates every fixture. In each of 3 rounds every pair plays once. The referee is a member not in the match, chosen to share refereeing evenly. */
     fun generateFixtures(memberIds: List<String>): List<FixtureSpec> {
         val members = memberIds.distinct()
         require(members.size >= MIN_MEMBERS) { "A league needs at least $MIN_MEMBERS members" }
         val refereeCount = members.associateWith { 0 }.toMutableMap()
-        // When two candidates have refereed equally often, pick the one who refereed longest ago.
+        // If two members have refereed equally, pick the one who refereed longest ago.
         val lastTurn = members.associateWith { -1 }.toMutableMap()
         var turn = 0
         val fixtures = mutableListOf<FixtureSpec>()
@@ -62,11 +54,7 @@ object LeagueEngine {
         return balanceReferees(members, fixtures)
     }
 
-    /**
-     * Evens out the refereeing: while the busiest referee has done more than one match more than the
-     * quietest, move one of the busiest referee's matches (that the quietest member is not playing in)
-     * to the quietest member.
-     */
+    /** Evens out refereeing: moves matches from the busiest referee to the quietest until the difference is at most one. */
     private fun balanceReferees(members: List<String>, fixtures: List<FixtureSpec>): List<FixtureSpec> {
         val referees = fixtures.map { it.refereeId }.toMutableList()
         val counts = members.associateWith { 0 }.toMutableMap()
@@ -85,7 +73,7 @@ object LeagueEngine {
         return fixtures.mapIndexed { index, fixture -> fixture.copy(refereeId = referees[index]) }
     }
 
-    /** Is this a score a referee can enter? Both must be whole numbers from 0 to [MAX_SCORE]. */
+    /** A score must be a whole number from 0 to MAX_SCORE. */
     fun isValidScore(score: Int?): Boolean = score != null && score in 0..MAX_SCORE
 
     /** Who won, from the two scores. */
@@ -95,7 +83,7 @@ object LeagueEngine {
         else -> Outcome.DRAW
     }
 
-    /** The winner's id for a verified match, or null for a draw. */
+    /** The winner's id, or null for a draw. */
     fun winnerId(player1Id: String, player2Id: String, player1Score: Int, player2Score: Int): String? =
         when (outcome(player1Score, player2Score)) {
             Outcome.PLAYER1_WIN -> player1Id
@@ -103,10 +91,7 @@ object LeagueEngine {
             Outcome.DRAW -> null
         }
 
-    /**
-     * Builds the league table from the matches. Only verified matches count. Sorted by points, then
-     * wins, then (so the order never jumps around) by id. Every member appears, even with no matches.
-     */
+    /** Builds the league table from verified matches. Sorted by points, then wins, then id. Every member appears. */
     fun computeStandings(memberIds: List<String>, results: List<MatchResult>): List<StandingRow> {
         val won = memberIds.associateWith { 0 }.toMutableMap()
         val drawn = memberIds.associateWith { 0 }.toMutableMap()
@@ -130,7 +115,7 @@ object LeagueEngine {
         }.sortedWith(compareByDescending<StandingRow> { it.points }.thenByDescending { it.won }.thenBy { it.uid })
     }
 
-    /** Rank of each row, where rows with the same points and wins share a rank (1, 1, 3, ...). */
+    /** Rank of each row. Rows with the same points and wins share a rank (1, 1, 3). */
     fun ranks(sorted: List<StandingRow>): List<Int> {
         val result = mutableListOf<Int>()
         for ((index, row) in sorted.withIndex()) {
@@ -140,33 +125,33 @@ object LeagueEngine {
         return result
     }
 
-    /** The league is complete when there are fixtures and every one has been verified. */
+    /** The league is complete when every fixture is verified. */
     fun isComplete(totalFixtures: Int, verifiedFixtures: Int): Boolean = totalFixtures > 0 && verifiedFixtures == totalFixtures
 
-    /** The champion(s): everyone sharing first place in a finished league. */
+    /** The champions: everyone sharing first place in a finished league. */
     fun champions(sorted: List<StandingRow>): List<StandingRow> {
         val rank = ranks(sorted)
         return sorted.filterIndexed { index, _ -> rank[index] == 1 }
     }
 }
 
-/** Invite codes: 6 characters, easy to read out loud (no 0/O or 1/I/L). */
+/** Invite codes: 6 easy-to-read characters (no 0, O, 1, I or L). */
 object InviteCode {
     const val LENGTH = 6
     const val ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
 
     fun generate(random: Random = Random.Default): String = buildString { repeat(LENGTH) { append(ALPHABET[random.nextInt(ALPHABET.length)]) } }
 
-    /** Cleans what the user typed: upper case, and spaces or dashes removed. */
+    /** Cleans the typed code: upper case, no spaces or dashes. */
     fun normalise(input: String): String = input.uppercase().filter { it.isLetterOrDigit() }
 
     fun isValid(code: String): Boolean = code.length == LENGTH && code.all { it in ALPHABET }
 }
 
-/** Why a club form is invalid. */
+/** Why the create-club form is invalid. */
 enum class ClubError { NAME_TOO_SHORT, NAME_TOO_LONG, DESCRIPTION_TOO_LONG }
 
-/** Validation for the create-club form. */
+/** Checks the create-club form. */
 object ClubValidator {
     const val MIN_NAME = 3
     const val MAX_NAME = 40

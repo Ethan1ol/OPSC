@@ -21,11 +21,11 @@ data class Workout(
     val syncState: SyncState
 )
 
-/** Talks to Firestore for workouts: `users/{uid}/workouts/{workoutId}` (matches firestore.rules). */
+/** Talks to Firestore for workouts at users/{uid}/workouts/{workoutId}. */
 class WorkoutRemote(private val db: FirebaseFirestore = FirebaseFirestore.getInstance()) {
     private fun collection(uid: String) = db.collection("users").document(uid).collection("workouts")
 
-    /** Writes the workout under its UUID, so running this twice changes nothing. Returns false on timeout. */
+    /** Writes the workout under its UUID, so running twice changes nothing. Returns false on timeout. */
     suspend fun upsert(uid: String, e: WorkoutEntity): Boolean = withTimeoutOrNull(TIMEOUT_MS) {
         collection(uid).document(e.id).set(
             mapOf(
@@ -42,13 +42,13 @@ class WorkoutRemote(private val db: FirebaseFirestore = FirebaseFirestore.getIns
         true
     } ?: false
 
-    /** Deletes the workout; deleting one that does not exist is fine. Returns false on timeout. */
+    /** Deletes the workout. Deleting a missing one is fine. Returns false on timeout. */
     suspend fun delete(uid: String, id: String): Boolean = withTimeoutOrNull(TIMEOUT_MS) {
         collection(uid).document(id).delete().await()
         true
     } ?: false
 
-    /** Reads up to [limit] workouts. [complete] is false if there may be more than were returned. */
+    /** Reads up to limit workouts. complete is false if there may be more. */
     suspend fun fetchAll(uid: String, limit: Int = FETCH_LIMIT): Pair<List<WorkoutEntity>, Boolean>? =
         withTimeoutOrNull(TIMEOUT_MS) {
             val snapshot = collection(uid).limit(limit.toLong()).get().await()
@@ -76,23 +76,20 @@ class WorkoutRemote(private val db: FirebaseFirestore = FirebaseFirestore.getIns
     }
 }
 
-/**
- * The single place the app reads and writes workouts. Everything is saved to the phone's Room
- * database FIRST (even when online); a WorkManager job then syncs with Firestore.
- */
+/** The one place the app reads and writes workouts. Everything is saved to the phone's database first, then a WorkManager job syncs with Firestore. */
 class WorkoutRepository private constructor(private val appContext: Context) {
     private val dao = AppDatabase.get(appContext).workoutDao()
     val remote = WorkoutRemote()
     val localDao: WorkoutDao get() = dao
 
-    /** The user's workouts, newest first, updating live. Deleted-but-not-yet-synced ones are hidden. */
+    /** The user's workouts, newest first, live. Workouts waiting to be deleted are hidden. */
     fun observe(uid: String): Flow<List<Workout>> = dao.observeVisible(uid).map { rows -> rows.map { it.toWorkout() } }
 
     fun observePendingCount(uid: String): Flow<Int> = dao.observePendingCount(uid)
 
     fun observeRecentExercises(uid: String): Flow<List<String>> = dao.observeRecentExercises(uid)
 
-    /** Saves a new workout on the phone immediately and schedules a sync. */
+    /** Saves a new workout on the phone at once and schedules a sync. */
     suspend fun add(uid: String, input: NewWorkout, nowMillis: Long = System.currentTimeMillis()): String {
         val id = UUID.randomUUID().toString()
         dao.upsert(
@@ -107,14 +104,14 @@ class WorkoutRepository private constructor(private val appContext: Context) {
         return id
     }
 
-    /** Hides the workout now and queues the delete for the server, even if the phone is offline. */
+    /** Hides the workout now and queues the delete for the server, even when offline. */
     suspend fun delete(id: String) {
         dao.markPendingDelete(id, System.currentTimeMillis())
         Log.i(TAG, "Workout $id deleted locally (delete queued)")
         SyncScheduler.enqueue(appContext)
     }
 
-    /** Removes everything stored on the phone for this user (used when the account is deleted). */
+    /** Removes everything stored on the phone for this user. */
     suspend fun clearLocal(uid: String) = dao.deleteAllForUser(uid)
 
     private fun WorkoutEntity.toWorkout() = Workout(id, exercise, sets, reps, durationMinutes, notes, timestamp, syncState)

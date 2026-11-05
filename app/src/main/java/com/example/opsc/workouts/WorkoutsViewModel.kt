@@ -22,26 +22,26 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-/** Everything the Workouts screen and the dashboard show. */
+/** Everything the Workouts screen and dashboard show. */
 data class WorkoutsUiState(
-    /** False until the database has answered for the first time (shows a spinner). */
+    /** False until the database first answers (shows a spinner). */
     val loaded: Boolean = false,
     val items: List<Workout> = emptyList(),
     val stats: DashboardStats = WorkoutStats.compute(emptyList(), System.currentTimeMillis(), WorkoutStats.DEFAULT_GOAL),
-    /** Workouts with changes the server has not confirmed yet. */
+    /** Workouts the server has not confirmed yet. */
     val pendingCount: Int = 0
 )
 
 /** One-off messages for the screens. */
 sealed interface WorkoutEvent {
-    /** A sync run finished; [pushed] changes were sent. */
+    /** A sync finished. pushed changes were sent. */
     data class SyncFinished(val pushed: Int) : WorkoutEvent
-    /** "Sync now" was pressed with no connection. It is queued and will run when the phone is online. */
+    /** Sync now was pressed offline. It runs when the phone is online. */
     data object SyncQueuedOffline : WorkoutEvent
     data class Saved(val offline: Boolean) : WorkoutEvent
 }
 
-/** Remembers the monthly workout goal on the phone. */
+/** Remembers the monthly goal on the phone. */
 object GoalPrefs {
     private const val PREFS = "battle_fitness_workouts"
     private const val KEY_GOAL = "monthly_goal"
@@ -56,16 +56,13 @@ object GoalPrefs {
     }
 }
 
-/**
- * Shared by the Workouts screen, the dashboard and the log-workout sheet (it lives as long as the
- * main activity). Turns the Room database into live screen state, and runs saves, deletes and syncs.
- */
+/** Shared by the Workouts screen, dashboard and log sheet. Turns the Room database into screen state and runs saves, deletes and syncs. */
 class WorkoutsViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = WorkoutRepository.get(application)
     private val connectivity = ConnectivityMonitor(application)
     private val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
 
-    /** Workouts swiped away but still within the "Undo" window: hidden from the list, not yet deleted. */
+    /** Workouts swiped away but still in the Undo time: hidden, not deleted yet. */
     private val hiddenIds = MutableStateFlow<Set<String>>(emptySet())
     private val goal = MutableStateFlow(GoalPrefs.get(application))
 
@@ -85,7 +82,7 @@ class WorkoutsViewModel(application: Application) : AndroidViewModel(application
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WorkoutsUiState())
 
-    /** Exercise names the user has logged before, newest first. */
+    /** Exercise names logged before, newest first. */
     val recentExercises: StateFlow<List<String>> =
         (if (uid == null) flowOf(emptyList()) else repository.observeRecentExercises(uid))
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
@@ -94,12 +91,12 @@ class WorkoutsViewModel(application: Application) : AndroidViewModel(application
     val events: Flow<WorkoutEvent> = _events.receiveAsFlow()
 
     init {
-        // Start-up sync: sends anything left over and pulls workouts from other devices.
+        // Start-up sync: sends leftovers and pulls workouts from other devices.
         SyncScheduler.enqueue(application)
         watchSyncRuns()
     }
 
-    /** Saves a workout on the phone straight away (sync happens in the background). */
+    /** Saves a workout on the phone at once. Sync runs in the background. */
     fun add(input: NewWorkout) {
         val owner = uid ?: return
         viewModelScope.launch {
@@ -108,7 +105,7 @@ class WorkoutsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /** Hides a swiped workout immediately. Call [commitDelete] when the Undo time runs out, or [undoHide] to bring it back. */
+    /** Hides a swiped workout. Call commitDelete when Undo runs out, or undoHide to bring it back. */
     fun hide(id: String) {
         hiddenIds.value = hiddenIds.value + id
     }
@@ -117,7 +114,7 @@ class WorkoutsViewModel(application: Application) : AndroidViewModel(application
         hiddenIds.value = hiddenIds.value - id
     }
 
-    /** Really deletes the workout (on the phone now, on the server when online). */
+    /** Deletes the workout (on the phone now, on the server when online). */
     fun commitDelete(id: String) {
         viewModelScope.launch {
             repository.delete(id)
@@ -132,16 +129,13 @@ class WorkoutsViewModel(application: Application) : AndroidViewModel(application
         uid?.let { ProfileRepository().save(it, mapOf("monthlyGoal" to clean)) }
     }
 
-    /** The "Sync now" action. */
+    /** The Sync now action. */
     fun syncNow() {
         SyncScheduler.enqueue(getApplication())
         if (!connectivity.isOnlineNow()) _events.trySend(WorkoutEvent.SyncQueuedOffline)
     }
 
-    /**
-     * Watches the WorkManager sync job and reports when a run that we saw start has finished.
-     * (A job that finished before this screen existed is ignored, so no stale message appears.)
-     */
+    /** Watches the sync job and reports when a run we saw start has finished. Runs that finished earlier are ignored. */
     private fun watchSyncRuns() {
         viewModelScope.launch {
             val seenActive = mutableSetOf<UUID>()

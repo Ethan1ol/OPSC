@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withTimeoutOrNull
 
-/** A club as stored at `clubs/{clubId}` (matches firestore.rules). */
+/** A club, stored at clubs/{clubId}. */
 data class Club(
     val id: String,
     val name: String,
@@ -26,7 +26,7 @@ data class Club(
     val ownerId: String,
     val inviteCode: String,
     val memberIds: List<String>,
-    /** "open" (people can join) or "active" (the league has started). */
+    /** open (people can join) or active (league started). */
     val status: String
 ) {
     val isOpen get() = status == STATUS_OPEN
@@ -37,10 +37,10 @@ data class Club(
     }
 }
 
-/** Where a fixture is in its life: created, waiting for review, or confirmed by the referee. */
+/** Where a fixture is: scheduled, waiting for review, or confirmed. */
 enum class FixtureStatus { SCHEDULED, PENDING, VERIFIED }
 
-/** A fixture as stored at `clubs/{clubId}/fixtures/{fixtureId}`. */
+/** A fixture, stored at clubs/{clubId}/fixtures/{fixtureId}. */
 data class Fixture(
     val id: String,
     val round: Int,
@@ -51,11 +51,11 @@ data class Fixture(
     val player1Score: Int?,
     val player2Score: Int?,
     val winnerId: String?,
-    /** Set when the referee attached a proof photo (the photo itself is stored separately). */
+    /** Set when the referee attached a proof photo. */
     val proofUrl: String? = null
 )
 
-/** Why a club action failed. Each has a translated message. */
+/** Why a club action failed. */
 enum class ClubFailure(@StringRes val messageRes: Int) {
     NETWORK(R.string.club_err_network),
     NOT_FOUND(R.string.club_err_not_found),
@@ -68,24 +68,20 @@ enum class ClubFailure(@StringRes val messageRes: Int) {
     UNKNOWN(R.string.club_err_unknown)
 }
 
-/** The result of a club action. Errors are values so the screens never crash. */
+/** Result of a club action. */
 sealed interface ClubResult<out T> {
     data class Success<T>(val value: T) : ClubResult<T>
     data class Failure(val failure: ClubFailure) : ClubResult<Nothing>
 }
 
-/**
- * All reading and writing of clubs, fixtures and standings in Cloud Firestore. Lists update live
- * through snapshot listeners (and are served from Firestore's offline cache when there is no signal).
- * Actions that must not be queued for later (create, join, start, verify) need a connection.
- */
+/** Reads and writes clubs, fixtures and standings in Firestore. Lists update live and work from the offline cache. Create, join, start and verify need a connection. */
 class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getInstance()) {
     private val notifications = NotificationRepository(db)
     private val media = MediaRepository.get(FirebaseFirestore.getInstance().app.applicationContext)
 
     private fun clubs() = db.collection("clubs")
 
-    /** How many verified fixtures the user won, across the given clubs. Returns what it can if some reads fail. */
+    /** Counts the fixtures the user won in the given clubs. */
     suspend fun countWins(uid: String, clubIds: List<String>): Int {
         var total = 0
         for (id in clubIds) {
@@ -102,9 +98,8 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
         return total
     }
 
-    // ---------------------------------------------------------------- live data
 
-    /** The clubs the user belongs to, updating live. */
+    /** The user's clubs, updating live. */
     fun observeMyClubs(uid: String): Flow<List<Club>> = callbackFlow {
         val registration = clubs().whereArrayContains("memberIds", uid).addSnapshotListener { snapshot, error ->
             if (error != null) { close(error); return@addSnapshotListener }
@@ -137,7 +132,7 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
         awaitClose { registration.remove() }
     }
 
-    /** Looks up usernames for the given user ids (profiles are readable by signed-in users). */
+    /** Looks up usernames for the given user ids. */
     suspend fun usernames(uids: Collection<String>): Map<String, String> {
         val result = mutableMapOf<String, String>()
         try {
@@ -153,13 +148,12 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
         return result
     }
 
-    // ---------------------------------------------------------------- actions
 
-    /** Creates a club with a fresh invite code and the creator as owner and first member. Returns the new club id. */
+    /** Creates a club with a new invite code. The creator is the owner. Returns the club id. */
     suspend fun createClub(uid: String, name: String, description: String): ClubResult<String> = guarded("createClub") {
         var code = InviteCode.generate()
         var attempts = 0
-        // Make sure nobody else already has this code.
+        // Make sure the code is not already used.
         while (attempts++ < 5 && !clubs().whereEqualTo("inviteCode", code).limit(1).get().await().isEmpty) code = InviteCode.generate()
         val ref = clubs().document()
         ref.set(
@@ -190,11 +184,7 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
         }
     }
 
-    /**
-     * Starts the league (owner only): creates every fixture and a zeroed standings row for each
-     * member, then marks the club active. Fixture ids are fixed, so retrying after a failure is safe.
-     * Writes are sent in small batches (Firestore security rules allow limited lookups per batch).
-     */
+    /** Starts the league (owner only): creates all fixtures and a standings row per member, then sets the club to active. Fixture ids are fixed, so retrying is safe. Writes go in small batches. */
     suspend fun startLeague(club: Club, uid: String): ClubResult<Unit> {
         if (uid != club.ownerId) return ClubResult.Failure(ClubFailure.NOT_ALLOWED)
         if (!LeagueEngine.canStart(club.memberIds.size)) return ClubResult.Failure(ClubFailure.NOT_ENOUGH_MEMBERS)
@@ -222,7 +212,7 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
                 )
             }
             last.update(clubs().document(club.id), "status", Club.STATUS_ACTIVE)
-            // Tell every member the fixtures are ready, and tell each referee how many matches they have.
+            // Tell every member the fixtures are ready, and tell each referee their match count.
             club.memberIds.forEach { member ->
                 notifications.queue(last, member, uid, NotificationType.FIXTURES_SCHEDULED, club.id, club.name, listOf(specs.size.toString()))
             }
@@ -235,11 +225,7 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
         }
     }
 
-    /**
-     * Referee confirms the result of a fixture: saves the scores and winner, marks it VERIFIED and
-     * updates the standings of the two players. Reads the current fixtures from the server first so
-     * the table is always worked out from the real data.
-     */
+    /** The referee confirms a result: saves the scores and winner, marks the fixture verified and updates the standings. */
     suspend fun verifyFixture(
         club: Club, fixtureId: String, player1Score: Int, player2Score: Int,
         proof: ByteArray? = null, names: Map<String, String> = emptyMap(), refereeUid: String = ""
@@ -251,7 +237,7 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
             val target = all.firstOrNull { it.id == fixtureId } ?: return@guarded ClubResult.Failure(ClubFailure.NOT_FOUND)
             if (target.status == FixtureStatus.VERIFIED) return@guarded ClubResult.Failure(ClubFailure.NOT_ALLOWED)
 
-            // Save the proof photo first, so a result is never confirmed with its proof missing.
+            // Save the proof photo first, so a result is never confirmed without it.
             if (proof != null && media.upload(MediaRepository.proofPath(club.id, fixtureId), proof, 1L) == null) {
                 return@guarded ClubResult.Failure(ClubFailure.PROOF_FAILED)
             }
@@ -279,7 +265,7 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
                     notifications.queue(batch, member, refereeUid, NotificationType.LEADERBOARD_CHANGED, club.id, club.name, emptyList())
                 }
             }
-            // Only the two players' rows can change.
+            // Only the two players' rows change.
             table.filter { it.uid == target.player1Id || it.uid == target.player2Id }.forEach { row ->
                 batch.set(
                     clubs().document(club.id).collection("standings").document(row.uid),
@@ -292,9 +278,8 @@ class ClubRepository(private val db: FirebaseFirestore = FirebaseFirestore.getIn
         }
     }
 
-    // ---------------------------------------------------------------- helpers
 
-    /** Runs a Firestore action with a timeout and turns every failure into a [ClubResult.Failure]. */
+    /** Runs an action with a timeout and turns any failure into a ClubResult.Failure. */
     private suspend fun <T> guarded(label: String, block: suspend () -> ClubResult<T>): ClubResult<T> = try {
         withTimeoutOrNull(ACTION_TIMEOUT_MS) { block() } ?: ClubResult.Failure(ClubFailure.NETWORK).also { Log.w(TAG, "$label timed out") }
     } catch (e: CancellationException) {

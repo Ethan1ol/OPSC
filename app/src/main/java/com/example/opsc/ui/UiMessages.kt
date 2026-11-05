@@ -10,18 +10,18 @@ import com.google.android.material.R as MaterialR
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
-/** Consistent feedback messages (snackbars) for the whole app. */
+/** Feedback messages (snackbars) for the whole app. */
 object UiMessages {
 
-    /** Neutral information, for example "Settings saved". */
+    /** Neutral information, such as Settings saved. */
     fun info(anchor: View, @StringRes message: Int, duration: Int = Snackbar.LENGTH_SHORT): Snackbar =
         show(anchor, anchor.context.getString(message), duration, null, null)
 
-    /** Success feedback in green, for example "Sync finished". */
+    /** Success in green. */
     fun success(anchor: View, @StringRes message: Int, duration: Int = Snackbar.LENGTH_SHORT): Snackbar =
         show(anchor, anchor.context.getString(message), duration, R.attr.colorSuccess, R.attr.colorOnSuccess)
 
-    /** Error feedback in red. Pass a retry action to add a Retry button. */
+    /** Error in red. Pass a retry action to add a Retry button. */
     fun error(
         anchor: View,
         @StringRes message: Int,
@@ -33,7 +33,7 @@ object UiMessages {
         return bar
     }
 
-    /** A message with an Undo button, for example after deleting a workout. */
+    /** A message with an Undo button. */
     fun undo(anchor: View, @StringRes message: Int, onUndo: () -> Unit): Snackbar {
         val bar = show(anchor, anchor.context.getString(message), Snackbar.LENGTH_LONG, null, null)
         bar.setAction(R.string.action_undo) { onUndo() }
@@ -58,10 +58,10 @@ object UiMessages {
     }
 }
 
-/** A consistent confirmation dialog for risky actions (log out, delete). */
+/** A confirmation dialog for risky actions (log out, delete). */
 object ConfirmDialog {
 
-    /** Shows a dialog with a title, message, a Cancel button and a confirm button that runs [onConfirm]. */
+    /** Shows a dialog with Cancel and a confirm button that runs onConfirm. */
     fun show(
         context: Context,
         @StringRes title: Int,

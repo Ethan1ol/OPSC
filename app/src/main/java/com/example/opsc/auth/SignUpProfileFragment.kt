@@ -28,11 +28,7 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
-/**
- * Sign-up step 2 of 2: username, name, birth date (date picker, at least 13 years old),
- * height, weight and country. Every field is checked at once with inline messages; then the
- * Firebase account and the Firestore profile (users/{uid}) are created.
- */
+/** Sign-up step 2 of 2: username, name, birth date (at least 13 years old), height, weight and country. All fields are checked at once, then the account and profile are created. */
 class SignUpProfileFragment : Fragment(R.layout.fragment_signup_profile) {
     private val viewModel: AuthViewModel by activityViewModels()
     private lateinit var countries: List<Pair<String, String>>
@@ -58,7 +54,7 @@ class SignUpProfileFragment : Fragment(R.layout.fragment_signup_profile) {
         listOf(usernameLayout to username, nameLayout to name, surnameLayout to surname, heightLayout to height, weightLayout to weight)
             .forEach { (layout, edit) -> edit.doAfterTextChanged { layout.error = null } }
 
-        // Country dropdown. The chosen code lives in the ViewModel so it survives rotation.
+        // Country dropdown. The chosen code is kept in the ViewModel for rotation.
         countries = countryList(Locale.getDefault())
         country.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, countries.map { it.second }))
         country.setText(countries.firstOrNull { it.first == viewModel.selectedCountry }?.second.orEmpty(), false)
@@ -68,7 +64,7 @@ class SignUpProfileFragment : Fragment(R.layout.fragment_signup_profile) {
             countryLayout.error = null
         }
 
-        // Birth date picker (a dialog fragment, so it survives rotation; re-attach its listener).
+        // Birth date picker. Re-attach its listener after rotation.
         val showPicker = { openDatePicker(birth, birthLayout) }
         birth.setOnClickListener { showPicker() }
         birthLayout.setEndIconOnClickListener { showPicker() }
@@ -147,7 +143,7 @@ class SignUpProfileFragment : Fragment(R.layout.fragment_signup_profile) {
 
     private fun handleFailure(root: View, error: AuthError) {
         when (error) {
-            // The email lives on step 1, so go back there and mark the field.
+            // The email is on step 1, so go back there and mark the field.
             AuthError.EMAIL_IN_USE -> {
                 viewModel.emailAlreadyUsed = true
                 findNavController().popBackStack()
@@ -158,7 +154,7 @@ class SignUpProfileFragment : Fragment(R.layout.fragment_signup_profile) {
 
     private fun openDatePicker(birth: TextInputEditText, birthLayout: TextInputLayout) {
         if (childFragmentManager.findFragmentByTag(PICKER_TAG) != null) return
-        // Latest allowed birth date = exactly 13 years ago. Opens at 18 years ago.
+        // Latest allowed birth date is 13 years ago. The picker opens at 18 years ago.
         val latest = utcCalendar().apply { add(Calendar.YEAR, -Validators.MIN_AGE_YEARS) }.timeInMillis
         val opening = utcCalendar().apply { add(Calendar.YEAR, -18) }.timeInMillis
         val picker = MaterialDatePicker.Builder.datePicker()

@@ -16,7 +16,6 @@ class WorkoutLogicTest {
 
     private fun point(timestamp: Long, sets: Int = 3, reps: Int = 10) = WorkoutPoint(timestamp, sets, reps)
 
-    // ---------- sync policy ----------
 
     @Test fun networkErrorsAreRetried() {
         assertTrue(SyncPolicy.isRetryable("UNAVAILABLE"))
@@ -50,7 +49,7 @@ class WorkoutLogicTest {
         val plan = SyncPolicy.planPull(local, remoteIds = emptySet(), remoteListComplete = true)
         assertTrue(plan.insertIds.isEmpty())
         assertTrue(plan.removeLocalIds.isEmpty())
-        // a workout the user deleted offline must not be re-added from the server
+        // A workout deleted offline must not be added again from the server.
         val again = SyncPolicy.planPull(local, remoteIds = setOf("gone"), remoteListComplete = true)
         assertTrue(again.insertIds.isEmpty())
     }
@@ -60,7 +59,6 @@ class WorkoutLogicTest {
         assertTrue(plan.removeLocalIds.isEmpty())
     }
 
-    // ---------- validation ----------
 
     @Test fun validWorkoutHasNoErrors() {
         assertTrue(WorkoutValidator.validate("Squat", "3", "10", "30", "felt good").isEmpty())
@@ -98,7 +96,6 @@ class WorkoutLogicTest {
         assertEquals(WorkoutError.NOTES_TOO_LONG, WorkoutValidator.validate("Squat", "3", "10", "30", "n".repeat(501))[WorkoutField.NOTES])
     }
 
-    // ---------- statistics ----------
 
     @Test fun monthCountOnlyCountsThisMonth() {
         val now = at(2026, 11, 15)

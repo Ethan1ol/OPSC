@@ -15,10 +15,7 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import kotlinx.coroutines.flow.Flow
 
-/**
- * One logged workout in the phone's Room (SQLite) database. The id is a UUID that is also the
- * Firestore document id, which makes uploading it twice harmless (no duplicates).
- */
+/** One workout in the phone's Room database. The id is a UUID that is also the Firestore id, so uploading twice is harmless. */
 @Entity(tableName = "workouts", indices = [Index("uid")])
 data class WorkoutEntity(
     @PrimaryKey val id: String,
@@ -29,31 +26,31 @@ data class WorkoutEntity(
     val reps: Int,
     val durationMinutes: Int,
     val notes: String,
-    /** When the workout was done, in milliseconds since 1970. */
+    /** When the workout was done (milliseconds). */
     val timestamp: Long,
-    /** Changes every time the row changes; the sync job uses it to detect edits made while uploading. */
+    /** Changes on every edit. The sync job uses it to spot edits made during an upload. */
     val version: Long,
     val syncState: SyncState
 )
 
-/** Lets Room store [SyncState] as its name. */
+/** Lets Room store SyncState as its name. */
 class SyncStateConverter {
     @TypeConverter fun toName(state: SyncState): String = state.name
     @TypeConverter fun fromName(name: String): SyncState = SyncState.valueOf(name)
 }
 
-/** Database access for workouts. Every query is limited to one user so accounts on one phone stay separate. */
+/** Database access for workouts. Every query is for one user, so accounts on one phone stay separate. */
 @Dao
 interface WorkoutDao {
-    /** Workouts to show: everything except ones the user has deleted (waiting to be deleted on the server). */
+    /** Workouts to show: all except ones waiting to be deleted on the server. */
     @Query("SELECT * FROM workouts WHERE uid = :uid AND syncState != 'PENDING_DELETE' ORDER BY timestamp DESC")
     fun observeVisible(uid: String): Flow<List<WorkoutEntity>>
 
-    /** How many workouts have changes not yet confirmed by the server. */
+    /** How many workouts the server has not confirmed yet. */
     @Query("SELECT COUNT(*) FROM workouts WHERE uid = :uid AND syncState != 'SYNCED'")
     fun observePendingCount(uid: String): Flow<Int>
 
-    /** Exercise names used before, newest first, for the exercise suggestions. */
+    /** Exercise names used before, newest first. */
     @Query("SELECT exercise FROM workouts WHERE uid = :uid AND syncState != 'PENDING_DELETE' GROUP BY exercise ORDER BY MAX(timestamp) DESC LIMIT 30")
     fun observeRecentExercises(uid: String): Flow<List<String>>
 
@@ -72,7 +69,7 @@ interface WorkoutDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertIfMissing(workouts: List<WorkoutEntity>)
 
-    /** Marks a workout synced, but only if it has not changed since [version] was uploaded. Returns rows changed. */
+    /** Marks a workout synced, only if it did not change since that version. Returns rows changed. */
     @Query("UPDATE workouts SET syncState = 'SYNCED' WHERE id = :id AND version = :version AND syncState = 'PENDING_UPSERT'")
     suspend fun markSynced(id: String, version: Long): Int
 
@@ -89,7 +86,7 @@ interface WorkoutDao {
     suspend fun deleteAllForUser(uid: String)
 }
 
-/** A row of just the id and sync state, used when merging the server's list. */
+/** Just the id and sync state, used when merging the server list. */
 data class IdAndState(val id: String, val syncState: SyncState)
 
 /** The phone's Room database. */
@@ -101,7 +98,7 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         @Volatile private var instance: AppDatabase? = null
 
-        /** The one shared database instance. */
+        /** The one shared database. */
         fun get(context: Context): AppDatabase = instance ?: synchronized(this) {
             instance ?: Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "battle_fitness.db")
                 .build().also { instance = it }

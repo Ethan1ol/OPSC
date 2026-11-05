@@ -11,47 +11,43 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-/** One-off results the screens react to (open the app, show an error, show the "email sent" message). */
+/** One-off results the screens react to. */
 sealed interface AuthEvent {
-    /** [needsProfile]: signed in, but the user must finish their profile first (first Google sign-in). */
+    /** True if the user must finish their profile first. */
     data class LoggedIn(val isNewUser: Boolean, val needsProfile: Boolean = false) : AuthEvent
     data object ResetSent : AuthEvent
     data class Failed(val error: AuthError) : AuthEvent
 }
 
-/**
- * Shared by the login, sign-up, finish-profile and forgot-password screens. It runs the Firebase
- * calls in [viewModelScope], so a request is not lost when the phone is rotated, and it remembers
- * the answers from sign-up step 1 while the user fills in step 2.
- */
+/** Shared by the login, sign-up, finish-profile and forgot-password screens. Keeps requests alive when the phone rotates and remembers the step 1 answers. */
 class AuthViewModel : ViewModel() {
-    /** The repository, also used by the Google sign-in helper. */
+    /** Also used by the Google helper. */
     val repository = AuthRepository()
 
     private val _loading = MutableStateFlow(false)
 
-    /** True while a request is running, so screens can show progress and block double taps. */
+    /** True while a request is running. */
     val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
     private val _events = Channel<AuthEvent>(Channel.BUFFERED)
 
-    /** Results of requests. Each event is delivered once. */
+    /** Results, each delivered once. */
     val events: Flow<AuthEvent> = _events.receiveAsFlow()
 
-    // Sign-up step 1 answers, kept in memory only (never written to disk).
+    // Sign-up step 1 answers, kept in memory only.
     var pendingEmail = ""
     var pendingPassword = ""
 
-    /** The country picked on a profile screen (ISO code), kept across rotation. */
+    /** The chosen country, kept when the phone rotates. */
     var selectedCountry = DEFAULT_COUNTRY
 
-    /** Set when registration failed because the email is taken, so step 1 can show it inline. */
+    /** True if the email is already used. */
     var emailAlreadyUsed = false
 
-    /** True once a reset email has been requested, so the forgot-password screen keeps showing the result. */
+    /** True once a reset email was requested. */
     var resetSent = false
 
-    /** True while the Google account picker is open. */
+    /** True while the Google picker is open. */
     var googleInFlight = false
         private set
 
@@ -59,7 +55,7 @@ class AuthViewModel : ViewModel() {
 
     fun register(data: RegistrationData) = run("register") { repository.register(data) }
 
-    /** Creates the profile for a signed-in user who has none (first Google sign-in). */
+    /** Creates a profile for a Google user who has none. */
     fun finishProfile(username: String, heightCm: Double?, weightKg: Double?, country: String) {
         val base = repository.suggestedProfile()
         if (base == null) {
@@ -86,20 +82,20 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    /** Marks a Google sign-in as started (the account picker runs in the screen, not here). */
+    /** Google sign-in started. */
     fun googleStarted() {
         googleInFlight = true
         _loading.value = true
     }
 
-    /** Hands the result of Google sign-in (or its cancellation) back to the screens. */
+    /** Passes the Google result to the screens. */
     fun googleFinished(outcome: AuthOutcome) {
         googleInFlight = false
         _loading.value = false
         _events.trySend(outcome.toEvent())
     }
 
-    /** Clears the busy flag, for example if a screen is destroyed while the Google picker is open. */
+    /** Clears the busy flag if the screen closed. */
     fun googleAbandoned() {
         googleInFlight = false
         _loading.value = false

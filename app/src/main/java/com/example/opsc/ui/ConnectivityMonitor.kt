@@ -10,14 +10,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-/**
- * Tells the app whether the phone currently has a working internet connection.
- * Used for the offline banner and by the offline-sync feature.
- */
+/** Tells the app if the phone has a working internet connection. Used for the offline banner and offline sync. */
 class ConnectivityMonitor(context: Context) {
     private val manager = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    /** True if the active network can reach the internet right now. */
+    /** True if the network can reach the internet now. */
     fun isOnlineNow(): Boolean {
         val caps = manager.getNetworkCapabilities(manager.activeNetwork) ?: return false
         return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
@@ -26,7 +23,7 @@ class ConnectivityMonitor(context: Context) {
 
     // Adapted from: Android Developers (2026) Monitor connectivity status and connection metering.
     // Available at: https://developer.android.com/training/monitoring-device-state/connectivity-status-type
-    /** Emits the current state straight away, then every change. */
+    /** Emits the current state at once, then every change. */
     val isOnline: Flow<Boolean> = callbackFlow {
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {

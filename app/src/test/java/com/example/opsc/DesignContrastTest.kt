@@ -5,11 +5,7 @@ import org.junit.Test
 import java.io.File
 import kotlin.math.pow
 
-/**
- * Checks the WCAG 2.2 contrast ratio of every text/background colour pair in the design
- * system, in light and dark mode, by reading the real colour files. Text needs 4.5:1,
- * borders and icons need 3:1.
- */
+/** Checks the WCAG 2.2 contrast of every text and background colour pair, in light and dark, using the real colour files. Text needs 4.5:1, borders and icons 3:1. */
 class DesignContrastTest {
 
     private fun load(path: String): Map<String, String> {
@@ -30,7 +26,7 @@ class DesignContrastTest {
         return (hi + 0.05) / (lo + 0.05)
     }
 
-    /** (foreground token, background token, minimum ratio) */
+    /** (text colour, background colour, minimum ratio) */
     private val pairs = listOf(
         Triple("md_on_primary", "md_primary", 4.5),
         Triple("md_on_primary_container", "md_primary_container", 4.5),
@@ -66,7 +62,7 @@ class DesignContrastTest {
     @Test fun lightModeMeetsContrast() = check("light", load("src/main/res/values/colors.xml"))
 
     @Test fun darkModeMeetsContrast() {
-        // Dark mode overrides the light tokens; anything it does not define falls back to light.
+        // Dark mode overrides the light colours. Anything it does not define uses light.
         val merged = load("src/main/res/values/colors.xml") + load("src/main/res/values-night/colors.xml")
         check("dark", merged)
     }
