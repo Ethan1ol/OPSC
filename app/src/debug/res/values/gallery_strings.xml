@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Strings for the debug-only design gallery. Not shipped and not translated. -->
+<resources>
+    <string name="gallery_title" translatable="false">Design gallery</string>
+    <string name="gallery_dark_toggle" translatable="false">Toggle dark mode</string>
+    <string name="gallery_section_type" translatable="false">Typography</string>
+    <string name="gallery_headline" translatable="false">Headline 28 SemiBold</string>
+    <string name="gallery_title_sample" translatable="false">Title 20 Medium</string>
+    <string name="gallery_body" translatable="false">Body 16 Regular. The quick brown fox jumps over the lazy dog.</string>
+    <string name="gallery_caption" translatable="false">Caption 12 Regular</string>
+    <string name="gallery_section_colour" translatable="false">Colour</string>
+    <string name="gallery_primary" translatable="false">Primary</string>
+    <string name="gallery_container" translatable="false">Container</string>
+    <string name="gallery_brand" translatable="false">Brand</string>
+    <string name="gallery_success" translatable="false">Success</string>
+    <string name="gallery_error" translatable="false">Error</string>
+    <string name="gallery_section_buttons" translatable="false">Buttons</string>
+    <string name="gallery_btn_primary" translatable="false">Primary</string>
+    <string name="gallery_btn_secondary" translatable="false">Secondary</string>
+    <string name="gallery_btn_text" translatable="false">Text button</string>
+    <string name="gallery_btn_disabled" translatable="false">Disabled</string>
+    <string name="gallery_section_inputs" translatable="false">Text input</string>
+    <string name="gallery_input_hint" translatable="false">Email</string>
+    <string name="gallery_input_error" translatable="false">That email address does not look right</string>
+    <string name="gallery_toggle_error" translatable="false">Toggle input error</string>
+    <string name="gallery_section_card" translatable="false">Card</string>
+    <string name="gallery_card_title" translatable="false">Club: Sunday Sprinters</string>
+    <string name="gallery_card_body" translatable="false">6 members, round 2 of 3, next fixture on Saturday.</string>
+    <string name="gallery_section_chips" translatable="false">Chips</string>
+    <string name="gallery_chip_scheduled" translatable="false">Scheduled</string>
+    <string name="gallery_chip_pending" translatable="false">Pending</string>
+    <string name="gallery_chip_verified" translatable="false">Verified</string>
+    <string name="gallery_section_states" translatable="false">Screen states</string>
+    <string name="gallery_state_content" translatable="false">This is the normal content of a screen.</string>
+    <string name="gallery_state_loading" translatable="false">Loading</string>
+    <string name="gallery_state_empty" translatable="false">Empty</string>
+    <string name="gallery_state_error" translatable="false">Error</string>
+    <string name="gallery_state_offline" translatable="false">Offline</string>
+    <string name="gallery_state_content_btn" translatable="false">Content</string>
+    <string name="gallery_empty_message" translatable="false">No workouts yet. Log your first one!</string>
+    <string name="gallery_empty_action" translatable="false">Log workout</string>
+    <string name="gallery_section_feedback" translatable="false">Feedback</string>
+    <string name="gallery_snack_info" translatable="false">Info</string>
+    <string name="gallery_snack_success" translatable="false">Success</string>
+    <string name="gallery_snack_error" translatable="false">Error</string>
+    <string name="gallery_snack_undo" translatable="false">Undo</string>
+    <string name="gallery_dialog" translatable="false">Confirm dialog</string>
+    <string name="gallery_msg_info" translatable="false">Settings saved</string>
+    <string name="gallery_msg_success" translatable="false">Sync finished</string>
+    <string name="gallery_msg_error" translatable="false">Could not save. Check your connection.</string>
+    <string name="gallery_msg_undo" translatable="false">Workout deleted</string>
+    <string name="gallery_dialog_title" translatable="false">Delete workout?</string>
+    <string name="gallery_dialog_message" translatable="false">This cannot be undone.</string>
+</resources>

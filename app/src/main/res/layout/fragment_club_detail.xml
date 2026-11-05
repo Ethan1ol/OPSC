@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.opsc.ui.StateLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/clubDetailState"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="@dimen/screen_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/detailClubName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Battle.Headline" />
+
+            <TextView
+                android:id="@+id/detailClubDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Battle.Body" />
+
+            <!-- Invite code -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/clubs_invite_code"
+                            android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+                        <TextView
+                            android:id="@+id/detailInviteCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:letterSpacing="0.2"
+                            android:textAppearance="@style/TextAppearance.Battle.Headline" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/detailShare"
+                        style="@style/Widget.Battle.Button.Secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btn_share" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Start league (owner, before the league starts) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/startCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/startHint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.Battle.Body" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/startLeague"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_md"
+                        android:text="@string/btn_start_league" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- League complete -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/winnerCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:visibility="gone"
+                app:cardBackgroundColor="?attr/colorBrand">
+
+                <TextView
+                    android:id="@+id/winnerText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.Battle.Title"
+                    android:textColor="@color/bf_on_brand" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/detailTabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md" />
+
+            <!-- Leaderboard -->
+            <LinearLayout
+                android:id="@+id/tabLeaderboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/podium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:gravity="bottom"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/podium2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/podiumName2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Battle.Body" />
+
+                        <TextView
+                            android:id="@+id/podiumPts2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="72dp"
+                            android:layout_marginHorizontal="@dimen/space_xs"
+                            android:background="?attr/colorSecondaryContainer"
+                            android:gravity="center"
+                            android:text="@string/podium_second"
+                            android:textAppearance="@style/TextAppearance.Battle.Title"
+                            android:textColor="?attr/colorOnSecondaryContainer" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/podium1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/podiumName1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Battle.Body" />
+
+                        <TextView
+                            android:id="@+id/podiumPts1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="104dp"
+                            android:layout_marginHorizontal="@dimen/space_xs"
+                            android:background="?attr/colorBrand"
+                            android:gravity="center"
+                            android:text="@string/podium_first"
+                            android:textAppearance="@style/TextAppearance.Battle.Headline"
+                            android:textColor="@color/bf_on_brand" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/podium3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/podiumName3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Battle.Body" />
+
+                        <TextView
+                            android:id="@+id/podiumPts3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:layout_marginHorizontal="@dimen/space_xs"
+                            android:background="?attr/colorSurfaceContainerHigh"
+                            android:gravity="center"
+                            android:text="@string/podium_third"
+                            android:textAppearance="@style/TextAppearance.Battle.Title" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/leaderboardHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md"
+                    android:text="@string/leaderboard_header"
+                    android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/leaderboardList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+                <TextView
+                    android:id="@+id/leaderboardEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/leaderboard_not_started"
+                    android:textAppearance="@style/TextAppearance.Battle.Body"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Fixtures -->
+            <LinearLayout
+                android:id="@+id/tabFixtures"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fixturesList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+                <TextView
+                    android:id="@+id/fixturesEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fixtures_none"
+                    android:textAppearance="@style/TextAppearance.Battle.Body"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Members -->
+            <LinearLayout
+                android:id="@+id/tabMembers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/membersList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</com.example.opsc.ui.StateLayout>

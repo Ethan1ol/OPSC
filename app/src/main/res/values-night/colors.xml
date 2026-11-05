@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Battle Fitness colour tokens, DARK mode (same names as values/colors.xml). -->
+<resources>
+    <color name="bf_brand">#FF891B</color>
+
+    <color name="md_primary">#FFB784</color>
+    <color name="md_on_primary">#4A2300</color>
+    <color name="md_primary_container">#7A3A00</color>
+    <color name="md_on_primary_container">#FFDCC2</color>
+
+    <color name="md_secondary">#E1C1AB</color>
+    <color name="md_on_secondary">#3F2A1B</color>
+    <color name="md_secondary_container">#4F4439</color>
+    <color name="md_on_secondary_container">#F5E4D6</color>
+
+    <color name="md_background">#1A120B</color>
+    <color name="md_on_background">#F0DFD2</color>
+    <color name="md_surface">#1F160F</color>
+    <color name="md_on_surface">#F0DFD2</color>
+    <color name="md_surface_variant">#4F4439</color>
+    <color name="md_on_surface_variant">#D5C3B6</color>
+    <color name="md_surface_container_lowest">#150E08</color>
+    <color name="md_surface_container_low">#251B13</color>
+    <color name="md_surface_container">#2A1F17</color>
+    <color name="md_surface_container_high">#352A21</color>
+    <color name="md_outline">#9E8E81</color>
+    <color name="md_outline_variant">#4F4439</color>
+
+    <color name="md_error">#FFB4AB</color>
+    <color name="md_on_error">#690005</color>
+    <color name="md_error_container">#93000A</color>
+    <color name="md_on_error_container">#FFDAD6</color>
+    <color name="bf_success">#82DB97</color>
+    <color name="bf_on_success">#00391A</color>
+    <color name="bf_success_container">#00522A</color>
+    <color name="bf_on_success_container">#BDF2C9</color>
+</resources>

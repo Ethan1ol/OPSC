@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="200dp"
+    android:padding="@dimen/space_sm">
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/proofProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true" />
+
+    <ImageView
+        android:id="@+id/proofImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/proof_description"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/proofError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/proof_load_error"
+        android:textAppearance="@style/TextAppearance.Battle.Body"
+        android:visibility="gone" />
+</FrameLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Spacing on an 8dp grid, corner radii and touch target size. -->
+<resources>
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_sm">8dp</dimen>
+    <dimen name="space_md">16dp</dimen>
+    <dimen name="space_lg">24dp</dimen>
+    <dimen name="space_xl">32dp</dimen>
+    <dimen name="screen_padding">16dp</dimen>
+
+    <dimen name="radius_card">16dp</dimen>
+    <dimen name="radius_control">12dp</dimen>
+    <dimen name="radius_sheet">28dp</dimen>
+
+    <dimen name="elevation_card">2dp</dimen>
+    <dimen name="min_touch_target">48dp</dimen>
+    <dimen name="icon_state">64dp</dimen>
+</resources>

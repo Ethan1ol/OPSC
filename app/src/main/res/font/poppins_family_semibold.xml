@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Poppins SemiBold as its own family, so a text style can pick this weight directly. -->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <font
+        android:font="@font/poppins_semibold"
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        app:font="@font/poppins_semibold"
+        app:fontStyle="normal"
+        app:fontWeight="400" />
+</font-family>

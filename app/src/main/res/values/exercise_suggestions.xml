@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Common exercise names offered while typing in the log-workout sheet (the wger library replaces this later). -->
+<resources>
+    <string-array name="common_exercises" translatable="false">
+        <item>Squat</item>
+        <item>Bench press</item>
+        <item>Deadlift</item>
+        <item>Overhead press</item>
+        <item>Barbell row</item>
+        <item>Pull-up</item>
+        <item>Push-up</item>
+        <item>Lunge</item>
+        <item>Plank</item>
+        <item>Bicep curl</item>
+        <item>Tricep dip</item>
+        <item>Running</item>
+        <item>Cycling</item>
+        <item>Swimming</item>
+        <item>Skipping rope</item>
+        <item>Burpees</item>
+    </string-array>
+</resources>

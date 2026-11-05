@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_lg"
+        android:paddingVertical="@dimen/space_md">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_title"
+            android:textAppearance="@style/TextAppearance.Battle.Headline" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_step1"
+            android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/signupEmailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:hint="@string/field_email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/signupEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="emailAddress"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/signupPasswordLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_password"
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/signupPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="newPassword"
+                android:imeOptions="actionNext"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Live password strength hint -->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/signupStrengthBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
+            android:max="100"
+            app:trackCornerRadius="4dp" />
+
+        <TextView
+            android:id="@+id/signupStrengthText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xs"
+            android:accessibilityLiveRegion="polite"
+            android:text="@string/strength_empty"
+            android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/signupConfirmLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_confirm_password"
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/signupConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="newPassword"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signupNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:text="@string/btn_next" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/space_md"
+            android:gravity="center"
+            android:text="@string/login_or"
+            android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signupGoogle"
+            style="@style/Widget.Battle.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_continue_google"
+            app:icon="@drawable/google"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/space_sm"
+            app:iconTint="@null" />
+    </LinearLayout>
+</ScrollView>

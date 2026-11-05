@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_padding">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/editProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/editProgressText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:accessibilityLiveRegion="polite"
+            android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+        <!-- Banner -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
+            android:text="@string/edit_banner"
+            android:textAppearance="@style/TextAppearance.Battle.Title" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/editBanner"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="@dimen/space_sm"
+            android:background="?attr/colorPrimaryContainer"
+            android:contentDescription="@string/profile_banner_description"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Battle.Card" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editBannerChange"
+            style="@style/Widget.Battle.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
+            android:text="@string/btn_change_banner" />
+
+        <!-- Avatar -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:text="@string/edit_avatar"
+            android:textAppearance="@style/TextAppearance.Battle.Title" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/editAvatar"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="@dimen/space_sm"
+            android:background="?attr/colorSurfaceContainerHigh"
+            android:contentDescription="@string/profile_avatar_description"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Battle.Circle" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editAvatarChange"
+            style="@style/Widget.Battle.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
+            android:text="@string/btn_change_photo" />
+
+        <!-- Details -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:text="@string/edit_details"
+            android:textAppearance="@style/TextAppearance.Battle.Title" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editNameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
+            android:hint="@string/field_first_name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="givenName"
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName|textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editSurnameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_surname">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editSurname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="familyName"
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName|textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editBioLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_bio"
+            app:counterEnabled="true"
+            app:counterMaxLength="150">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editBio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLines="4" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:text="@string/btn_save" />
+    </LinearLayout>
+</ScrollView>

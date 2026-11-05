@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_lg"
+        android:paddingVertical="@dimen/space_md">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_title"
+            android:textAppearance="@style/TextAppearance.Battle.Headline" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_step2"
+            android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profileUsernameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:hint="@string/field_username">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profileUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="username"
+                android:imeOptions="actionNext"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profileNameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_first_name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="givenName"
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName|textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profileSurnameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_surname">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profileSurname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="familyName"
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName|textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profileBirthLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_birth_date"
+            app:endIconContentDescription="@string/pick_birth_date"
+            app:endIconDrawable="@drawable/ic_calendar"
+            app:endIconMode="custom"
+            app:helperText="@string/helper_birth">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profileBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="birthDateFull"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/profileHeightLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_sm"
+                android:layout_weight="1"
+                android:hint="@string/field_height">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/profileHeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@null"
+                    android:imeOptions="actionNext"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/profileWeightLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_sm"
+                android:layout_weight="1"
+                android:hint="@string/field_weight">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/profileWeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@null"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profileCountryLayout"
+            style="@style/Widget.Battle.TextInputLayout.Dropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/field_country">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/profileCountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profileCreate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_lg"
+            android:text="@string/btn_create_account" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/profileProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:showAnimationBehavior="inward" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_md"
+            android:gravity="center"
+            android:text="@string/terms_privacy_policy"
+            android:textAppearance="@style/TextAppearance.Battle.Caption" />
+    </LinearLayout>
+</ScrollView>

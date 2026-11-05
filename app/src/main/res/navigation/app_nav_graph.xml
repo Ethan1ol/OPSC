@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Navigation graph for the main app. The four top-level tabs are listed here;
+  detail screens (club detail, exercise detail, ...) are added as features are built.
+-->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.opsc.app.HomeFragment"
+        android:label="@string/nav_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/clubsFragment"
+        android:name="com.example.opsc.clubs.ClubsFragment"
+        android:label="@string/nav_clubs"
+        tools:layout="@layout/fragment_clubs" />
+    <fragment
+        android:id="@+id/clubDetailFragment"
+        android:name="com.example.opsc.clubs.ClubDetailFragment"
+        android:label="@string/nav_clubs"
+        tools:layout="@layout/fragment_club_detail">
+        <argument
+            android:name="clubId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/workoutsFragment"
+        android:name="com.example.opsc.workouts.WorkoutsFragment"
+        android:label="@string/nav_workouts"
+        tools:layout="@layout/fragment_workouts" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.opsc.profile.ProfileFragment"
+        android:label="@string/nav_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.opsc.settings.SettingsFragment"
+        android:label="@string/btn_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.example.opsc.settings.ChangePasswordFragment"
+        android:label="@string/settings_change_password"
+        tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/exerciseLibraryFragment"
+        android:name="com.example.opsc.exercises.ExerciseLibraryFragment"
+        android:label="@string/btn_browse_library"
+        tools:layout="@layout/fragment_exercise_library">
+        <argument
+            android:name="pickMode"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/exerciseDetailFragment"
+        android:name="com.example.opsc.exercises.ExerciseDetailFragment"
+        android:label="@string/field_exercise"
+        tools:layout="@layout/fragment_exercise_detail">
+        <argument
+            android:name="exerciseId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/memberProfileFragment"
+        android:name="com.example.opsc.profile.MemberProfileFragment"
+        android:label="@string/member_profile_title"
+        tools:layout="@layout/fragment_profile">
+        <argument
+            android:name="uid"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.opsc.profile.EditProfileFragment"
+        android:label="@string/btn_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.opsc.notifications.NotificationsFragment"
+        android:label="@string/notifications_title"
+        tools:layout="@layout/fragment_notifications" />
+</navigation>

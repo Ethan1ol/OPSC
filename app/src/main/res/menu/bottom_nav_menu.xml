@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bottom navigation. Item ids must match the destination ids in app_nav_graph.xml. -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_nav_home"
+        android:title="@string/nav_home" />
+    <item
+        android:id="@+id/clubsFragment"
+        android:icon="@drawable/ic_nav_clubs"
+        android:title="@string/nav_clubs" />
+    <item
+        android:id="@+id/workoutsFragment"
+        android:icon="@drawable/ic_nav_workouts"
+        android:title="@string/nav_workouts" />
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/ic_nav_profile"
+        android:title="@string/nav_profile" />
+</menu>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Navigation for login, the two-step sign-up and password reset. -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.opsc.auth.LoginFragment"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/signUpAccountFragment"
+        android:name="com.example.opsc.auth.SignUpAccountFragment"
+        android:label="@string/btn_create_account"
+        tools:layout="@layout/fragment_signup_account" />
+    <fragment
+        android:id="@+id/signUpProfileFragment"
+        android:name="com.example.opsc.auth.SignUpProfileFragment"
+        android:label="@string/btn_create_account"
+        tools:layout="@layout/fragment_signup_profile" />
+    <fragment
+        android:id="@+id/finishProfileFragment"
+        android:name="com.example.opsc.auth.FinishProfileFragment"
+        android:label="@string/finish_profile_title"
+        tools:layout="@layout/fragment_finish_profile" />
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.example.opsc.auth.ForgotPasswordFragment"
+        android:label="@string/forgot_title"
+        tools:layout="@layout/fragment_forgot_password" />
+</navigation>
