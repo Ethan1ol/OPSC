@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Debug-only screen that shows every design-system component in one place. -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/galleryRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground">
+
+    <ScrollView
+        android:id="@+id/galleryScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/screen_padding">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gallery_title"
+                android:textAppearance="@style/TextAppearance.Battle.Headline" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/galleryDarkToggle"
+                style="@style/Widget.Battle.Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:text="@string/gallery_dark_toggle" />
+
+            <!-- Typography -->
+            <TextView
+                style="@style/TextAppearance.Battle.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:text="@string/gallery_section_type" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:text="@string/gallery_headline"
+                android:textAppearance="@style/TextAppearance.Battle.Headline" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gallery_title_sample"
+                android:textAppearance="@style/TextAppearance.Battle.Title" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gallery_body"
+                android:textAppearance="@style/TextAppearance.Battle.Body" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gallery_caption"
+                android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+            <!-- Colour -->
+            <TextView
+                style="@style/TextAppearance.Battle.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:text="@string/gallery_section_colour" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="@dimen/space_xs"
+                    android:layout_weight="1"
+                    android:background="?attr/colorPrimary"
+                    android:gravity="center"
+                    android:text="@string/gallery_primary"
+                    android:textAppearance="@style/TextAppearance.Battle.Caption"
+                    android:textColor="?attr/colorOnPrimary" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="@dimen/space_xs"
+                    android:layout_weight="1"
+                    android:background="?attr/colorPrimaryContainer"
+                    android:gravity="center"
+                    android:text="@string/gallery_container"
+                    android:textAppearance="@style/TextAppearance.Battle.Caption"
+                    android:textColor="?attr/colorOnPrimaryContainer" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:background="?attr/colorBrand"
+                    android:gravity="center"
+                    android:text="@string/gallery_brand"
+                    android:textAppearance="@style/TextAppearance.Battle.Caption"
+                    android:textColor="@color/bf_on_brand" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="@dimen/space_xs"
+                    android:layout_weight="1"
+                    android:background="?attr/colorSuccess"
+                    android:gravity="center"
+                    android:text="@string/gallery_success"
+                    android:textAppearance="@style/TextAppearance.Battle.Caption"
+                    android:textColor="?attr/colorOnSuccess" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:background="?attr/colorError"
+                    android:gravity="center"
+                    android:text="@string/gallery_error"
+                    android:textAppearance="@style/TextAppearance.Battle.Caption"
+                    android:textColor="?attr/colorOnError" />
+            </LinearLayout>
+
+            <!-- Buttons -->
+            <TextView
+                style="@style/TextAppearance.Battle.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:text="@string/gallery_section_buttons" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:text="@string/gallery_btn_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Battle.Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:text="@string/gallery_btn_secondary" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Battle.Button.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:text="@string/gallery_btn_text" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:enabled="false"
+                android:text="@string/gallery_btn_disabled" />
+
+            <!-- Text input -->
+            <TextView
+                style="@style/TextAppearance.Battle.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:text="@string/gallery_section_inputs" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/galleryInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/gallery_input_hint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/galleryToggleError"
+                style="@style/Widget.Battle.Button.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gallery_toggle_error" />
+
+            <!-- Card -->
+            <TextView
+                style="@style/TextAppearance.Battle.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:text="@string/gallery_section_card" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/gallery_card_title"
+                        android:textAppearance="@style/TextAppearance.Battle.Title" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_xs"
+                        android:text="@string/gallery_card_body"
+                        android:textAppearance="@style/TextAppearance.Battle.Body" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Chips -->
+            <TextView
+                style="@style/TextAppearance.Battle.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:text="@string/gallery_section_chips" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/gallery_chip_scheduled" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gallery_chip_pending" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gallery_chip_verified" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Screen states -->
+            <TextView
+                style="@style/TextAppearance.Battle.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:text="@string/gallery_section_states" />
+
+            <com.example.opsc.ui.StateLayout
+                android:id="@+id/galleryStateLayout"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:layout_marginTop="@dimen/space_sm"
+                android:background="?attr/colorSurfaceContainerLow">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="@dimen/space_md"
+                    android:text="@string/gallery_state_content"
+                    android:textAppearance="@style/TextAppearance.Battle.Body" />
+            </com.example.opsc.ui.StateLayout>
+
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/stateBtnContent"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gallery_state_content_btn" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/stateBtnLoading"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gallery_state_loading" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/stateBtnEmpty"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gallery_state_empty" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/stateBtnError"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gallery_state_error" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/stateBtnOffline"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gallery_state_offline" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Feedback -->
+            <TextView
+                style="@style/TextAppearance.Battle.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:text="@string/gallery_section_feedback" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/snackInfo"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gallery_snack_info" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/snackSuccess"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gallery_snack_success" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/snackError"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gallery_snack_error" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/snackUndo"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gallery_snack_undo" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/galleryDialog"
+                style="@style/Widget.Battle.Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:layout_marginBottom="@dimen/space_xl"
+                android:text="@string/gallery_dialog" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
