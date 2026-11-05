@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- White rounded card used for the sign-up form and dashboard tiles. -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="@color/white" />
-    <corners android:radius="24dp" />
-</shape>

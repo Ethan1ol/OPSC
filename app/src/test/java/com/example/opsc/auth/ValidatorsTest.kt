@@ -93,6 +93,12 @@ class ValidatorsTest {
     @Test fun weight_tooBig() = assertEquals(FieldError.WEIGHT_OUT_OF_RANGE, Validators.validateWeightKg("401"))
     @Test fun weight_rejectsInfinity() = assertEquals(FieldError.NUMBER_INVALID, Validators.validateWeightKg("Infinity"))
 
+    @Test fun changedPassword_sameAsCurrent() =
+        assertEquals(FieldError.PASSWORD_SAME_AS_CURRENT, Validators.validateChangedPassword("secret1", "secret1"))
+    @Test fun changedPassword_tooShortWinsOverSame() =
+        assertEquals(FieldError.PASSWORD_TOO_SHORT, Validators.validateChangedPassword("abc", "abc"))
+    @Test fun changedPassword_valid() = assertNull(Validators.validateChangedPassword("secret2", "secret1"))
+
     @Test fun usernameFromEmail_sanitises() = assertEquals("john_smith", Validators.usernameFromEmail("john.smith@x.com"))
     @Test fun usernameFromEmail_padsShort() = assertEquals("a__", Validators.usernameFromEmail("a@x.com"))
     @Test fun usernameFromEmail_truncates() = assertEquals(20, Validators.usernameFromEmail("a".repeat(40) + "@x.com").length)

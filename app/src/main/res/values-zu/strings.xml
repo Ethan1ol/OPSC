@@ -1,12 +1,6 @@
 <resources>
     <!-- isiZulu -->
     <string name="terms_privacy_policy">Ngokubhalisa, uyavuma ku-Battle Fitness\n<font color="#5B95F9">Imigomo Yokusebenzisa</font> kanye <font color="#5B95F9">Nenqubomgomo Yobumfihlo</font></string>
-    <string name="enter_username">Faka igama lomsebenzisi</string>
-    <string name="enter_surname">Faka isibongo</string>
-    <string name="enter_name">Faka igama</string>
-    <string name="username">Igama lomsebenzisi:</string>
-    <string name="surname">Isibongo:</string>
-    <string name="name">Igama:</string>
 
     <string name="err_email_empty">Sicela ufake i-imeyili yakho</string>
     <string name="err_email_invalid">Leli kheli le-imeyili alibonakali lilungile</string>
@@ -41,22 +35,12 @@
     <string name="msg_logging_in">Iyangena…</string>
     <string name="msg_signing_up">Iyakha i-akhawunti…</string>
     <string name="msg_reset_sent">Uma i-akhawunti ikhona kuleyo imeyili, kuthunyelwe isixhumanisi sokusetha kabusha iphasiwedi.</string>
-    <string name="msg_welcome_user">Siyakwamukela, %1$s!</string>
     <string name="btn_logout">Phuma</string>
     <string name="btn_settings">Izilungiselelo</string>
     <string name="pick_birth_date">Thinta ukukhetha usuku lwakho lokuzalwa</string>
-
-    <string name="settings_title">Izilungiselelo</string>
     <string name="settings_language">Ulimi</string>
-    <string name="settings_country">Izwe</string>
     <string name="settings_push">Izaziso</string>
-    <string name="settings_profile_section">Iphrofayela</string>
-    <string name="hint_height">Ubude (cm)</string>
-    <string name="hint_weight">Isisindo (kg)</string>
     <string name="btn_save">Londoloza izinguquko</string>
-    <string name="btn_back">Emuva</string>
-    <string name="msg_saved">Izilungiselelo zilondoloziwe. Ziyovumelanisa uma usubuyele ku-inthanethi.</string>
-    <string name="confirm_password_label">Qinisekisa iphasiwedi:</string>
 
     <string name="nav_home">Ikhaya</string>
     <string name="nav_clubs">Amaklabhu</string>
@@ -126,4 +110,38 @@
     <string name="btn_finish_profile">Qhubeka</string>
     <string name="btn_other_account">Sebenzisa enye i-akhawunti</string>
     <string name="msg_saving">Iyalondoloza\u2026</string>
+
+    <string name="settings_section_account">I-akhawunti</string>
+    <string name="settings_section_preferences">Okuthandwayo</string>
+    <string name="settings_section_about">Mayelana</string>
+    <string name="settings_change_password">Shintsha iphasiwedi</string>
+    <string name="settings_delete_account">Susa i-akhawunti</string>
+    <string name="settings_units">Amayunithi</string>
+    <string name="units_metric">I-Metric (cm, kg)</string>
+    <string name="units_imperial">I-Imperial (in, lb)</string>
+    <string name="settings_push_hint">Izaziso ngemidlalo, izicelo zikanompempe nebhodi lamaphuzu</string>
+    <string name="settings_google_account_note">Ungena nge-Google, ngakho akukho phasiwedi yokushintsha.</string>
+    <string name="field_height_in">Ubude (in)</string>
+    <string name="field_weight_lb">Isisindo (lb)</string>
+    <string name="err_height_range_in">Ubude kumele bube phakathi kuka-20 no-102 in</string>
+    <string name="err_weight_range_lb">Isisindo kumele sibe phakathi kuka-44 no-880 lb</string>
+    <string name="msg_settings_saved">Izilungiselelo zilondoloziwe</string>
+    <string name="msg_saved_offline">Kulondolozwe kule foni. Kuzovumelanisa uma usubuyele ku-inthanethi.</string>
+    <string name="about_version">Inguqulo %1$s (%2$s)</string>
+    <string name="about_credits">Yenziwe ngu-Ethan Carr no-Insaaf Behardien ye-OPSC6312.</string>
+    <string name="about_built_with">Yakhiwe nge-Firebase ne-Material Design.</string>
+    <string name="btn_privacy_policy">Inqubomgomo yobumfihlo</string>
+    <string name="err_open_link">Alukho uhlelo kule foni olungavula lesi sixhumanisi.</string>
+    <string name="field_current_password">Iphasiwedi yamanje</string>
+    <string name="field_new_password">Iphasiwedi entsha</string>
+    <string name="btn_update_password">Buyekeza iphasiwedi</string>
+    <string name="msg_password_changed">Iphasiwedi ibuyekeziwe</string>
+    <string name="err_password_same">Khetha iphasiwedi eyehlukile kweyamanje</string>
+    <string name="btn_continue">Qhubeka</string>
+    <string name="delete_title">Susa i-akhawunti yakho?</string>
+    <string name="delete_message">Lokhu kususa unomphela i-akhawunti yakho, iphrofayela nezivivinyo. Akukwazi ukuhlehliswa.</string>
+    <string name="reauth_title">Qinisekisa ukuthi nguwe</string>
+    <string name="reauth_message">Faka iphasiwedi yakho ukuze ususe i-akhawunti yakho.</string>
+    <string name="msg_account_deleted">I-akhawunti yakho isusiwe</string>
+    <string name="auth_err_google_wrong_account">Leyo i-akhawunti ye-Google ihlukile. Khetha leyo ongene ngayo.</string>
 </resources>

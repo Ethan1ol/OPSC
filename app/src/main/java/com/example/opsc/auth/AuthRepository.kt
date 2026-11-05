@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import com.example.opsc.R
 import com.example.opsc.profile.LanguageManager
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -52,6 +53,8 @@ data class UserProfile(
     val pushEnabled: Boolean = true,
     val heightCm: Double? = null,
     val weightKg: Double? = null,
+    /** "metric" or "imperial": how height and weight are shown. Values are always stored in cm and kg. */
+    val units: String = "metric",
     @ServerTimestamp val createdAt: Date? = null
 )
 
@@ -65,6 +68,7 @@ enum class AuthError(@StringRes val messageRes: Int) {
     TOO_MANY_REQUESTS(R.string.auth_err_too_many),
     GOOGLE_CANCELLED(R.string.auth_err_google_cancelled),
     GOOGLE_UNAVAILABLE(R.string.auth_err_google_unavailable),
+    GOOGLE_WRONG_ACCOUNT(R.string.auth_err_google_wrong_account),
     PROFILE_SAVE_FAILED(R.string.auth_err_profile_save),
     UNKNOWN(R.string.auth_err_unknown)
 }
@@ -166,6 +170,102 @@ class AuthRepository(
         AuthOutcome.Failure(mapError(e))
     }
 
+    /** True if this account signs in with an email and password (so it has a password to change). */
+    fun usesPasswordSignIn(): Boolean =
+        auth.currentUser?.providerData?.any { it.providerId == EmailAuthProvider.PROVIDER_ID } == true
+
+    /** Keeps the Firebase display name in step with the username. Best effort. */
+    fun updateDisplayName(name: String) {
+        auth.currentUser?.updateProfile(UserProfileChangeRequest.Builder().setDisplayName(name).build())
+            ?.addOnFailureListener { Log.w(TAG, "Could not update display name", it) }
+    }
+
+    /** Proves the user knows their password (needed before changing it or deleting the account). */
+    suspend fun reauthenticateWithPassword(password: String): AuthOutcome = try {
+        val user = auth.currentUser
+        val email = user?.email
+        if (user == null || email == null) AuthOutcome.Failure(AuthError.UNKNOWN)
+        else {
+            user.reauthenticate(EmailAuthProvider.getCredential(email, password)).await()
+            AuthOutcome.Success(isNewUser = false)
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Log.w(TAG, "Re-authentication failed", e)
+        AuthOutcome.Failure(mapError(e))
+    }
+
+    /** Re-authenticates a Google user. Fails with GOOGLE_WRONG_ACCOUNT if a different Google account was chosen. */
+    suspend fun reauthenticateWithGoogle(idToken: String): AuthOutcome = try {
+        val user = auth.currentUser
+        if (user == null) AuthOutcome.Failure(AuthError.UNKNOWN)
+        else {
+            user.reauthenticate(GoogleAuthProvider.getCredential(idToken, null)).await()
+            AuthOutcome.Success(isNewUser = false)
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Log.w(TAG, "Google re-authentication failed", e)
+        AuthOutcome.Failure(mapError(e))
+    }
+
+    /** Changes the password after re-checking the current one. */
+    suspend fun changePassword(currentPassword: String, newPassword: String): AuthOutcome {
+        val check = reauthenticateWithPassword(currentPassword)
+        if (check is AuthOutcome.Failure) return check
+        return try {
+            auth.currentUser?.updatePassword(newPassword)?.await()
+            Log.i(TAG, "Password changed")
+            AuthOutcome.Success(isNewUser = false)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(TAG, "Password change failed", e)
+            AuthOutcome.Failure(mapError(e))
+        }
+    }
+
+    /**
+     * Permanently deletes the account: first the user's data in Firestore (profile, workouts,
+     * notifications), then the sign-in itself. Call this only right after re-authenticating.
+     * If the data cannot be deleted (for example offline) the sign-in is left alone.
+     */
+    suspend fun deleteAccount(): AuthOutcome = try {
+        val user = auth.currentUser ?: return AuthOutcome.Failure(AuthError.UNKNOWN)
+        val uid = user.uid
+        val deleted = withTimeoutOrNull(DELETE_TIMEOUT_MS) {
+            for (sub in USER_SUBCOLLECTIONS) deleteCollection("$USERS/$uid/$sub")
+            db.collection(USERS).document(uid).delete().await()
+            true
+        }
+        if (deleted != true) {
+            Log.w(TAG, "Deleting account data timed out")
+            AuthOutcome.Failure(AuthError.NETWORK)
+        } else {
+            user.delete().await()
+            Log.i(TAG, "Account deleted uid=$uid")
+            AuthOutcome.Success(isNewUser = false)
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Log.e(TAG, "Account deletion failed", e)
+        AuthOutcome.Failure(if (e is FirebaseFirestoreException && e.code == FirebaseFirestoreException.Code.UNAVAILABLE) AuthError.NETWORK else mapError(e))
+    }
+
+    /** Deletes every document in a collection, 400 at a time. */
+    private suspend fun deleteCollection(path: String) {
+        while (true) {
+            val snapshot = db.collection(path).limit(400).get().await()
+            if (snapshot.isEmpty) return
+            val batch = db.batch()
+            snapshot.documents.forEach { batch.delete(it.reference) }
+            batch.commit().await()
+        }
+    }
+
     fun logout() {
         Log.i(TAG, "Logging out uid=${auth.currentUser?.uid}")
         auth.signOut()
@@ -260,7 +360,8 @@ class AuthRepository(
         is FirebaseAuthWeakPasswordException -> AuthError.WEAK_PASSWORD
         is FirebaseAuthInvalidUserException ->
             if (e.errorCode == "ERROR_USER_DISABLED") AuthError.ACCOUNT_DISABLED else AuthError.WRONG_CREDENTIALS
-        is FirebaseAuthInvalidCredentialsException -> AuthError.WRONG_CREDENTIALS
+        is FirebaseAuthInvalidCredentialsException ->
+            if (e.errorCode == "ERROR_USER_MISMATCH") AuthError.GOOGLE_WRONG_ACCOUNT else AuthError.WRONG_CREDENTIALS
         else ->
             if (e.message?.contains("TOO_MANY", ignoreCase = true) == true ||
                 e.message?.contains("blocked all requests", ignoreCase = true) == true
@@ -272,5 +373,7 @@ class AuthRepository(
         const val USERS = "users"
         const val PROFILE_CHECK_TIMEOUT_MS = 5000L
         const val PROFILE_SAVE_TIMEOUT_MS = 10000L
+        const val DELETE_TIMEOUT_MS = 20000L
+        val USER_SUBCOLLECTIONS = listOf("workouts", "notifications")
     }
 }

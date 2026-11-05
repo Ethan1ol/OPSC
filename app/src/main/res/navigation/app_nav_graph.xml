@@ -29,4 +29,14 @@
         android:name="com.example.opsc.app.ProfileFragment"
         android:label="@string/nav_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.opsc.settings.SettingsFragment"
+        android:label="@string/btn_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.example.opsc.settings.ChangePasswordFragment"
+        android:label="@string/settings_change_password"
+        tools:layout="@layout/fragment_change_password" />
 </navigation>

@@ -1,12 +1,6 @@
 <resources>
     <!-- Afrikaans -->
     <string name="terms_privacy_policy">Deur te registreer, stem jy in tot Battle Fitness se\n<font color="#5B95F9">Gebruiksvoorwaardes</font> en <font color="#5B95F9">Privaatheidsbeleid</font></string>
-    <string name="enter_username">Voer gebruikersnaam in</string>
-    <string name="enter_surname">Voer van in</string>
-    <string name="enter_name">Voer naam in</string>
-    <string name="username">Gebruikersnaam:</string>
-    <string name="surname">Van:</string>
-    <string name="name">Naam:</string>
 
     <string name="err_email_empty">Voer asseblief jou e-pos in</string>
     <string name="err_email_invalid">Daardie e-posadres lyk nie reg nie</string>
@@ -41,22 +35,12 @@
     <string name="msg_logging_in">Teken tans in…</string>
     <string name="msg_signing_up">Skep tans rekening…</string>
     <string name="msg_reset_sent">As daar \'n rekening vir daardie e-pos bestaan, is \'n skakel om jou wagwoord terug te stel gestuur.</string>
-    <string name="msg_welcome_user">Welkom, %1$s!</string>
     <string name="btn_logout">Teken uit</string>
     <string name="btn_settings">Instellings</string>
     <string name="pick_birth_date">Tik om jou geboortedatum te kies</string>
-
-    <string name="settings_title">Instellings</string>
     <string name="settings_language">Taal</string>
-    <string name="settings_country">Land</string>
     <string name="settings_push">Kennisgewings</string>
-    <string name="settings_profile_section">Profiel</string>
-    <string name="hint_height">Lengte (cm)</string>
-    <string name="hint_weight">Gewig (kg)</string>
     <string name="btn_save">Stoor veranderinge</string>
-    <string name="btn_back">Terug</string>
-    <string name="msg_saved">Instellings gestoor. Dit sal sinkroniseer wanneer jy weer aanlyn is.</string>
-    <string name="confirm_password_label">Bevestig wagwoord:</string>
 
     <string name="nav_home">Tuis</string>
     <string name="nav_clubs">Klubs</string>
@@ -126,4 +110,38 @@
     <string name="btn_finish_profile">Gaan voort</string>
     <string name="btn_other_account">Gebruik \'n ander rekening</string>
     <string name="msg_saving">Stoor tans\u2026</string>
+
+    <string name="settings_section_account">Rekening</string>
+    <string name="settings_section_preferences">Voorkeure</string>
+    <string name="settings_section_about">Oor</string>
+    <string name="settings_change_password">Verander wagwoord</string>
+    <string name="settings_delete_account">Vee rekening uit</string>
+    <string name="settings_units">Eenhede</string>
+    <string name="units_metric">Metrieke (cm, kg)</string>
+    <string name="units_imperial">Imperiale (in, lb)</string>
+    <string name="settings_push_hint">Waarskuwings vir wedstryde, skeidsregter-versoeke en die ranglys</string>
+    <string name="settings_google_account_note">Jy teken met Google in, so daar is geen wagwoord om te verander nie.</string>
+    <string name="field_height_in">Lengte (in)</string>
+    <string name="field_weight_lb">Gewig (lb)</string>
+    <string name="err_height_range_in">Lengte moet tussen 20 en 102 in wees</string>
+    <string name="err_weight_range_lb">Gewig moet tussen 44 en 880 lb wees</string>
+    <string name="msg_settings_saved">Instellings gestoor</string>
+    <string name="msg_saved_offline">Op hierdie foon gestoor. Dit sal sinkroniseer wanneer jy weer aanlyn is.</string>
+    <string name="about_version">Weergawe %1$s (%2$s)</string>
+    <string name="about_credits">Gemaak deur Ethan Carr en Insaaf Behardien vir OPSC6312.</string>
+    <string name="about_built_with">Gebou met Firebase en Material Design.</string>
+    <string name="btn_privacy_policy">Privaatheidsbeleid</string>
+    <string name="err_open_link">Geen program op hierdie foon kan daardie skakel oopmaak nie.</string>
+    <string name="field_current_password">Huidige wagwoord</string>
+    <string name="field_new_password">Nuwe wagwoord</string>
+    <string name="btn_update_password">Dateer wagwoord op</string>
+    <string name="msg_password_changed">Wagwoord opgedateer</string>
+    <string name="err_password_same">Kies \'n wagwoord wat verskil van jou huidige een</string>
+    <string name="btn_continue">Gaan voort</string>
+    <string name="delete_title">Vee jou rekening uit?</string>
+    <string name="delete_message">Dit vee jou rekening, profiel en oefensessies permanent uit. Dit kan nie ontdoen word nie.</string>
+    <string name="reauth_title">Bevestig dit is jy</string>
+    <string name="reauth_message">Voer jou wagwoord in om jou rekening uit te vee.</string>
+    <string name="msg_account_deleted">Jou rekening is uitgevee</string>
+    <string name="auth_err_google_wrong_account">Dit is \'n ander Google-rekening. Kies die een waarmee jy aangemeld is.</string>
 </resources>

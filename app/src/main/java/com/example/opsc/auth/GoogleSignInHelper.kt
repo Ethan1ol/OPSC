@@ -22,9 +22,16 @@ import kotlinx.coroutines.CancellationException
 object GoogleSignInHelper {
     private const val TAG = "GoogleSignIn"
 
+    /** Result of showing the Google account picker. */
+    sealed interface TokenResult {
+        data class Token(val idToken: String) : TokenResult
+        data class Error(val error: AuthError) : TokenResult
+    }
+
     // Adapted from: Android Developers (2026) Authenticate users with Sign in with Google.
     // Available at: https://developer.android.com/identity/sign-in/credential-manager-siwg
-    suspend fun signIn(activity: Activity, repository: AuthRepository): AuthOutcome {
+    /** Shows the Google account picker and returns a Google ID token, or why it could not. */
+    suspend fun fetchIdToken(activity: Activity): TokenResult {
         return try {
             val option = GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
@@ -37,31 +44,37 @@ object GoogleSignInHelper {
             if (credential is CustomCredential &&
                 credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
             ) {
-                val token = GoogleIdTokenCredential.createFrom(credential.data).idToken
-                repository.signInWithGoogleIdToken(token)
+                TokenResult.Token(GoogleIdTokenCredential.createFrom(credential.data).idToken)
             } else {
                 Log.e(TAG, "Unexpected credential type: ${credential.type}")
-                AuthOutcome.Failure(AuthError.UNKNOWN)
+                TokenResult.Error(AuthError.UNKNOWN)
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: GetCredentialCancellationException) {
             Log.i(TAG, "User cancelled Google sign-in")
-            AuthOutcome.Failure(AuthError.GOOGLE_CANCELLED)
+            TokenResult.Error(AuthError.GOOGLE_CANCELLED)
         } catch (e: NoCredentialException) {
             Log.w(TAG, "No Google account available", e)
-            AuthOutcome.Failure(AuthError.GOOGLE_UNAVAILABLE)
+            TokenResult.Error(AuthError.GOOGLE_UNAVAILABLE)
         } catch (e: GetCredentialException) {
             Log.e(TAG, "Credential Manager error: ${e.type}", e)
-            AuthOutcome.Failure(AuthError.UNKNOWN)
+            TokenResult.Error(AuthError.UNKNOWN)
         } catch (e: GoogleIdTokenParsingException) {
             Log.e(TAG, "Could not parse Google ID token", e)
-            AuthOutcome.Failure(AuthError.UNKNOWN)
+            TokenResult.Error(AuthError.UNKNOWN)
         } catch (e: Exception) {
             Log.e(TAG, "Google sign-in failed", e)
-            AuthOutcome.Failure(AuthError.UNKNOWN)
+            TokenResult.Error(AuthError.UNKNOWN)
         }
     }
+
+    /** Shows the picker, then signs in to Firebase with the chosen Google account. */
+    suspend fun signIn(activity: Activity, repository: AuthRepository): AuthOutcome =
+        when (val result = fetchIdToken(activity)) {
+            is TokenResult.Token -> repository.signInWithGoogleIdToken(result.idToken)
+            is TokenResult.Error -> AuthOutcome.Failure(result.error)
+        }
 
     /** Forgets the chosen Google account so the picker appears again after logout. */
     suspend fun clearState(activity: Activity) {

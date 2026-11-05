@@ -8,18 +8,14 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.opsc.auth.logoutToLogin
 import androidx.lifecycle.lifecycleScope
 import com.example.opsc.BuildConfig
-import com.example.opsc.auth.AuthActivity
 import com.example.opsc.R
-import com.example.opsc.SettingsActivity
 import com.example.opsc.auth.AuthRepository
-import com.example.opsc.auth.GoogleSignInHelper
 import com.example.opsc.profile.LanguageManager
 import com.example.opsc.ui.ConfirmDialog
-import com.example.opsc.ui.ThemeManager
-import com.example.opsc.ui.ThemeMode
-import com.google.android.material.button.MaterialButtonToggleGroup
 import com.example.opsc.ui.StateLayout
 import kotlinx.coroutines.launch
 
@@ -67,19 +63,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         view.findViewById<TextView>(R.id.textProfileName).text = user.displayName ?: user.email.orEmpty()
         view.findViewById<TextView>(R.id.textProfileEmail).text = user.email.orEmpty()
 
-        // Appearance: dark is the default; the choice is saved and applied straight away.
-        val themeToggle = view.findViewById<MaterialButtonToggleGroup>(R.id.themeToggle)
-        val ids = mapOf(ThemeMode.DARK to R.id.themeDark, ThemeMode.LIGHT to R.id.themeLight, ThemeMode.SYSTEM to R.id.themeSystem)
-        themeToggle.check(ids.getValue(ThemeManager.current(requireContext())))
-        themeToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            val mode = ids.entries.firstOrNull { it.value == checkedId }?.key
-            if (isChecked && mode != null && mode != ThemeManager.current(requireContext())) {
-                ThemeManager.set(requireContext(), mode)
-            }
-        }
-
         view.findViewById<View>(R.id.buttonSettings).setOnClickListener {
-            startActivity(Intent(requireContext(), SettingsActivity::class.java))
+            findNavController().navigate(R.id.settingsFragment)
         }
 
         // The design gallery only exists in debug builds, so it is opened by class name.
@@ -97,20 +82,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         view.findViewById<View>(R.id.buttonLogout).setOnClickListener {
             ConfirmDialog.show(requireContext(), R.string.logout_title, R.string.logout_message, R.string.btn_logout) {
-                logout()
+                logoutToLogin()
             }
-        }
-    }
-
-    private fun logout() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            Log.i(TAG, "User confirmed log out")
-            auth.logout()
-            GoogleSignInHelper.clearState(requireActivity())
-            startActivity(Intent(requireContext(), AuthActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
-            requireActivity().finish()
         }
     }
 

@@ -64,15 +64,4 @@
         <item name="textInputStyle">@style/Widget.Battle.TextInputLayout</item>
         <item name="materialCardViewStyle">@style/Widget.Battle.Card</item>
     </style>
-
-    <!--
-      Used only by the older screens that have not been rebuilt yet (they have fixed orange
-      artwork and black text). Removed screen by screen as the features are rebuilt.
-    -->
-    <style name="Theme.BattleFitness.Legacy" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimary">#A94A00</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="android:fontFamily">@font/poppins</item>
-        <item name="fontFamily">@font/poppins</item>
-    </style>
 </resources>

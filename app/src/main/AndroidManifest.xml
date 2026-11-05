@@ -22,11 +22,6 @@
             android:name=".app.AppActivity"
             android:exported="false" />
 
-        <!-- Settings is not rebuilt yet and still uses the legacy theme -->
-        <activity
-            android:name=".SettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.BattleFitness.Legacy" />
         <!-- Login, sign-up and password reset; the launcher screen -->
         <activity
             android:name=".auth.AuthActivity"

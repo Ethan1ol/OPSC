@@ -3,12 +3,13 @@ package com.example.opsc.auth
 /** Every way a form field can be invalid. The UI maps each value to a translated message. */
 enum class FieldError {
     EMAIL_EMPTY, EMAIL_INVALID,
-    PASSWORD_EMPTY, PASSWORD_TOO_SHORT, PASSWORD_MISMATCH,
+    PASSWORD_EMPTY, PASSWORD_TOO_SHORT, PASSWORD_MISMATCH, PASSWORD_SAME_AS_CURRENT,
     NAME_EMPTY, NAME_INVALID,
     SURNAME_EMPTY, SURNAME_INVALID,
     USERNAME_EMPTY, USERNAME_TOO_SHORT, USERNAME_TOO_LONG, USERNAME_BAD_CHARS,
     BIRTH_EMPTY, BIRTH_INVALID, BIRTH_IN_FUTURE, BIRTH_TOO_YOUNG,
-    NUMBER_INVALID, HEIGHT_OUT_OF_RANGE, WEIGHT_OUT_OF_RANGE
+    NUMBER_INVALID, HEIGHT_OUT_OF_RANGE, WEIGHT_OUT_OF_RANGE,
+    HEIGHT_OUT_OF_RANGE_IMPERIAL, WEIGHT_OUT_OF_RANGE_IMPERIAL
 }
 
 /** The fields on the registration form, used to attach an error to the right input. */
@@ -54,6 +55,11 @@ object Validators {
         password.length < MIN_PASSWORD_LENGTH -> FieldError.PASSWORD_TOO_SHORT
         else -> null
     }
+
+    /** For the change-password form: a valid new password that is not the same as the current one. */
+    fun validateChangedPassword(newPassword: String, currentPassword: String): FieldError? =
+        validateNewPassword(newPassword)
+            ?: if (newPassword == currentPassword) FieldError.PASSWORD_SAME_AS_CURRENT else null
 
     fun validateConfirmPassword(password: String, confirm: String): FieldError? =
         if (password != confirm) FieldError.PASSWORD_MISMATCH else null

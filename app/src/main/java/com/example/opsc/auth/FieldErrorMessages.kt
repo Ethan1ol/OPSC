@@ -11,6 +11,7 @@ fun FieldError.messageRes(): Int = when (this) {
     FieldError.PASSWORD_EMPTY -> R.string.err_password_empty
     FieldError.PASSWORD_TOO_SHORT -> R.string.err_password_short
     FieldError.PASSWORD_MISMATCH -> R.string.err_password_mismatch
+    FieldError.PASSWORD_SAME_AS_CURRENT -> R.string.err_password_same
     FieldError.NAME_EMPTY -> R.string.err_name_empty
     FieldError.NAME_INVALID -> R.string.err_name_invalid
     FieldError.SURNAME_EMPTY -> R.string.err_surname_empty
@@ -26,4 +27,6 @@ fun FieldError.messageRes(): Int = when (this) {
     FieldError.NUMBER_INVALID -> R.string.err_number_invalid
     FieldError.HEIGHT_OUT_OF_RANGE -> R.string.err_height_range
     FieldError.WEIGHT_OUT_OF_RANGE -> R.string.err_weight_range
+    FieldError.HEIGHT_OUT_OF_RANGE_IMPERIAL -> R.string.err_height_range_in
+    FieldError.WEIGHT_OUT_OF_RANGE_IMPERIAL -> R.string.err_weight_range_lb
 }

@@ -45,10 +45,4 @@
     <color name="bf_on_success">#FFFFFF</color>
     <color name="bf_success_container">#BDF2C9</color>
     <color name="bf_on_success_container">#00210C</color>
-
-    <!-- Legacy colours still used by screens that have not been rebuilt yet -->
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="grey">#b4b4b4</color>
-    <color name="link_blue">#5B95F5</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.opsc.auth
 
+import android.content.Intent
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -50,6 +51,19 @@ fun Fragment.handleLoggedIn(event: AuthEvent.LoggedIn) {
         com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
             ?.let { ProfileGate.markComplete(requireContext(), it) }
         openMainApp()
+    }
+}
+
+/** Signs out (and forgets the chosen Google account), then returns to the login screen. */
+fun Fragment.logoutToLogin() {
+    val activity = requireActivity()
+    activity.lifecycleScope.launch {
+        AuthRepository().logout()
+        GoogleSignInHelper.clearState(activity)
+        activity.startActivity(Intent(activity, AuthActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
+        activity.finish()
     }
 }
 
