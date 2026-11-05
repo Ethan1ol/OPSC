@@ -1,0 +1,78 @@
+<resources>
+    <!-- isiZulu -->
+    <string name="password_hint">Faka iphasiwedi</string>
+    <string name="forgot_password">Ukhohlwe iphasiwedi?</string>
+    <string name="signUp_link">Bhalisa</string>
+    <string name="login_link">Ngena</string>
+    <string name="login">Ngena</string>
+    <string name="signupButton">Bhalisa</string>
+    <string name="logo_name">Siyakwamukela ku-Battle Fitness</string>
+    <string name="login_with_google">Ngena nge-Google</string>
+    <string name="welcome_message">uhlelo lokulandelela ukuzivocavoca nokuncintisana nokuxhumana ngobungane.</string>
+    <string name="terms_privacy_policy">Ngokubhalisa, uyavuma ku-Battle\n<font color="#5B95F9">Imigomo Yokusebenzisa</font> kanye <font color="#5B95F9">Nenqubomgomo Yobumfihlo</font></string>
+    <string name="confirm_password">Qinisekisa iphasiwedi</string>
+    <string name="enter_username">Faka igama lomsebenzisi</string>
+    <string name="enter_surname">Faka isibongo</string>
+    <string name="password">Iphasiwedi</string>
+    <string name="enter_name">Faka igama</string>
+    <string name="email">I-imeyili</string>
+    <string name="username">Igama lomsebenzisi:</string>
+    <string name="birth_date">Usuku lokuzalwa:</string>
+    <string name="surname">Isibongo:</string>
+    <string name="password_display">Iphasiwedi:</string>
+    <string name="name">Igama:</string>
+    <string name="email_sisplay">I-imeyili:</string>
+    <string name="already_a_member">Usulilungu kakade?</string>
+    <string name="login_title">Ukungena ku-akhawunti</string>
+    <string name="no_account_yet">Awunayo i-akhawunti okwamanje?</string>
+
+    <string name="err_email_empty">Sicela ufake i-imeyili yakho</string>
+    <string name="err_email_invalid">Leli kheli le-imeyili alibonakali lilungile</string>
+    <string name="err_password_empty">Sicela ufake iphasiwedi yakho</string>
+    <string name="err_password_short">Iphasiwedi kumele ibe okungenani nezinhlamvu eziyi-6</string>
+    <string name="err_password_mismatch">Amaphasiwedi awafani</string>
+    <string name="err_name_empty">Sicela ufake igama lakho</string>
+    <string name="err_name_invalid">Sebenzisa izinhlamvu kuphela (2 kuya ku-30)</string>
+    <string name="err_surname_empty">Sicela ufake isibongo sakho</string>
+    <string name="err_surname_invalid">Sebenzisa izinhlamvu kuphela (2 kuya ku-30)</string>
+    <string name="err_username_empty">Sicela ufake igama lomsebenzisi</string>
+    <string name="err_username_short">Igama lomsebenzisi kumele libe okungenani nezinhlamvu ezi-3</string>
+    <string name="err_username_long">Igama lomsebenzisi akumele libe ngaphezu kwezinhlamvu ezingu-20</string>
+    <string name="err_username_chars">Igama lomsebenzisi kumele libe nezinhlamvu, izinombolo ne-_ kuphela</string>
+    <string name="err_birth_empty">Sicela ukhethe usuku lwakho lokuzalwa</string>
+    <string name="err_birth_invalid">Lolo suku lokuzalwa alulungile</string>
+    <string name="err_birth_future">Usuku lokuzalwa alunakuba esikhathini esizayo</string>
+    <string name="err_birth_young">Kumele ube nezinyaka okungenani eziyi-13</string>
+    <string name="err_number_invalid">Faka inombolo elungile</string>
+    <string name="err_height_range">Ubude kumele bube phakathi kuka-50 no-260 cm</string>
+    <string name="err_weight_range">Isisindo kumele sibe phakathi kuka-20 no-400 kg</string>
+
+    <string name="auth_err_network">Alukho uxhumo lwe-inthanethi. Hlola inethiwekhi yakho uzame futhi.</string>
+    <string name="auth_err_wrong_credentials">I-imeyili noma iphasiwedi akulungile.</string>
+    <string name="auth_err_email_in_use">I-akhawunti enale-imeyili isivele ikhona. Zama ukungena.</string>
+    <string name="auth_err_weak_password">Leyo phasiwedi ibuthaka kakhulu. Khetha eqinile.</string>
+    <string name="auth_err_disabled">Le akhawunti ivaliwe.</string>
+    <string name="auth_err_too_many">Imizamo eminingi kakhulu. Sicela ulinde isikhashana uzame futhi.</string>
+    <string name="auth_err_google_cancelled">Ukungena nge-Google kukhanselwe.</string>
+    <string name="auth_err_google_unavailable">Ayikho i-akhawunti ye-Google kule foni. Engeza eyodwa kuzilungiselelo uzame futhi.</string>
+    <string name="auth_err_unknown">Kukhona okungahambanga kahle. Sicela uzame futhi.</string>
+    <string name="msg_logging_in">Iyangena…</string>
+    <string name="msg_signing_up">Iyakha i-akhawunti…</string>
+    <string name="msg_reset_sent">Uma i-akhawunti ikhona kuleyo imeyili, kuthunyelwe isixhumanisi sokusetha kabusha iphasiwedi.</string>
+    <string name="msg_enter_email_first">Qala ngokufaka i-imeyili yakho ngenhla, bese uthinta Ukhohlwe iphasiwedi.</string>
+    <string name="msg_welcome_user">Siyakwamukela, %1$s!</string>
+    <string name="btn_logout">Phuma</string>
+    <string name="btn_settings">Izilungiselelo</string>
+    <string name="pick_birth_date">Thinta ukukhetha usuku lwakho lokuzalwa</string>
+
+    <string name="settings_title">Izilungiselelo</string>
+    <string name="settings_language">Ulimi</string>
+    <string name="settings_country">Izwe</string>
+    <string name="settings_push">Izaziso</string>
+    <string name="settings_profile_section">Iphrofayela</string>
+    <string name="hint_height">Ubude (cm)</string>
+    <string name="hint_weight">Isisindo (kg)</string>
+    <string name="btn_save">Londoloza izinguquko</string>
+    <string name="btn_back">Emuva</string>
+    <string name="msg_saved">Izilungiselelo zilondoloziwe. Ziyovumelanisa uma usubuyele ku-inthanethi.</string>
+</resources>

@@ -1,0 +1,78 @@
+<resources>
+    <!-- Afrikaans -->
+    <string name="password_hint">Voer wagwoord in</string>
+    <string name="forgot_password">Wagwoord vergeet?</string>
+    <string name="signUp_link">Registreer</string>
+    <string name="login_link">Teken in</string>
+    <string name="login">Teken in</string>
+    <string name="signupButton">Registreer</string>
+    <string name="logo_name">Welkom by Battle Fitness</string>
+    <string name="login_with_google">Teken in met Google</string>
+    <string name="welcome_message">\'n fiksheidsprogram vir fiksheidsopsporing en vriendskaplike kompetisie en interaksie.</string>
+    <string name="terms_privacy_policy">Deur te registreer, stem jy in tot Battle se\n<font color="#5B95F9">Gebruiksvoorwaardes</font> en <font color="#5B95F9">Privaatheidsbeleid</font></string>
+    <string name="confirm_password">Bevestig wagwoord</string>
+    <string name="enter_username">Voer gebruikersnaam in</string>
+    <string name="enter_surname">Voer van in</string>
+    <string name="password">Wagwoord</string>
+    <string name="enter_name">Voer naam in</string>
+    <string name="email">E-pos</string>
+    <string name="username">Gebruikersnaam:</string>
+    <string name="birth_date">Geboortedatum:</string>
+    <string name="surname">Van:</string>
+    <string name="password_display">Wagwoord:</string>
+    <string name="name">Naam:</string>
+    <string name="email_sisplay">E-pos:</string>
+    <string name="already_a_member">Reeds \'n lid?</string>
+    <string name="login_title">Rekeninginteken</string>
+    <string name="no_account_yet">Het jy nog nie \'n rekening nie?</string>
+
+    <string name="err_email_empty">Voer asseblief jou e-pos in</string>
+    <string name="err_email_invalid">Daardie e-posadres lyk nie reg nie</string>
+    <string name="err_password_empty">Voer asseblief jou wagwoord in</string>
+    <string name="err_password_short">Wagwoord moet ten minste 6 karakters wees</string>
+    <string name="err_password_mismatch">Wagwoorde stem nie ooreen nie</string>
+    <string name="err_name_empty">Voer asseblief jou naam in</string>
+    <string name="err_name_invalid">Gebruik net letters (2 tot 30 karakters)</string>
+    <string name="err_surname_empty">Voer asseblief jou van in</string>
+    <string name="err_surname_invalid">Gebruik net letters (2 tot 30 karakters)</string>
+    <string name="err_username_empty">Voer asseblief \'n gebruikersnaam in</string>
+    <string name="err_username_short">Gebruikersnaam moet ten minste 3 karakters wees</string>
+    <string name="err_username_long">Gebruikersnaam mag hoogstens 20 karakters wees</string>
+    <string name="err_username_chars">Gebruikersnaam mag net letters, syfers en _ bevat</string>
+    <string name="err_birth_empty">Kies asseblief jou geboortedatum</string>
+    <string name="err_birth_invalid">Daardie geboortedatum is nie geldig nie</string>
+    <string name="err_birth_future">Geboortedatum kan nie in die toekoms wees nie</string>
+    <string name="err_birth_young">Jy moet ten minste 13 jaar oud wees</string>
+    <string name="err_number_invalid">Voer \'n geldige getal in</string>
+    <string name="err_height_range">Lengte moet tussen 50 en 260 cm wees</string>
+    <string name="err_weight_range">Gewig moet tussen 20 en 400 kg wees</string>
+
+    <string name="auth_err_network">Geen internetverbinding nie. Kontroleer jou netwerk en probeer weer.</string>
+    <string name="auth_err_wrong_credentials">Verkeerde e-pos of wagwoord.</string>
+    <string name="auth_err_email_in_use">\'n Rekening met daardie e-pos bestaan reeds. Probeer inteken.</string>
+    <string name="auth_err_weak_password">Daardie wagwoord is te swak. Kies \'n sterker een.</string>
+    <string name="auth_err_disabled">Hierdie rekening is gedeaktiveer.</string>
+    <string name="auth_err_too_many">Te veel pogings. Wag asseblief \'n oomblik en probeer weer.</string>
+    <string name="auth_err_google_cancelled">Google-aanmelding is gekanselleer.</string>
+    <string name="auth_err_google_unavailable">Geen Google-rekening op hierdie foon nie. Voeg een by in Instellings en probeer weer.</string>
+    <string name="auth_err_unknown">Iets het verkeerd gegaan. Probeer asseblief weer.</string>
+    <string name="msg_logging_in">Teken tans in…</string>
+    <string name="msg_signing_up">Skep tans rekening…</string>
+    <string name="msg_reset_sent">As daar \'n rekening vir daardie e-pos bestaan, is \'n skakel om jou wagwoord terug te stel gestuur.</string>
+    <string name="msg_enter_email_first">Voer eers jou e-pos hierbo in en tik dan Wagwoord vergeet.</string>
+    <string name="msg_welcome_user">Welkom, %1$s!</string>
+    <string name="btn_logout">Teken uit</string>
+    <string name="btn_settings">Instellings</string>
+    <string name="pick_birth_date">Tik om jou geboortedatum te kies</string>
+
+    <string name="settings_title">Instellings</string>
+    <string name="settings_language">Taal</string>
+    <string name="settings_country">Land</string>
+    <string name="settings_push">Kennisgewings</string>
+    <string name="settings_profile_section">Profiel</string>
+    <string name="hint_height">Lengte (cm)</string>
+    <string name="hint_weight">Gewig (kg)</string>
+    <string name="btn_save">Stoor veranderinge</string>
+    <string name="btn_back">Terug</string>
+    <string name="msg_saved">Instellings gestoor. Dit sal sinkroniseer wanneer jy weer aanlyn is.</string>
+</resources>
