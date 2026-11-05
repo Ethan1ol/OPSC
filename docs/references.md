@@ -63,3 +63,15 @@ Material Components for Android (2026) *Switch and toggle button groups*. Availa
 
 Republic of South Africa (2013) *Protection of Personal Information Act 4 of 2013*. Available at: https://www.gov.za/documents/protection-personal-information-act (Accessed: 5 November 2026).
 
+Android Developers (2026) *Save data in a local database using Room*. Available at: https://developer.android.com/training/data-storage/room (Accessed: 5 November 2026).
+
+Android Developers (2026) *Schedule tasks with WorkManager: constraints, unique work and backoff*. Available at: https://developer.android.com/develop/background-work/background-tasks/persistent (Accessed: 5 November 2026).
+
+Android Developers (2026) *Create dynamic lists with RecyclerView and ListAdapter*. Available at: https://developer.android.com/develop/ui/views/layout/recyclerview (Accessed: 5 November 2026).
+
+Android Developers (2026) *Swipe to dismiss with ItemTouchHelper*. Available at: https://developer.android.com/reference/androidx/recyclerview/widget/ItemTouchHelper (Accessed: 5 November 2026).
+
+Material Components for Android (2026) *Bottom sheets, progress indicators and floating action buttons*. Available at: https://github.com/material-components/material-components-android/tree/master/docs/components (Accessed: 5 November 2026).
+
+Firebase (2026) *Offline capabilities and the document id as an idempotency key (Cloud Firestore data model)*. Available at: https://firebase.google.com/docs/firestore/data-model (Accessed: 5 November 2026).
+

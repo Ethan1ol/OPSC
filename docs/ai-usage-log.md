@@ -83,3 +83,11 @@ Entries are appended after every piece.
 - **How it was tested:** build, lint (no errors) and 94 unit tests. Not tested: the Settings screens on a device. The emulator froze with "system not responding" dialogs while testing, so no Settings screenshot was captured. Not tested: language switching, saving to Firestore, change password, delete account, the privacy link.
 - **Images/text generated:** all Afrikaans and isiZulu text; the privacy policy draft. No images.
 
+## 2026-11-05 – Features 4 and 5: Offline mode with sync, Workout Logger and Dashboard
+- **Generated:** the Room database (`WorkoutEntity`, `WorkoutDao`, `AppDatabase`); `WorkoutRepository` and `WorkoutRemote`; the WorkManager `SyncWorker` and `SyncScheduler`; pure logic in `WorkoutLogic.kt` (sync decisions, form validation, monthly goal, streak and totals) with 26 unit tests; `WorkoutsViewModel`; the Workouts screen with goal ring, badges, swipe-to-delete with undo and "Sync now"; the log-workout bottom sheet; the goal dialog; the rebuilt dashboard Home screen; English, Afrikaans and isiZulu text for all new strings.
+- **Reviewed/changed by students:** (to be completed) Ethan specified the behaviour: save to Room first, sync with WorkManager, no duplicates (UUID as Firestore id), offline deletes, Pending/Synced badges, a banner, "Sync now", a snackbar when sync finishes, and the dashboard contents.
+- **Design decisions:** each row has a version number so an edit made while an upload is running is not wrongly marked synced; a swiped workout is only hidden until the Undo message goes away, then deleted; the sync job also pulls workouts from other devices and removes ones deleted elsewhere, but never touches rows with pending changes; the exercise picker offers recent and common exercises for now and is replaced by the wger library in a later feature.
+- **Bugs debugged:** none found in testing yet.
+- **How it was tested:** build, lint (no errors) and 120 unit tests (the sync decisions, validation and statistics are unit tested). Not tested: the database queries and the WorkManager job on a device (needs the airplane-mode demo), and the screens visually.
+- **Images/text generated:** all Afrikaans and isiZulu text. No images.
+
