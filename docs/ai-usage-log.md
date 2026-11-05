@@ -20,3 +20,10 @@ Entries are appended after every piece.
 - **Reviewed/changed by students:** (to be completed)
 - **Bugs debugged:** none. Rules are not yet tested in the Firebase Rules Playground.
 - **Images/text generated:** none.
+
+## 2026-11-05 – Piece 2: Authentication and SSO
+- **Generated:** `Validators.kt` and its 42 unit tests, `AuthRepository.kt`, `GoogleSignInHelper.kt`, `FieldErrorMessages.kt`, rewrites of `MainActivity`, `signUpSection`, `signUpDetailsActivity`, `HomeActivity`, `activity_home.xml`, new validation/auth strings, INTERNET permission.
+- **Reviewed/changed by students:** (to be completed) Ethan chose to keep the Firebase package `com.battlefitness.app` instead of `za.co.battlefitness`.
+- **Bugs debugged:** duplicate name check, date picker never shown, wrong birth-date error text, password/username messages not matching their rules; a resource-compiler error from an apostrophe in a string; Firebase config package mismatch found by reading `google-services.json`.
+- **Images/text generated:** English error and message strings.
+

@@ -2,7 +2,7 @@
 
 - [x] Piece 0 – Recon and plan
 - [x] Piece 1 – Build foundation
-- [ ] Piece 2 – Authentication and SSO
+- [x] Piece 2 – Authentication and SSO
 - [ ] Piece 3 – Settings, languages and profile
 - [ ] Piece 4 – Offline mode with sync
 - [ ] Piece 5 – REST API (wger)

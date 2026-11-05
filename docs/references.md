@@ -14,3 +14,16 @@ Google for Developers (2026) *Authenticate your client (SHA-1 certificate finger
 Gradle Inc. (2026) *Version catalogs*. Available at: https://docs.gradle.org/current/userguide/version_catalogs.html (Accessed: 5 November 2026).
 
 Git (2026) *gitattributes documentation*. Available at: https://git-scm.com/docs/gitattributes (Accessed: 5 November 2026).
+
+Android Developers (2026) *Authenticate users with Sign in with Google (Credential Manager)*. Available at: https://developer.android.com/identity/sign-in/credential-manager-siwg (Accessed: 5 November 2026).
+
+Firebase (2026) *Authenticate with Firebase using password-based accounts on Android*. Available at: https://firebase.google.com/docs/auth/android/password-auth (Accessed: 5 November 2026).
+
+Firebase (2026) *Authenticate with Google on Android*. Available at: https://firebase.google.com/docs/auth/android/google-signin (Accessed: 5 November 2026).
+
+Firebase (2026) *Send a password reset email*. Available at: https://firebase.google.com/docs/auth/android/manage-users#send_a_password_reset_email (Accessed: 5 November 2026).
+
+Firebase (2026) *Add data to Cloud Firestore*. Available at: https://firebase.google.com/docs/firestore/manage-data/add-data (Accessed: 5 November 2026).
+
+Firebase (2026) *Cloud Firestore Security Rules*. Available at: https://firebase.google.com/docs/firestore/security/get-started (Accessed: 5 November 2026).
+
