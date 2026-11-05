@@ -1,3 +1,4 @@
+[README.md](https://github.com/user-attachments/files/34450155/README.md)
 
 # Battle Fitness (OPSC Mobile Application)
 
@@ -65,6 +66,17 @@ clubs/{clubId}                       ownerId, name, inviteCode, memberIds, statu
 clubs/{clubId}/fixtures/{fixtureId}  player ids, referee, round, status, scores, proof photo
 clubs/{clubId}/standings/{uid}       points, played, won, drawn, lost
 ```
+
+### 🗄️ Database screenshots (Cloud Firestore)
+These screenshots are from the live Firebase console and show that the app really saves its data online. Private values (email address, push token and photo link) are hidden.
+
+**Clubs collection:** one club document with its invite code, the list of member ids (`memberIds`), the owner (`ownerId`) and the `status`, which is `active` because the league has started. The `fixtures` and `standings` sub-collections sit inside the club.
+
+![Cloud Firestore clubs collection](docs/images/firestore-clubs.png)
+
+**Users collection:** one document for each registered user, with the profile and settings (name, username, country, height, language, units, monthly goal, push switch and push token). The `workouts` and `notifications` sub-collections sit inside the user.
+
+![Cloud Firestore users collection](docs/images/firestore-users.png)
 
 ---
 
@@ -194,7 +206,7 @@ Everything below was added or changed since the Part 2 prototype, which had a lo
 ---
 
 ## 🎥 Demonstration Video
-Watch the full demonstration (recorded on a physical Android phone, with voice-over): :https://youtu.be/PhxCVDvSRq0 
+Watch the full demonstration (recorded on a physical Android phone, with voice-over): **[https://youtu.be/PhxCVDvSRq0](https://youtu.be/PhxCVDvSRq0)**
 
 ---
 
