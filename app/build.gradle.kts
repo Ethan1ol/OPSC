@@ -12,7 +12,7 @@ android {
     }}
 
     defaultConfig {
-        applicationId = "za.co.battlefitness"
+        applicationId = "com.battlefitness.app"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
