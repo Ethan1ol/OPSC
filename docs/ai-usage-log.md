@@ -33,3 +33,10 @@ Entries are appended after every piece.
 - **Reviewed/changed by students:** (to be completed)
 - **Bugs debugged:** none. Not yet tested in the Firebase console.
 - **Images/text generated:** none.
+
+## 2026-11-05 – Piece 3: Settings, languages and profile
+- **Generated:** `LanguageManager.kt`, `ProfileRepository.kt`, new `SettingsActivity.kt` and `activity_settings.xml`, shared widget styles, height/weight validators plus 17 more unit tests, `locales_config.xml`, manifest changes, English strings, and **Afrikaans (`values-af`) and isiZulu (`values-zu`) translations of every string**.
+- **Reviewed/changed by students:** (to be completed) the Afrikaans and isiZulu text was written by the AI and must be checked by a first-language speaker before submission.
+- **Bugs debugged:** AAPT failure because style names with a dot (`Battle.Label`) implied a missing parent style; fixed by renaming. Switched theme from DayNight to Light because layouts use fixed black text on white.
+- **Images/text generated:** all translated UI text (Afrikaans, isiZulu).
+

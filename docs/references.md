@@ -27,3 +27,7 @@ Firebase (2026) *Add data to Cloud Firestore*. Available at: https://firebase.go
 
 Firebase (2026) *Cloud Firestore Security Rules*. Available at: https://firebase.google.com/docs/firestore/security/get-started (Accessed: 5 November 2026).
 
+Android Developers (2026) *Per-app language preferences*. Available at: https://developer.android.com/guide/topics/resources/app-languages (Accessed: 5 November 2026).
+
+Android Developers (2026) *Localize your app*. Available at: https://developer.android.com/guide/topics/resources/localization (Accessed: 5 November 2026).
+

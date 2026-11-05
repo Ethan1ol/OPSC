@@ -3,7 +3,7 @@
 - [x] Piece 0 – Recon and plan
 - [x] Piece 1 – Build foundation
 - [x] Piece 2 – Authentication and SSO
-- [ ] Piece 3 – Settings, languages and profile
+- [x] Piece 3 – Settings, languages and profile
 - [ ] Piece 4 – Offline mode with sync
 - [ ] Piece 5 – REST API (wger)
 - [ ] Piece 6 – Clubs and league (User Defined 4)
