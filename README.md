@@ -194,7 +194,7 @@ Everything below was added or changed since the Part 2 prototype, which had a lo
 ---
 
 ## 🎥 Demonstration Video
-Watch the full demonstration (recorded on a physical Android phone, with voice-over): **[add the unlisted YouTube link here]**
+Watch the full demonstration (recorded on a physical Android phone, with voice-over): :https://youtu.be/PhxCVDvSRq0 
 
 ---
 
