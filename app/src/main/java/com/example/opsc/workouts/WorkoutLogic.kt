@@ -3,39 +3,24 @@ package com.example.opsc.workouts
 import java.util.Calendar
 import java.util.TimeZone
 
-/**
- * Where a workout is in the sync process.
- * - [PENDING_UPSERT]: saved on the phone, not yet confirmed on the server (new or changed).
- * - [SYNCED]: the server has this version.
- * - [PENDING_DELETE]: deleted by the user, waiting to be deleted on the server too.
- */
+/** Where a workout is in syncing: PENDING_UPSERT (new or changed, not confirmed), SYNCED (server has it), PENDING_DELETE (deleted, waiting to delete on the server). */
 enum class SyncState { PENDING_UPSERT, SYNCED, PENDING_DELETE }
 
-/** What a sync run should do with the workouts that exist only on the server. Pure data, unit tested. */
+/** What a sync run does with workouts that exist only on the server. */
 data class PullPlan(val insertIds: Set<String>, val removeLocalIds: Set<String>)
 
-/**
- * Pure decisions made by the sync job. Kept free of Android and Firebase so they can be unit tested.
- */
+/** Decisions made by the sync job, with no Android or Firebase code so they can be unit tested. */
 object SyncPolicy {
-    /** Firestore error codes that may succeed later (network trouble), so the job should retry with backoff. */
+    /** Firestore errors that may work later (network trouble). */
     private val RETRYABLE = setOf("UNAVAILABLE", "DEADLINE_EXCEEDED", "ABORTED", "RESOURCE_EXHAUSTED", "INTERNAL", "UNKNOWN", "CANCELLED")
 
-    /** True if a failure with this Firestore code is worth retrying. Permission and argument errors are not. */
+    /** True if a failure with this code is worth retrying. */
     fun isRetryable(firestoreCodeName: String): Boolean = firestoreCodeName in RETRYABLE
 
-    /**
-     * A push of a workout may only mark it as synced if the row has not changed while the upload
-     * was running (same version). Otherwise it stays pending and the next run uploads the newer edit.
-     */
+    /** A workout may only be marked synced if it did not change during the upload. Otherwise the next run uploads the newer edit. */
     fun shouldMarkSynced(versionAtUpload: Long, currentVersion: Long): Boolean = versionAtUpload == currentVersion
 
-    /**
-     * Decides how to merge the server's workout list into the phone's:
-     * insert ones the phone has never seen, and (only if the server list is complete) drop local
-     * rows that were already synced but no longer exist on the server (deleted on another device).
-     * Rows with pending changes are never touched.
-     */
+    /** Merges the server list into the phone's: insert workouts the phone has not seen, and (only if the server list is complete) drop synced rows deleted elsewhere. Rows with pending changes are never touched. */
     fun planPull(localStates: Map<String, SyncState>, remoteIds: Set<String>, remoteListComplete: Boolean): PullPlan {
         val insert = remoteIds.filter { it !in localStates }.toSet()
         val remove = if (remoteListComplete) {
@@ -45,7 +30,7 @@ object SyncPolicy {
     }
 }
 
-/** The user's input when logging a workout. */
+/** What the user typed when logging a workout. */
 data class NewWorkout(
     val exercise: String,
     val sets: Int,
@@ -57,13 +42,13 @@ data class NewWorkout(
 /** Fields of the log-workout form. */
 enum class WorkoutField { EXERCISE, SETS, REPS, DURATION, NOTES }
 
-/** Every way a field can be invalid. The UI turns each into a translated message. */
+/** Every way a field can be invalid. */
 enum class WorkoutError {
     EXERCISE_EMPTY, EXERCISE_TOO_LONG, NOT_A_NUMBER,
     SETS_OUT_OF_RANGE, REPS_OUT_OF_RANGE, DURATION_OUT_OF_RANGE, NOTES_TOO_LONG
 }
 
-/** Validation for the log-workout form. Pure Kotlin. Numbers arrive as text exactly as typed. */
+/** Checks the log-workout form. Numbers arrive as typed text. */
 object WorkoutValidator {
     const val MAX_EXERCISE_LENGTH = 60
     const val MAX_NOTES_LENGTH = 500
@@ -71,7 +56,7 @@ object WorkoutValidator {
     val REPS_RANGE = 1..500
     val DURATION_RANGE = 1..600
 
-    /** Returns one error per bad field (an empty map means the workout is valid). */
+    /** Returns one error per bad field. An empty map means valid. */
     fun validate(exercise: String, sets: String, reps: String, duration: String, notes: String): Map<WorkoutField, WorkoutError> {
         val errors = linkedMapOf<WorkoutField, WorkoutError>()
         val name = exercise.trim()
@@ -92,20 +77,20 @@ object WorkoutValidator {
     }
 }
 
-/** The bits of a workout needed to work out the dashboard numbers. */
+/** The parts of a workout needed for the dashboard numbers. */
 data class WorkoutPoint(val timestamp: Long, val sets: Int, val reps: Int)
 
-/** Numbers shown on the Workouts screen and the dashboard. */
+/** Numbers on the Workouts screen and dashboard. */
 data class DashboardStats(
     val monthCount: Int,
     val streakDays: Int,
     val monthReps: Int,
     val goal: Int,
-    /** 0.0 to 1.0, how much of the monthly goal is done. */
+    /** 0.0 to 1.0: how much of the monthly goal is done. */
     val progress: Float
 )
 
-/** Pure calculations for the monthly goal, streak and total reps. */
+/** Calculations for the monthly goal, streak and total reps. */
 object WorkoutStats {
     const val DEFAULT_GOAL = 12
     val GOAL_RANGE = 1..100
@@ -124,10 +109,7 @@ object WorkoutStats {
         )
     }
 
-    /**
-     * Consecutive days with at least one workout, counting back from today. If there is none yet
-     * today the streak is still alive when yesterday had one (the day is not over).
-     */
+    /** Consecutive days with a workout, counting back from today. If today has none yet, the streak lives on if yesterday had one. */
     fun streak(workouts: List<WorkoutPoint>, nowMillis: Long, timeZone: TimeZone = TimeZone.getDefault()): Int {
         val days = workouts.map { dayIndex(it.timestamp, timeZone) }.toSet()
         var day = dayIndex(nowMillis, timeZone)
@@ -140,7 +122,7 @@ object WorkoutStats {
         return count
     }
 
-    /** The number of whole days since 1970 in the given time zone. */
+    /** The number of whole days since 1970 in the time zone. */
     fun dayIndex(millis: Long, timeZone: TimeZone): Long = Math.floorDiv(millis + timeZone.getOffset(millis), DAY_MS)
 
     private fun monthKey(millis: Long, timeZone: TimeZone): Int {

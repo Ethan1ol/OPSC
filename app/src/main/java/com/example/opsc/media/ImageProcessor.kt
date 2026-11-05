@@ -12,16 +12,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
-/**
- * Turns a photo the user picked (gallery or camera) into a small JPEG ready to store: it decodes
- * a reduced version (so big photos do not use all the memory), fixes the rotation from the EXIF
- * data, crops to the wanted shape from the centre, shrinks it, and lowers the quality until the
- * file is small enough. The arithmetic lives in [ImageMath] and is unit tested.
- */
+/** Turns a picked photo into a small JPEG: decodes a smaller copy, fixes rotation, crops from the centre, shrinks it and lowers the quality until it fits. */
 object ImageProcessor {
     private const val TAG = "ImageProcessor"
 
-    /** Returns the JPEG bytes, or null if the picture could not be read. */
+    /** Returns the JPEG bytes, or null if the picture cannot be read. */
     suspend fun process(context: Context, uri: Uri, spec: ImageSpec): ByteArray? = withContext(Dispatchers.Default) {
         try {
             val resolver = context.contentResolver
@@ -31,13 +26,13 @@ object ImageProcessor {
             resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) } ?: return@withContext null
             if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return@withContext null
 
-            // 2. Decode a reduced copy.
+            // 2. Decode a smaller copy.
             val options = BitmapFactory.Options().apply {
                 inSampleSize = ImageMath.sampleSize(bounds.outWidth, bounds.outHeight, spec.maxWidth, spec.maxHeight)
             }
             var bitmap = resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, options) } ?: return@withContext null
 
-            // 3. Straighten it using the camera's rotation information.
+            // 3. Fix the rotation.
             val orientation = resolver.openInputStream(uri)?.use {
                 ExifInterface(it).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
             } ?: ExifInterface.ORIENTATION_NORMAL
@@ -53,7 +48,7 @@ object ImageProcessor {
             val (width, height) = ImageMath.scaledSize(bitmap.width, bitmap.height, spec.maxWidth, spec.maxHeight)
             if (width != bitmap.width || height != bitmap.height) bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true)
 
-            // 5. Compress, lowering the quality until it fits.
+            // 5. Compress until it is small enough.
             var quality: Int? = ImageMath.QUALITY_STEPS.first()
             while (quality != null) {
                 val out = ByteArrayOutputStream()

@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-/** What the settings screen is showing while it loads the profile. */
+/** What the settings screen shows while the profile loads. */
 sealed interface SettingsState {
     data object Loading : SettingsState
     data class Ready(val profile: UserProfile) : SettingsState
@@ -29,18 +29,14 @@ sealed interface SettingsState {
 
 /** One-off results the settings screens react to. */
 sealed interface SettingsEvent {
-    /** Settings were saved. [offline] means they are queued until the phone is online again. */
+    /** Settings were saved. offline means they wait until the phone is online. */
     data class Saved(val offline: Boolean) : SettingsEvent
     data object PasswordChanged : SettingsEvent
     data object AccountDeleted : SettingsEvent
     data class Failed(val error: AuthError) : SettingsEvent
 }
 
-/**
- * Loads the user's profile for the settings screens and saves changes to Firestore (queued by
- * Firestore when the phone is offline). Also runs password changes and account deletion.
- * Lives as long as the settings screen so typed values and results survive rotation.
- */
+/** Loads the profile for the settings screens and saves changes (Firestore queues them when offline). Also runs password changes and account deletion. Lives as long as the screen, so typed values survive rotation. */
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
     private val auth = AuthRepository()
     private val profiles = ProfileRepository()
@@ -51,22 +47,22 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     private val _busy = MutableStateFlow(false)
 
-    /** True while a password change or account deletion is running. */
+    /** True while a password change or account deletion runs. */
     val busy: StateFlow<Boolean> = _busy.asStateFlow()
 
     private val _events = Channel<SettingsEvent>(Channel.BUFFERED)
     val events: Flow<SettingsEvent> = _events.receiveAsFlow()
 
-    /** True once the form fields have been filled from the profile (so rotation does not overwrite typing). */
+    /** True once the form is filled, so rotation does not overwrite typing. */
     var fieldsFilled = false
 
-    /** The units currently shown in the height and weight fields. */
+    /** The units shown in the height and weight fields. */
     var units: Units = Units.METRIC
 
-    /** The push-notification preference currently shown. */
+    /** The push setting now shown. */
     var pushEnabled: Boolean = true
 
-    /** The country picked in the form (ISO code). */
+    /** The country picked in the form. */
     var country: String = ""
 
     val usesPassword: Boolean get() = auth.usesPasswordSignIn()
@@ -97,7 +93,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /** Saves the account fields. Height and weight are passed in centimetres and kilograms. */
+    /** Saves the account fields. Height and weight are in cm and kg. */
     fun saveAccount(username: String, heightCm: Double?, weightKg: Double?, country: String) {
         this.country = country
         save(
@@ -112,7 +108,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         auth.updateDisplayName(username)
     }
 
-    /** Saves one or more preference fields (language, units, push) straight away. */
+    /** Saves preference fields (language, units, push) at once. */
     fun savePreference(fields: Map<String, Any?>) = save(fields)
 
     private fun save(fields: Map<String, Any?>) {
@@ -128,13 +124,13 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /** Re-checks the password, then deletes the account and its data. */
+    /** Checks the password, then deletes the account and its data. */
     fun deleteWithPassword(password: String) = runAccountTask("deleteWithPassword") {
         val check = auth.reauthenticateWithPassword(password)
         if (check is AuthOutcome.Failure) SettingsEvent.Failed(check.error) else delete()
     }
 
-    /** Re-checks the Google account (from a fresh ID token), then deletes the account and its data. */
+    /** Checks the Google account (new ID token), then deletes the account and its data. */
     fun deleteWithGoogle(idToken: String) = runAccountTask("deleteWithGoogle") {
         val check = auth.reauthenticateWithGoogle(idToken)
         if (check is AuthOutcome.Failure) SettingsEvent.Failed(check.error) else delete()
@@ -144,7 +140,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         val uid = auth.currentUser?.uid
         return when (val outcome = auth.deleteAccount()) {
             is AuthOutcome.Success -> {
-                // The account is gone, so remove this user's workouts stored on the phone too.
+                // The account is gone, so remove this user's workouts from the phone too.
                 uid?.let { WorkoutRepository.get(getApplication()).clearLocal(it) }
                 SettingsEvent.AccountDeleted
             }
@@ -163,7 +159,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /** Called by the screen when the user can start another account task (for example after cancelling Google). */
+    /** Called by the screen when an account task fails. */
     fun reportFailure(error: AuthError) {
         _events.trySend(SettingsEvent.Failed(error))
     }

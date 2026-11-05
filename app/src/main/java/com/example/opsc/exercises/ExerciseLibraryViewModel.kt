@@ -19,23 +19,20 @@ import kotlinx.coroutines.launch
 /** What the library screen shows. */
 data class LibraryState(
     val items: List<ExerciseEntity> = emptyList(),
-    /** True if there are more matches than are shown (for the "Load more" button). */
+    /** True if there are more matches to load. */
     val canLoadMore: Boolean = false,
     val categories: List<CategoryRow> = emptyList(),
-    /** How many exercises are stored on the phone. 0 means the library has never been downloaded. */
+    /** How many exercises are on the phone. 0 means never downloaded. */
     val cachedCount: Int = 0,
     val syncing: Boolean = false,
-    /** 0.0 to 1.0 while [syncing]. */
+    /** 0.0 to 1.0 while syncing. */
     val progress: Float = 0f,
     /** Set if the last download failed. */
     val failure: RefreshFailure? = null,
     val loaded: Boolean = false
 )
 
-/**
- * Drives the exercise library: the search text, category filter and "load more" paging all work on
- * the phone's cache; the download from wger runs in the background and can be retried.
- */
+/** Runs the exercise library. Search, filter and paging use the phone's cache. The wger download runs in the background and can be retried. */
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class ExerciseLibraryViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = ExerciseRepository.get(application)
@@ -53,7 +50,7 @@ class ExerciseLibraryViewModel(application: Application) : AndroidViewModel(appl
         limit
     ) { q, c, l -> Triple(q, c, l) }
         .flatMapLatest { (q, c, l) ->
-            // Ask for one extra row so we know whether "Load more" is needed.
+            // Ask for one extra row to know if there is more to load.
             repository.search(q, c, l + 1).map { rows -> rows.take(l) to (rows.size > l) }
         }
 
@@ -61,12 +58,12 @@ class ExerciseLibraryViewModel(application: Application) : AndroidViewModel(appl
         LibraryState(rows, more, categories, count, s.syncing, s.progress, s.failure, loaded = true)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), LibraryState())
 
-    /** The text currently in the search box (kept so rotation restores it). */
+    /** The text in the search box, kept for rotation. */
     val currentQuery: String get() = query.value
     val currentCategory: Int get() = categoryId.value
 
     init {
-        // First visit, or the library is over a week old: download it in the background.
+        // First visit, or older than a week: download in the background.
         if (repository.isStale()) refresh()
     }
 
@@ -86,7 +83,7 @@ class ExerciseLibraryViewModel(application: Application) : AndroidViewModel(appl
         limit.value = limit.value + PAGE_SIZE
     }
 
-    /** Downloads the library from wger. Safe to call repeatedly (it ignores calls while running). */
+    /** Downloads the library. Ignored while a download is already running. */
     fun refresh() {
         if (sync.value.syncing) return
         sync.value = SyncUi(syncing = true)

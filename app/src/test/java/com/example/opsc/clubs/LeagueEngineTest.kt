@@ -13,7 +13,6 @@ class LeagueEngineTest {
 
     private fun match(a: String, b: String, s1: Int?, s2: Int?, verified: Boolean = true) = MatchResult(a, b, s1, s2, verified)
 
-    // ---------- starting a league ----------
 
     @Test fun needsAtLeastThreeMembersToStart() {
         assertFalse(LeagueEngine.canStart(2))
@@ -28,7 +27,6 @@ class LeagueEngineTest {
         assertTrue(failed)
     }
 
-    // ---------- fixture generation ----------
 
     @Test fun fixtureCountIsThreeTimesEveryPair() {
         for (n in 3..12) assertEquals(LeagueEngine.fixtureCount(n), LeagueEngine.generateFixtures(members(n)).size)
@@ -83,7 +81,6 @@ class LeagueEngineTest {
         assertEquals(9, LeagueEngine.generateFixtures(listOf("a", "b", "c", "a", "b")).size)
     }
 
-    // ---------- scores and outcomes ----------
 
     @Test fun scoresMustBeWholeNumbersInRange() {
         assertTrue(LeagueEngine.isValidScore(0))
@@ -102,7 +99,6 @@ class LeagueEngineTest {
         assertNull(LeagueEngine.winnerId("a", "b", 2, 2))
     }
 
-    // ---------- standings ----------
 
     @Test fun winGivesThreeAndLossGivesZero() {
         val table = LeagueEngine.computeStandings(listOf("a", "b", "c"), listOf(match("a", "b", 2, 0)))
@@ -159,7 +155,6 @@ class LeagueEngineTest {
         assertEquals(listOf(1, 1, 3), LeagueEngine.ranks(table))
     }
 
-    // ---------- completion and champions ----------
 
     @Test fun leagueIsCompleteOnlyWhenEveryFixtureIsVerified() {
         assertFalse(LeagueEngine.isComplete(0, 0))
@@ -186,7 +181,6 @@ class LeagueEngineTest {
         assertEquals(fixtures.size * LeagueEngine.POINTS_WIN, table.sumOf { it.points })
     }
 
-    // ---------- invite codes ----------
 
     @Test fun inviteCodeHasSixSafeCharacters() {
         repeat(200) {
@@ -212,7 +206,6 @@ class LeagueEngineTest {
         assertFalse(InviteCode.isValid("abcdef"))
     }
 
-    // ---------- club form ----------
 
     @Test fun clubNameLimits() {
         assertEquals(ClubError.NAME_TOO_SHORT, ClubValidator.validateName("ab"))

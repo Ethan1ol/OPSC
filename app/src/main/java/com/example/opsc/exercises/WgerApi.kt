@@ -8,8 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
-// The shapes below were checked against the live wger.de API (5 November 2026). Every field is
-// nullable because the API may omit fields, and the app must never crash on a missing one.
+// Checked against the live wger.de API (5 November 2026). Every field can be null, because the API may leave fields out.
 
 /** One page of a wger list response. [next] is null on the last page. */
 data class PageDto<T>(val count: Int?, val next: String?, val results: List<T>?)
@@ -23,7 +22,7 @@ data class ExerciseDto(
     val equipment: List<Int>?
 )
 
-/** The name and description of an exercise in one language. [exercise] is the id of the exercise it belongs to. */
+/** The name and description in one language. exercise is the id it belongs to. */
 data class TranslationDto(val id: Int?, val exercise: Int?, val name: String?, val description: String?, val language: Int?)
 
 data class CategoryDto(val id: Int?, val name: String?)
@@ -32,10 +31,7 @@ data class MuscleDto(val id: Int?, val name: String?, @SerializedName("name_en")
 
 data class EquipmentDto(val id: Int?, val name: String?)
 
-/**
- * The public wger exercise API (no key needed). wger has no text-search endpoint, so the app
- * downloads the catalogue in pages and searches it locally.
- */
+/** The public wger exercise API (no key needed). It has no search, so the app downloads the catalogue in pages and searches it on the phone. */
 interface WgerApi {
     @GET("exercise/")
     suspend fun exercises(
@@ -67,7 +63,7 @@ interface WgerApi {
 
         // Adapted from: Square (2026) Retrofit: Introduction.
         // Available at: https://square.github.io/retrofit/
-        /** Builds the Retrofit client with sensible timeouts and a JSON Accept header. */
+        /** Builds the Retrofit client with timeouts and a JSON header. */
         fun create(): WgerApi {
             val client = OkHttpClient.Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)

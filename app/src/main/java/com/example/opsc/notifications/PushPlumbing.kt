@@ -27,7 +27,7 @@ import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 
-/** What the user chose about notifications, kept on the phone (and mirrored in their profile). */
+/** The user's notification choices, kept on the phone and in their profile. */
 object NotificationPrefs {
     private const val PREFS = "battle_fitness_notifications"
     private const val KEY_ENABLED = "push_enabled"
@@ -35,12 +35,12 @@ object NotificationPrefs {
 
     private fun prefs(context: Context) = context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
-    /** The Settings toggle. On by default. */
+    /** The Settings switch. On by default. */
     fun isEnabled(context: Context): Boolean = prefs(context).getBoolean(KEY_ENABLED, true)
 
     fun setEnabled(context: Context, enabled: Boolean) = prefs(context).edit().putBoolean(KEY_ENABLED, enabled).apply()
 
-    /** True once the user has said "not now" to the permission explanation card. */
+    /** True once the user chose Not now on the permission card. */
     fun promptDismissed(context: Context): Boolean = prefs(context).getBoolean(KEY_PROMPT_DISMISSED, false)
 
     fun dismissPrompt(context: Context) = prefs(context).edit().putBoolean(KEY_PROMPT_DISMISSED, true).apply()
@@ -48,14 +48,14 @@ object NotificationPrefs {
 
 /** The Android 13+ notification permission. */
 object PushPermission {
-    /** Android 13 (API 33) and newer ask the user before an app may show notifications. */
+    /** Android 13 and newer must ask before showing notifications. */
     fun needsRuntimePermission(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
     fun isGranted(context: Context): Boolean =
         !needsRuntimePermission() || ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
 }
 
-/** Creates the notification channels and shows notifications. */
+/** Creates the channels and shows notifications. */
 object NotificationHelper {
     private const val TAG = "NotificationHelper"
     const val EXTRA_CLUB_ID = "clubId"
@@ -74,10 +74,7 @@ object NotificationHelper {
         }
     }
 
-    /**
-     * Shows a notification. Does nothing if the user turned notifications off in Settings, or the
-     * system has them blocked. Tapping it opens the club (if [clubId] is set) or the notification list.
-     */
+    /** Shows a notification. Does nothing if notifications are off. Tapping it opens the club (if clubId is set) or the notification list. */
     fun show(context: Context, channel: PushChannel, title: String, body: String, clubId: String?, type: String?) {
         if (!NotificationPrefs.isEnabled(context) || !PushPermission.isGranted(context) ||
             !NotificationManagerCompat.from(context).areNotificationsEnabled()
@@ -110,11 +107,11 @@ object NotificationHelper {
     }
 }
 
-/** Saves, refreshes and clears this phone's Firebase Cloud Messaging token on the user's profile. */
+/** Saves, refreshes and clears this phone's push token on the profile. */
 object PushTokenManager {
     private const val TAG = "PushTokenManager"
 
-    /** Gets the current token and saves it to `users/{uid}`. Does nothing if signed out or notifications are off. */
+    /** Saves the current token to the profile. Does nothing if signed out or notifications are off. */
     suspend fun register(context: Context) {
         if (!NotificationPrefs.isEnabled(context)) return
         try {
@@ -136,7 +133,7 @@ object PushTokenManager {
         Log.i(TAG, "Push token saved")
     }
 
-    /** Turning notifications off: delete the token so this phone no longer receives pushes, and remove it from the profile. */
+    /** Deletes the token so this phone stops getting pushes. */
     suspend fun unregister() {
         try {
             FirebaseMessaging.getInstance().deleteToken().await()
@@ -150,7 +147,7 @@ object PushTokenManager {
         }
     }
 
-    /** Debug helper: copies the token so it can be pasted into the Firebase console to send a test push. */
+    /** Debug helper: copies the token for a test push from the Firebase console. */
     fun copyTokenToClipboard(context: Context, root: View) {
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -160,11 +157,7 @@ object PushTokenManager {
     }
 }
 
-/**
- * Receives push messages from Firebase Cloud Messaging. Messages sent from the Firebase console
- * while the app is in the background are shown by Android itself; messages that arrive while the
- * app is open come here and are shown through our own channels.
- */
+/** Receives push messages. Messages from the console while the app is in the background are shown by Android. Messages while the app is open come here. */
 class BattleMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {

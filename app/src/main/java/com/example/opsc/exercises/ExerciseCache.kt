@@ -14,12 +14,12 @@ import androidx.room.RoomDatabase
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
-/** One exercise from the wger library, stored on the phone so the library works offline. */
+/** One exercise from wger, stored on the phone so the library works offline. */
 @Entity(tableName = "exercises", indices = [Index("categoryId"), Index("name")])
 data class ExerciseEntity(
     @PrimaryKey val id: Int,
     val name: String,
-    /** The description as HTML (from wger). */
+    /** The description as HTML. */
     val description: String,
     val categoryId: Int,
     val categoryName: String,
@@ -28,15 +28,12 @@ data class ExerciseEntity(
     val equipmentText: String
 )
 
-/** A category name and id, used for the filter chips. */
+/** A category, used for the filter chips. */
 data class CategoryRow(val categoryId: Int, val categoryName: String)
 
 @Dao
 interface ExerciseDao {
-    /**
-     * Searches by name (case-insensitive) and optionally by category. [categoryId] 0 means all.
-     * [limit] gives the "load more" pagination.
-     */
+    /** Searches by name and optionally by category (0 means all). limit gives the load more paging. */
     @Query(
         "SELECT * FROM exercises WHERE (:categoryId = 0 OR categoryId = :categoryId) AND name LIKE '%' || :query || '%' " +
             "ORDER BY name COLLATE NOCASE LIMIT :limit"
@@ -61,7 +58,7 @@ interface ExerciseDao {
     @Query("DELETE FROM exercises")
     suspend fun clear()
 
-    /** Swaps the whole library in one transaction, so a failed download never leaves half a library. */
+    /** Replaces the whole library in one go, so a failed download never leaves half a library. */
     @Transaction
     suspend fun replaceAll(items: List<ExerciseEntity>) {
         clear()
@@ -69,10 +66,7 @@ interface ExerciseDao {
     }
 }
 
-/**
- * A separate database for the exercise library. It is only a cache of public data that can be
- * downloaded again, so if its structure ever changes it is simply rebuilt.
- */
+/** A separate database for the library. It is only a cache, so it is rebuilt if its structure changes. */
 @Database(entities = [ExerciseEntity::class], version = 1, exportSchema = false)
 abstract class ExerciseDatabase : RoomDatabase() {
     abstract fun exerciseDao(): ExerciseDao

@@ -8,10 +8,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import java.util.Locale
 
-/**
- * Shows or hides a loading state on a button: while busy the button is disabled, shows
- * [busyLabel], and a thin progress bar appears under it. Prevents double submits.
- */
+/** Shows or hides a loading state on a button: disabled, shows busyLabel and a thin progress bar. Stops double taps. */
 fun setBusy(
     button: MaterialButton,
     progress: LinearProgressIndicator,
@@ -24,7 +21,7 @@ fun setBusy(
     if (busy) progress.show() else progress.hide()
 }
 
-/** Opens the main app (bottom navigation) and closes the login screens. */
+/** Opens the main app and closes the login screens. */
 fun Fragment.openMainApp() {
     startActivity(Intent(requireContext(), AppActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -32,7 +29,7 @@ fun Fragment.openMainApp() {
     requireActivity().finish()
 }
 
-/** Every country as (ISO code, display name in the current language), sorted by name. */
+/** Every country as (code, name in the current language), sorted by name. */
 fun countryList(locale: Locale = Locale.getDefault()): List<Pair<String, String>> =
     Locale.getISOCountries()
         .map { code -> code to Locale("", code).getDisplayCountry(locale) }

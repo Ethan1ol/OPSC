@@ -24,12 +24,7 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-/**
- * Shown after a first-time Google sign-in (or if a signed-in user has no profile yet).
- * Name and photo come from the Google account; the user chooses a username and optionally adds
- * height, weight and country. Saving creates users/{uid}, which the Firestore rules require
- * to contain an email and a username.
- */
+/** Shown after the first Google sign-in. Name and photo come from Google; the user picks a username and can add height, weight and country. */
 class FinishProfileFragment : Fragment(R.layout.fragment_finish_profile) {
     private val viewModel: AuthViewModel by activityViewModels()
 
@@ -88,7 +83,7 @@ class FinishProfileFragment : Fragment(R.layout.fragment_finish_profile) {
         saveButton.setOnClickListener { save() }
         weight.setOnEditorActionListener { _, _, _ -> save(); true }
 
-        // Wrong account? Sign out and go back to the login screen.
+        // Wrong account? Sign out and go to login.
         view.findViewById<View>(R.id.finishOtherAccount).setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.repository.logout()

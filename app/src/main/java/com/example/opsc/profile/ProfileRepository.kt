@@ -7,10 +7,10 @@ import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 
-/** Reads and updates the signed-in user's profile document at `users/{uid}` in Firestore. */
+/** Reads and updates the user's profile at users/{uid}. */
 class ProfileRepository(private val db: FirebaseFirestore = FirebaseFirestore.getInstance()) {
 
-    /** Loads the profile, or null if it is missing or cannot be read (offline with no cache). */
+    /** Loads the profile, or null if missing or offline with no cache. */
     suspend fun load(uid: String): UserProfile? = try {
         db.collection(USERS).document(uid).get().await().toObject(UserProfile::class.java)
     } catch (e: CancellationException) {
@@ -20,10 +20,7 @@ class ProfileRepository(private val db: FirebaseFirestore = FirebaseFirestore.ge
         null
     }
 
-    /**
-     * Merges [fields] into the profile. The write is queued by Firestore when the phone is
-     * offline and sent automatically later, so this returns immediately instead of waiting.
-     */
+    /** Merges the fields into the profile. Firestore queues the write when offline, so this returns at once. */
     fun save(uid: String, fields: Map<String, Any?>) {
         Log.d(TAG, "Saving profile fields ${fields.keys}")
         db.collection(USERS).document(uid).set(fields, SetOptions.merge())

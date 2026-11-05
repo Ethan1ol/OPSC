@@ -29,7 +29,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 
-/** How a chosen exercise travels back to the screen that wanted it (Fragment Result API). */
+/** How a chosen exercise is sent back to the screen that asked for it. */
 object ExercisePicker {
     const val RESULT_KEY = "exercise_picked"
     const val RESULT_NAME = "name"
@@ -69,11 +69,7 @@ class ExerciseAdapter(private val onClick: (ExerciseEntity) -> Unit) : ListAdapt
     }
 }
 
-/**
- * The exercise library screen: search, category chips, the list with "load more", and states for
- * loading (with a download progress bar), empty results, errors with Retry, and offline.
- * In pick mode, tapping an exercise returns it straight to the log-workout sheet.
- */
+/** The exercise library: search, category chips, a list with load more, and states for loading, no results, errors (with Retry) and offline. In pick mode, tapping an exercise returns it to the log-workout sheet. */
 class ExerciseLibraryFragment : Fragment(R.layout.fragment_exercise_library) {
     private val viewModel: ExerciseLibraryViewModel by viewModels()
     private var shownFailure = false
@@ -99,7 +95,7 @@ class ExerciseLibraryFragment : Fragment(R.layout.fragment_exercise_library) {
         }
         list.layoutManager = LinearLayoutManager(requireContext())
         list.adapter = adapter
-        // Load the next page automatically when the user nears the end of the list.
+        // Load the next page when the user nears the end of the list.
         list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
                 val layout = rv.layoutManager as LinearLayoutManager
@@ -138,7 +134,7 @@ class ExerciseLibraryFragment : Fragment(R.layout.fragment_exercise_library) {
                         }
                     }
 
-                    // A failed refresh when we still have saved exercises is only worth a quiet note.
+                    // If a refresh fails but saved exercises exist, only show a quiet note.
                     if (state.failure != null && !cacheEmpty && !shownFailure) {
                         shownFailure = true
                         UiMessages.info(view, R.string.library_update_failed)
@@ -149,7 +145,7 @@ class ExerciseLibraryFragment : Fragment(R.layout.fragment_exercise_library) {
         }
     }
 
-    /** Builds the "All" chip plus one chip per category, once per distinct list of categories. */
+    /** Builds the All chip and one chip per category. */
     private fun buildChips(group: ChipGroup, categories: List<CategoryRow>) {
         if (categories == builtCategories) return
         builtCategories = categories
@@ -174,7 +170,7 @@ class ExerciseLibraryFragment : Fragment(R.layout.fragment_exercise_library) {
     }
 }
 
-/** Shows one exercise: category, muscles, equipment and the description, with a button to log it. */
+/** Shows one exercise with a button to log it. */
 class ExerciseDetailFragment : Fragment(R.layout.fragment_exercise_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -197,7 +193,7 @@ class ExerciseDetailFragment : Fragment(R.layout.fragment_exercise_detail) {
                 else HtmlCompat.fromHtml(exercise.description, HtmlCompat.FROM_HTML_MODE_COMPACT)
             view.findViewById<View>(R.id.detailLog).setOnClickListener {
                 ExercisePicker.deliver(this@ExerciseDetailFragment, exercise.name)
-                // Go back to the screen that opened the library (Workouts) so it can open the log sheet.
+                // Go back to Workouts so it can open the log sheet.
                 if (!findNavController().popBackStack(R.id.workoutsFragment, false)) findNavController().popBackStack()
             }
             state.showContent()

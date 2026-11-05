@@ -52,12 +52,7 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-/**
- * Settings screen in three cards: Account (profile fields, change password, log out, delete
- * account), Preferences (language, light/dark, units, push notifications) and About (version,
- * credits, privacy policy). Preferences save as soon as they are changed; account fields save
- * with the Save button after validation. Everything goes to the user's Firestore profile.
- */
+/** Settings in three cards: Account (profile, change password, log out, delete), Preferences (language, light or dark, units, push) and About. Preferences save at once; account fields save with the Save button. */
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private val viewModel: SettingsViewModel by viewModels()
     private lateinit var countries: List<Pair<String, String>>
@@ -96,7 +91,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         setUpAbout(view)
         setUpAccountButtons(view)
 
-        // The password typed in the delete-account dialog comes back here.
+        // The password from the delete dialog comes back here.
         childFragmentManager.setFragmentResultListener(PasswordPromptDialog.REQUEST_KEY, viewLifecycleOwner) { _, bundle ->
             bundle.getString(PasswordPromptDialog.RESULT_PASSWORD)?.let { viewModel.deleteWithPassword(it) }
         }
@@ -115,7 +110,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
-    // ---------- loading states ----------
 
     private fun render(state: SettingsState, root: View) {
         when (state) {
@@ -131,7 +125,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
-    /** Fills the form from the profile, once; later renders (rotation) keep what the user typed. */
+    /** Fills the form from the profile once. Later redraws keep what the user typed. */
     private fun fill(profile: UserProfile) {
         if (!viewModel.fieldsFilled) {
             username.setText(profile.username)
@@ -145,7 +139,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         setUpPush()
     }
 
-    // ---------- account ----------
 
     private fun setUpCountry() {
         countries = countryList(Locale.getDefault())
@@ -205,7 +198,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         )
     }
 
-    /** Deleting needs the user to prove who they are first: password users type it, Google users pick their account again. */
+    /** Deleting needs proof first: password users type it, Google users pick their account again. */
     private fun startDelete() {
         if (viewModel.usesPassword) {
             if (childFragmentManager.findFragmentByTag(PasswordPromptDialog.TAG) == null) {
@@ -221,7 +214,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
-    // ---------- preferences ----------
 
     private fun setUpLanguage(root: View) {
         val language = root.findViewById<MaterialAutoCompleteTextView>(R.id.settingsLanguage)
@@ -230,7 +222,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         language.setText(names[LanguageManager.SUPPORTED_CODES.indexOf(LanguageManager.current()).coerceAtLeast(0)], false)
         language.setOnItemClickListener { _, _, position, _ ->
             val code = LanguageManager.SUPPORTED_CODES[position]
-            // Save first: switching language recreates the screen straight away.
+            // Save first, because changing language reopens the screen.
             viewModel.savePreference(mapOf("language" to code))
             LanguageManager.apply(code)
         }
@@ -255,7 +247,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             if (!isChecked) return@addOnButtonCheckedListener
             val newUnits = if (checkedId == R.id.unitsMetric) Units.METRIC else Units.IMPERIAL
             if (newUnits == viewModel.units) return@addOnButtonCheckedListener
-            // Convert what is typed so the same person is still shown, then remember the choice.
+            // Convert the typed values and remember the choice.
             height.setText(UnitConverter.convertTypedHeight(height.text.toString(), viewModel.units, newUnits))
             weight.setText(UnitConverter.convertTypedWeight(weight.text.toString(), viewModel.units, newUnits))
             viewModel.units = newUnits
@@ -270,7 +262,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         weightLayout.hint = getString(if (metric) R.string.field_weight else R.string.field_weight_lb)
     }
 
-    /** Saves the choice, and starts or stops receiving push messages on this phone. */
+    /** Saves the choice and starts or stops push on this phone. */
     private fun applyPush(enabled: Boolean) {
         viewModel.pushEnabled = enabled
         viewModel.savePreference(mapOf("pushEnabled" to enabled))
@@ -285,7 +277,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         if (granted) {
             applyPush(true)
         } else {
-            // Not allowed: switch it back off and explain how to change it.
+            // Not allowed: switch it off and explain how to change it.
             viewModel.pushEnabled = false
             pushSwitch.setOnCheckedChangeListener(null)
             pushSwitch.isChecked = false
@@ -303,7 +295,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         pushSwitch.isChecked = viewModel.pushEnabled
         pushSwitch.setOnCheckedChangeListener { _, checked ->
             if (checked && PushPermission.needsRuntimePermission() && !PushPermission.isGranted(requireContext())) {
-                // Android 13+: ask first. The switch stays on only if the user allows it.
+                // Android 13+: ask first. The switch stays on only if allowed.
                 requestPush.launch(Manifest.permission.POST_NOTIFICATIONS)
             } else {
                 applyPush(checked)
@@ -311,7 +303,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
-    // ---------- about ----------
 
     private fun setUpAbout(root: View) {
         root.findViewById<TextView>(R.id.settingsVersion).text =
@@ -326,7 +317,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
-    // ---------- results ----------
 
     private fun handle(event: SettingsEvent, root: View) {
         when (event) {

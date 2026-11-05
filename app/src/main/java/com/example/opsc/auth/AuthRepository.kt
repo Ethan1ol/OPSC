@@ -22,7 +22,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withTimeoutOrNull
 import java.util.Date
 
-/** What the user typed on the registration form (already validated by [Validators]). */
+/** What the user typed on the sign-up form. */
 data class RegistrationData(
     val email: String,
     val password: String,
@@ -32,14 +32,11 @@ data class RegistrationData(
     val birthDate: String,
     val heightCm: Double? = null,
     val weightKg: Double? = null,
-    /** ISO 3166 country code such as "ZA". */
+    /** Country code, for example ZA. */
     val country: String = ""
 )
 
-/**
- * The user profile document stored at `users/{uid}` in Firestore.
- * Field names match firestore.rules. All fields have defaults so Firestore can rebuild it.
- */
+/** The user's profile document at users/{uid}. */
 data class UserProfile(
     val uid: String = "",
     val email: String = "",
@@ -53,22 +50,22 @@ data class UserProfile(
     val pushEnabled: Boolean = true,
     val heightCm: Double? = null,
     val weightKg: Double? = null,
-    /** "metric" or "imperial": how height and weight are shown. Values are always stored in cm and kg. */
+    /** metric or imperial (always stored in cm and kg). */
     val units: String = "metric",
-    /** Workouts per month the user aims for (1 to 100). */
+    /** Workouts per month the user aims for. */
     val monthlyGoal: Int = 12,
-    /** A short "about me" (up to 150 characters). */
+    /** Short about-me text. */
     val bio: String = "",
-    /** Changes when the profile picture changes, so other phones know to download it again (0 = none). */
+    /** Changes when the picture changes, so other phones download it again. */
     val avatarVersion: Long = 0,
     val bannerVersion: Long = 0,
-    /** This phone's Firebase Cloud Messaging token (set while push notifications are on). */
+    /** This phone's push token. */
     val fcmToken: String = "",
     val fcmUpdatedAt: Long = 0,
     @ServerTimestamp val createdAt: Date? = null
 )
 
-/** Reasons authentication can fail, each with the string shown to the user. */
+/** Reasons sign-in can fail, with the message to show. */
 enum class AuthError(@StringRes val messageRes: Int) {
     NETWORK(R.string.auth_err_network),
     WRONG_CREDENTIALS(R.string.auth_err_wrong_credentials),
@@ -83,23 +80,19 @@ enum class AuthError(@StringRes val messageRes: Int) {
     UNKNOWN(R.string.auth_err_unknown)
 }
 
-/** The result of a login, registration or SSO attempt. Errors are values, so the UI never crashes. */
+/** Result of a login, sign-up or Google attempt. */
 sealed interface AuthOutcome {
-    /** [needsProfile] is true when the user is signed in but has no profile document yet (first Google sign-in). */
+    /** True if the user must still create a profile. */
     data class Success(val isNewUser: Boolean, val needsProfile: Boolean = false) : AuthOutcome
     data class Failure(val error: AuthError) : AuthOutcome
 }
 
-/**
- * Talks to Firebase Authentication and Firestore for login, registration, Google SSO,
- * password reset, logout and the user profile document.
- * Passwords are never stored by the app: Firebase Auth hashes them (scrypt) on the server.
- */
+/** Talks to Firebase Auth and Firestore. Passwords are never stored by the app. */
 class AuthRepository(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
-    /** The signed-in user, or null. Firebase restores this automatically after the app restarts. */
+    /** The signed-in user, or null. */
     val currentUser: FirebaseUser? get() = auth.currentUser
 
     // Adapted from: Firebase (2026) Get Started with Firebase Authentication on Android (password-based accounts).
@@ -165,7 +158,7 @@ class AuthRepository(
         AuthOutcome.Failure(mapError(e))
     }
 
-    /** Emails a password reset link. Succeeds silently for unknown emails so accounts cannot be probed. */
+    /** Sends a password reset email. It always looks successful, so accounts cannot be guessed. */
     suspend fun sendPasswordReset(email: String): AuthOutcome = try {
         auth.sendPasswordResetEmail(email.trim()).await()
         Log.i(TAG, "Password reset email requested")
@@ -180,17 +173,17 @@ class AuthRepository(
         AuthOutcome.Failure(mapError(e))
     }
 
-    /** True if this account signs in with an email and password (so it has a password to change). */
+    /** True if the account uses an email and password. */
     fun usesPasswordSignIn(): Boolean =
         auth.currentUser?.providerData?.any { it.providerId == EmailAuthProvider.PROVIDER_ID } == true
 
-    /** Keeps the Firebase display name in step with the username. Best effort. */
+    /** Keeps the display name the same as the username. */
     fun updateDisplayName(name: String) {
         auth.currentUser?.updateProfile(UserProfileChangeRequest.Builder().setDisplayName(name).build())
             ?.addOnFailureListener { Log.w(TAG, "Could not update display name", it) }
     }
 
-    /** Proves the user knows their password (needed before changing it or deleting the account). */
+    /** Checks the password again before a sensitive change. */
     suspend fun reauthenticateWithPassword(password: String): AuthOutcome = try {
         val user = auth.currentUser
         val email = user?.email
@@ -206,7 +199,7 @@ class AuthRepository(
         AuthOutcome.Failure(mapError(e))
     }
 
-    /** Re-authenticates a Google user. Fails with GOOGLE_WRONG_ACCOUNT if a different Google account was chosen. */
+    /** Checks a Google user again. Fails if a different account was chosen. */
     suspend fun reauthenticateWithGoogle(idToken: String): AuthOutcome = try {
         val user = auth.currentUser
         if (user == null) AuthOutcome.Failure(AuthError.UNKNOWN)
@@ -221,7 +214,7 @@ class AuthRepository(
         AuthOutcome.Failure(mapError(e))
     }
 
-    /** Changes the password after re-checking the current one. */
+    /** Changes the password after checking the old one. */
     suspend fun changePassword(currentPassword: String, newPassword: String): AuthOutcome {
         val check = reauthenticateWithPassword(currentPassword)
         if (check is AuthOutcome.Failure) return check
@@ -237,11 +230,7 @@ class AuthRepository(
         }
     }
 
-    /**
-     * Permanently deletes the account: first the user's data in Firestore (profile, workouts,
-     * notifications), then the sign-in itself. Call this only right after re-authenticating.
-     * If the data cannot be deleted (for example offline) the sign-in is left alone.
-     */
+    /** Deletes the user's data, then the account. Call right after re-checking the password. If the data cannot be deleted (for example offline), the account stays. */
     suspend fun deleteAccount(): AuthOutcome = try {
         val user = auth.currentUser ?: return AuthOutcome.Failure(AuthError.UNKNOWN)
         val uid = user.uid
@@ -281,7 +270,7 @@ class AuthRepository(
         auth.signOut()
     }
 
-    /** Reads the profile document. Returns null if it does not exist or the device is offline and has no cache. */
+    /** Reads the profile, or null if it is missing or the phone is offline with no cache. */
     suspend fun loadProfile(uid: String): UserProfile? = try {
         db.collection(USERS).document(uid).get().await().toObject(UserProfile::class.java)
     } catch (e: CancellationException) {
@@ -291,10 +280,7 @@ class AuthRepository(
         null
     }
 
-    /**
-     * Writes the profile in the background. Firestore queues the write if the phone is offline
-     * and sends it later, so we do not wait for the server (that would freeze the UI offline).
-     */
+    /** Saves the profile in the background. Firestore queues the write when offline. */
     // Adapted from: Firebase (2026) Add data to Cloud Firestore.
     // Available at: https://firebase.google.com/docs/firestore/manage-data/add-data
     private fun saveNewProfile(profile: UserProfile) {
@@ -303,10 +289,7 @@ class AuthRepository(
             .addOnFailureListener { Log.e(TAG, "Profile save failed", it) }
     }
 
-    /**
-     * Does the signed-in user have a profile document with a username? [ProfileStatus.UNKNOWN] means
-     * we could not find out (offline, timeout); callers then let the user in rather than trap them.
-     */
+    /** Checks if the user has a profile. UNKNOWN (offline) lets the user in. */
     suspend fun profileStatus(uid: String): ProfileStatus = try {
         val snapshot = withTimeoutOrNull(PROFILE_CHECK_TIMEOUT_MS) { db.collection(USERS).document(uid).get().await() }
         when {
@@ -321,7 +304,7 @@ class AuthRepository(
         ProfileStatus.UNKNOWN
     }
 
-    /** A starting point for the "finish your profile" screen, built from the Google account. */
+    /** Builds a starting profile from the Google account. */
     fun suggestedProfile(): UserProfile? {
         val user = auth.currentUser ?: return null
         val email = user.email.orEmpty()
@@ -337,10 +320,7 @@ class AuthRepository(
         )
     }
 
-    /**
-     * Creates the profile document and waits for the server to accept it, so a rejected write
-     * (Firestore rules) or a missing connection is reported instead of silently lost.
-     */
+    /** Saves the profile and waits for the server, so a failure is shown. */
     suspend fun saveProfile(profile: UserProfile): AuthOutcome = try {
         val done = withTimeoutOrNull(PROFILE_SAVE_TIMEOUT_MS) {
             db.collection(USERS).document(profile.uid).set(profile).await()
@@ -363,7 +343,7 @@ class AuthRepository(
         AuthOutcome.Failure(AuthError.PROFILE_SAVE_FAILED)
     }
 
-    /** Converts any Firebase exception into one of our friendly [AuthError]s. */
+    /** Turns a Firebase error into one of our errors. */
     private fun mapError(e: Exception): AuthError = when (e) {
         is FirebaseNetworkException -> AuthError.NETWORK
         is FirebaseAuthUserCollisionException -> AuthError.EMAIL_IN_USE

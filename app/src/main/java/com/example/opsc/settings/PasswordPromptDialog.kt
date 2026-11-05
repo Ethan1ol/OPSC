@@ -12,11 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-/**
- * Asks the user to type their password again before a risky action (deleting the account).
- * It is a DialogFragment so it survives rotation. The typed password is returned through the
- * Fragment Result API under [REQUEST_KEY] and is never stored.
- */
+/** Asks for the password again before a risky action (deleting the account). Survives rotation. The password is returned through the Fragment Result API and never stored. */
 class PasswordPromptDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

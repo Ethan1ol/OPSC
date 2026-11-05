@@ -1,6 +1,6 @@
 package com.example.opsc.auth
 
-/** Every way a form field can be invalid. The UI maps each value to a translated message. */
+/** Every way a form field can be invalid. */
 enum class FieldError {
     EMAIL_EMPTY, EMAIL_INVALID,
     PASSWORD_EMPTY, PASSWORD_TOO_SHORT, PASSWORD_MISMATCH, PASSWORD_SAME_AS_CURRENT,
@@ -12,17 +12,13 @@ enum class FieldError {
     HEIGHT_OUT_OF_RANGE_IMPERIAL, WEIGHT_OUT_OF_RANGE_IMPERIAL
 }
 
-/** The fields on the registration form, used to attach an error to the right input. */
+/** The fields on the sign-up form. */
 enum class FormField { EMAIL, NAME, SURNAME, BIRTH_DATE, USERNAME, PASSWORD, CONFIRM_PASSWORD }
 
-/** A calendar date without any Android or java.time dependency, so it is easy to unit test. */
+/** A simple date, so it is easy to unit test. */
 data class SimpleDate(val year: Int, val month: Int, val day: Int)
 
-/**
- * Pure-Kotlin input validation for login and registration.
- * Every function returns null when the value is valid, otherwise the [FieldError] to show.
- * It has no Android dependencies so it runs as a plain JVM unit test.
- */
+/** Input checks for login and sign-up. Each returns null when valid, otherwise the error to show. No Android code, so it runs as a plain unit test. */
 object Validators {
     const val MIN_PASSWORD_LENGTH = 6
     const val MIN_USERNAME_LENGTH = 3
@@ -46,7 +42,7 @@ object Validators {
         }
     }
 
-    /** Used on the login screen: only checks that something was typed (the server checks correctness). */
+    /** Login only checks that something was typed. */
     fun validateLoginPassword(password: String): FieldError? =
         if (password.isEmpty()) FieldError.PASSWORD_EMPTY else null
 
@@ -56,7 +52,7 @@ object Validators {
         else -> null
     }
 
-    /** For the change-password form: a valid new password that is not the same as the current one. */
+    /** The new password must be valid and different from the current one. */
     fun validateChangedPassword(newPassword: String, currentPassword: String): FieldError? =
         validateNewPassword(newPassword)
             ?: if (newPassword == currentPassword) FieldError.PASSWORD_SAME_AS_CURRENT else null
@@ -93,25 +89,25 @@ object Validators {
         }
     }
 
-    /** Parses a decimal typed by the user; accepts "1,75" and "1.75". Returns null if it is not a finite number. */
+    /** Reads a decimal such as 1,75 or 1.75. Returns null if it is not a number. */
     fun parseDecimal(text: String): Double? =
         text.trim().replace(',', '.').toDoubleOrNull()?.takeIf { it.isFinite() }
 
-    /** Height is optional (blank is fine). When given it must be a number from 50 to 260 cm. */
+    /** Height is optional. If given it must be 50 to 260 cm. */
     fun validateHeightCm(text: String): FieldError? {
         if (text.isBlank()) return null
         val value = parseDecimal(text) ?: return FieldError.NUMBER_INVALID
         return if (value in MIN_HEIGHT_CM..MAX_HEIGHT_CM) null else FieldError.HEIGHT_OUT_OF_RANGE
     }
 
-    /** Weight is optional (blank is fine). When given it must be a number from 20 to 400 kg. */
+    /** Weight is optional. If given it must be 20 to 400 kg. */
     fun validateWeightKg(text: String): FieldError? {
         if (text.isBlank()) return null
         val value = parseDecimal(text) ?: return FieldError.NUMBER_INVALID
         return if (value in MIN_WEIGHT_KG..MAX_WEIGHT_KG) null else FieldError.WEIGHT_OUT_OF_RANGE
     }
 
-    /** Parses an ISO date such as "2005-03-27". Returns null if the text is not a real calendar date. */
+    /** Reads a date such as 2005-03-27. Returns null if it is not a real date. */
     fun parseIsoDate(text: String): SimpleDate? {
         val parts = text.trim().split("-")
         if (parts.size != 3) return null
@@ -122,7 +118,7 @@ object Validators {
         return SimpleDate(year, month, day)
     }
 
-    /** Checks the birth date text is a real date, not in the future, and the user is old enough. */
+    /** Checks the date is real, not in the future, and the user is old enough. */
     fun validateBirthDate(text: String, today: SimpleDate): FieldError? {
         if (text.isBlank()) return FieldError.BIRTH_EMPTY
         val birth = parseIsoDate(text) ?: return FieldError.BIRTH_INVALID
@@ -130,7 +126,7 @@ object Validators {
         return if (ageInYears(birth, today) < MIN_AGE_YEARS) FieldError.BIRTH_TOO_YOUNG else null
     }
 
-    /** Validates the whole registration form and returns one error per bad field (empty map = valid). */
+    /** Checks the whole sign-up form. Returns one error per bad field. */
     fun validateRegistration(
         email: String, name: String, surname: String, birthDate: String,
         username: String, password: String, confirmPassword: String, today: SimpleDate
@@ -142,14 +138,14 @@ object Validators {
         validateBirthDate(birthDate, today)?.let { errors[FormField.BIRTH_DATE] = it }
         validateUsername(username)?.let { errors[FormField.USERNAME] = it }
         validateNewPassword(password)?.let { errors[FormField.PASSWORD] = it }
-        // Only report a mismatch if the password itself was acceptable.
+        // Only report a mismatch if the password itself was fine.
         if (!errors.containsKey(FormField.PASSWORD)) {
             validateConfirmPassword(password, confirmPassword)?.let { errors[FormField.CONFIRM_PASSWORD] = it }
         }
         return errors
     }
 
-    /** Turns an email such as "john.smith@x.com" into a safe username such as "john_smith" (used for Google sign-ups). */
+    /** Turns an email into a username, for example john.smith@x.com becomes john_smith. */
     fun usernameFromEmail(email: String): String {
         val local = email.substringBefore('@').replace(Regex("[^A-Za-z0-9_]"), "_")
         val padded = if (local.length < MIN_USERNAME_LENGTH) local.padEnd(MIN_USERNAME_LENGTH, '_') else local

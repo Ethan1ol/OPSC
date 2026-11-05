@@ -14,7 +14,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.R as MaterialR
 
-/** The user's clubs. Used as a list on the Clubs tab and as small horizontal cards on the dashboard. */
+/** The user's clubs, as a list or as small cards on the dashboard. */
 class ClubAdapter(@LayoutRes private val layout: Int, private val onClick: (Club) -> Unit) : ListAdapter<Club, ClubAdapter.Holder>(Diff) {
 
     class Holder(view: View) : RecyclerView.ViewHolder(view) {
@@ -71,13 +71,13 @@ class StandingAdapter : ListAdapter<RankedRow, StandingAdapter.Holder>(Diff) {
     }
 }
 
-/** A list entry on the Fixtures tab: a round title or a match. */
+/** A row on the Fixtures tab: a round title or a match. */
 sealed interface FixtureItem {
     data class Header(val round: Int) : FixtureItem
     data class Match(val view: FixtureView) : FixtureItem
 }
 
-/** Fixtures grouped by round (1 to 3) with a status badge on each. Only the referee can open an unfinished match. */
+/** Fixtures grouped by round, with a status badge. Only the referee can open an unfinished match. */
 class FixtureAdapter(private val onReferee: (FixtureView) -> Unit, private val onProof: (FixtureView) -> Unit) : ListAdapter<FixtureItem, RecyclerView.ViewHolder>(Diff) {
 
     class HeaderHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -156,7 +156,7 @@ class FixtureAdapter(private val onReferee: (FixtureView) -> Unit, private val o
     }
 }
 
-/** Groups fixtures into "Round 1", "Round 2", "Round 3" sections. */
+/** Groups fixtures into Round 1, 2 and 3. */
 fun groupByRound(fixtures: List<FixtureView>): List<FixtureItem> =
     fixtures.groupBy { it.fixture.round }.toSortedMap().flatMap { (round, list) ->
         listOf<FixtureItem>(FixtureItem.Header(round)) + list.map { FixtureItem.Match(it) }

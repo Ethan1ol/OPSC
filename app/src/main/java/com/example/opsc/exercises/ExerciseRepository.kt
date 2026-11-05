@@ -7,20 +7,16 @@ import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
 import java.io.IOException
 
-/** Why downloading the library failed. */
+/** Why the download failed. */
 enum class RefreshFailure { OFFLINE, SERVER, UNKNOWN }
 
-/** Result of downloading the exercise library. */
+/** Result of the download. */
 sealed interface RefreshResult {
     data class Success(val count: Int) : RefreshResult
     data class Failure(val reason: RefreshFailure) : RefreshResult
 }
 
-/**
- * Gives the app the wger exercise library. It is downloaded once through Retrofit into the phone's
- * Room database (a cache), then all searching, filtering and paging happens locally, so the library
- * keeps working in airplane mode.
- */
+/** Gives the app the wger library. It is downloaded once into the phone's database, then searching and paging all happen locally, so it works in airplane mode. */
 class ExerciseRepository private constructor(context: Context, private val api: WgerApi = WgerApi.create()) {
     private val dao = ExerciseDatabase.get(context).exerciseDao()
     private val prefs = context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -34,19 +30,16 @@ class ExerciseRepository private constructor(context: Context, private val api: 
 
     suspend fun get(id: Int): ExerciseEntity? = dao.get(id)
 
-    /** Every exercise name, for the suggestions in the log-workout sheet. */
+    /** Every exercise name, for the log-workout suggestions. */
     suspend fun allNames(): List<String> = dao.allNames()
 
-    /** True if the library was never downloaded or is more than a week old. */
+    /** True if never downloaded or older than a week. */
     fun isStale(nowMillis: Long = System.currentTimeMillis()): Boolean {
         val last = prefs.getLong(KEY_LAST_REFRESH, 0L)
         return last == 0L || nowMillis - last > STALE_AFTER_MS
     }
 
-    /**
-     * Downloads the whole English library (about 20 small pages) and replaces the cache in one go.
-     * On any failure the existing cache is left untouched. [onProgress] gets 0.0 to 1.0.
-     */
+    /** Downloads the English library (about 20 small pages) and replaces the cache. If it fails, the old cache stays. */
     suspend fun refresh(onProgress: (Float) -> Unit = {}): RefreshResult = try {
         onProgress(0f)
         val categories = api.categories().results.orEmpty()

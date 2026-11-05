@@ -15,7 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import kotlinx.coroutines.launch
 
-/** Shows the proof photo the referee attached to a fixture (club members can open it). */
+/** Shows the proof photo a referee attached to a fixture. */
 class ProofDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -27,7 +27,7 @@ class ProofDialogFragment : DialogFragment() {
         val fixtureId = requireArguments().getString(ARG_FIXTURE).orEmpty()
 
         lifecycleScope.launch {
-            // Proof is saved once and never changes, so version 1 is always the right copy.
+            // The proof is saved once and never changes, so version 1 is right.
             val file = MediaRepository.get(requireContext()).ensureLocal(MediaRepository.proofPath(clubId, fixtureId), 1L)
             progress.visibility = View.GONE
             if (file == null) {

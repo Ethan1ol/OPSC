@@ -19,10 +19,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 
-/**
- * Login screen: email and password (with show/hide), Google sign-in, "Forgot password" and a link
- * to sign-up. Input is checked on the phone first; Firebase errors are shown as friendly messages.
- */
+/** Login screen: email and password, Google sign-in, forgot password and a sign-up link. */
 class LoginFragment : Fragment(R.layout.fragment_login) {
     private val viewModel: AuthViewModel by activityViewModels()
 
@@ -35,7 +32,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         val googleButton = view.findViewById<MaterialButton>(R.id.loginGoogle)
         val progress = view.findViewById<LinearProgressIndicator>(R.id.loginProgress)
 
-        // Clear a field's error as soon as the user edits it.
+        // Clear a field error when the user types.
         email.doAfterTextChanged { emailLayout.error = null }
         password.doAfterTextChanged { passwordLayout.error = null }
 
@@ -88,7 +85,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private fun showError(root: View, passwordLayout: TextInputLayout, error: AuthError) {
         if (error == AuthError.WRONG_CREDENTIALS) {
-            // Firebase does not say whether the email or the password was wrong (so accounts cannot be probed).
+            // The message does not say which part was wrong, so accounts cannot be guessed.
             passwordLayout.error = getString(error.messageRes)
         } else {
             showAuthFailure(root, error)

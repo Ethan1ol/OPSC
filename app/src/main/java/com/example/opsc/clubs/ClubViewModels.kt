@@ -27,19 +27,18 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-// ------------------------------------------------------------------ clubs list
 
-/** What the clubs list screen shows. */
+/** What the clubs list shows. */
 data class ClubsUiState(val loading: Boolean = true, val clubs: List<Club> = emptyList(), val error: Boolean = false)
 
-/** One-off results for the clubs list screen. */
+/** One-off results for the clubs list. */
 sealed interface ClubsEvent {
     data class Created(val clubId: String) : ClubsEvent
     data class Joined(val clubId: String) : ClubsEvent
     data class Failed(val failure: ClubFailure) : ClubsEvent
 }
 
-/** Loads the user's clubs live and runs "create club" and "join with code". */
+/** Loads the user's clubs live. Also creates clubs and joins by code. */
 @OptIn(ExperimentalCoroutinesApi::class)
 class ClubsViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = ClubRepository()
@@ -79,7 +78,7 @@ class ClubsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    /** These actions need a connection (they must not be queued for later), so check first. */
+    /** These actions need a connection, so check first. */
     private fun act(block: suspend (String) -> ClubsEvent) {
         val user = uid ?: return
         if (_busy.value) return
@@ -96,12 +95,11 @@ class ClubsViewModel(application: Application) : AndroidViewModel(application) {
     }
 }
 
-// ------------------------------------------------------------------ club detail
 
-/** One row of the leaderboard with the player's name. */
+/** One leaderboard row with the player's name. */
 data class RankedRow(val rank: Int, val row: StandingRow, val name: String, val isMe: Boolean)
 
-/** One fixture with all names resolved, and whether the signed-in user may enter its result. */
+/** A fixture with names filled in, and whether the user may enter its result. */
 data class FixtureView(val fixture: Fixture, val player1Name: String, val player2Name: String, val refereeName: String, val canReferee: Boolean) {
     val hasProof get() = !fixture.proofUrl.isNullOrBlank()
 }
@@ -109,7 +107,7 @@ data class FixtureView(val fixture: Fixture, val player1Name: String, val player
 /** A member of the club. */
 data class MemberView(val uid: String, val name: String, val isOwner: Boolean, val isMe: Boolean)
 
-/** Everything the club detail screen shows. */
+/** Everything the club screen shows. */
 data class ClubDetailState(
     val loading: Boolean = true,
     val error: Boolean = false,
@@ -124,17 +122,14 @@ data class ClubDetailState(
     val isOwner: Boolean = false
 )
 
-/** One-off results for the club detail screen. */
+/** One-off results for the club screen. */
 sealed interface ClubDetailEvent {
     data object LeagueStarted : ClubDetailEvent
     data object ResultSaved : ClubDetailEvent
     data class Failed(val failure: ClubFailure) : ClubDetailEvent
 }
 
-/**
- * Live state of one club: members, fixtures and the league table (worked out from the verified
- * fixtures, so it is always consistent). Also starts the league (owner) and saves results (referee).
- */
+/** Live state of one club: members, fixtures and the league table. Also starts the league (owner) and saves results (referee). */
 class ClubDetailViewModel(application: Application, savedStateHandle: SavedStateHandle) : AndroidViewModel(application) {
     private val repository = ClubRepository()
     private val connectivity = ConnectivityMonitor(application)
@@ -146,7 +141,7 @@ class ClubDetailViewModel(application: Application, savedStateHandle: SavedState
     private val clubFlow: Flow<Club?> = repository.observeClub(clubId)
 
     init {
-        // Whenever the member list changes, look up their usernames.
+        // When the members change, look up their usernames.
         viewModelScope.launch {
             clubFlow.filterNotNull().map { it.memberIds }.distinctUntilChanged().catch { }.collect { ids ->
                 names.value = names.value + repository.usernames(ids)

@@ -16,18 +16,14 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.CancellationException
 import java.util.concurrent.TimeUnit
 
-/** Starts the workout sync job. Safe to call as often as you like. */
+/** Starts the workout sync job. Safe to call often. */
 object SyncScheduler {
-    /** Unique name of the sync job. */
+    /** Name of the sync job. */
     const val WORK_NAME = "workout_sync"
 
     // Adapted from: Android Developers (2026) Define work requests (WorkManager).
     // Available at: https://developer.android.com/develop/background-work/background-tasks/persistent/getting-started/define-work
-    /**
-     * Queues a sync that runs as soon as the phone has a connection (even if the app is closed).
-     * If a sync is already running, the new one waits for it, so a workout saved during a run is
-     * not missed. Failed runs retry with exponential backoff.
-     */
+    /** Queues a sync for when the phone has a connection, even if the app is closed. A running sync makes the new one wait, so no workout is missed. Failed runs retry with backoff. */
     fun enqueue(context: Context) {
         val request = OneTimeWorkRequestBuilder<SyncWorker>()
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
@@ -38,11 +34,7 @@ object SyncScheduler {
     }
 }
 
-/**
- * Background job that makes the phone and Firestore agree:
- * 1. sends offline deletes, 2. sends new and changed workouts, 3. pulls workouts made on other devices.
- * It is safe to run twice: workouts are written under their UUID, so nothing is duplicated.
- */
+/** Background job that makes the phone and Firestore agree: 1. send offline deletes, 2. send new and changed workouts, 3. pull workouts from other devices. Safe to run twice, because workouts use a UUID. */
 class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
@@ -63,7 +55,7 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
             }
             for (row in dao.pendingUpserts(uid)) {
                 if (!remote.upsert(uid, row)) return retry("upload timed out")
-                // Only mark synced if the user did not edit it while it was uploading.
+                // Only mark synced if the user did not edit it during the upload.
                 dao.markSynced(row.id, row.version)
                 pushed++
             }
@@ -83,7 +75,7 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
         }
     }
 
-    /** Brings in workouts logged on other devices and drops ones deleted elsewhere. */
+    /** Brings in workouts from other devices and removes ones deleted elsewhere. */
     private suspend fun pull(uid: String, repository: WorkoutRepository) {
         val dao = repository.localDao
         val (remoteRows, complete) = repository.remote.fetchAll(uid) ?: return
@@ -102,7 +94,7 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
     companion object {
         private const val TAG = "SyncWorker"
 
-        /** Output data key: how many changes were sent to the server in this run. */
+        /** Output key: how many changes were sent. */
         const val KEY_PUSHED = "pushed"
     }
 }

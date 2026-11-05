@@ -11,28 +11,19 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
 
-/**
- * Where uploaded images are stored. The app only talks to this interface, so the provider can be
- * changed without touching any screen. Today it is [FirestoreBlobStore] (works on the free Firebase
- * plan); a Firebase Storage version (needs the Blaze plan) would be one more class.
- *
- * A [path] names the item, for example `users/{uid}/media/avatar`.
- */
+/** Where uploaded images are stored. Screens only use this interface, so the storage can change later. Today it is FirestoreBlobStore, which works on the free Firebase plan. A path names an item, for example users/{uid}/media/avatar. */
 interface BlobStore {
-    /** Saves [bytes] at [path]. Returns false if it could not be saved (offline, too large, not allowed). */
+    /** Saves the bytes. Returns false if it fails. */
     suspend fun put(path: String, bytes: ByteArray, mime: String, version: Long): Boolean
 
-    /** Reads the bytes at [path], or null if there is nothing there or the read failed. */
+    /** Reads the bytes, or null if missing or the read failed. */
     suspend fun get(path: String): ByteArray?
 
-    /** Removes the item at [path]. Returns false on failure. */
+    /** Deletes the item. Returns false if it fails. */
     suspend fun delete(path: String): Boolean
 }
 
-/**
- * Stores images as Blob fields in Firestore documents (limit 1 MiB each, so images are compressed
- * first). Free-plan friendly. Reads and writes are covered by firestore.rules.
- */
+/** Stores images as Blob fields in Firestore documents (1 MiB limit, so images are compressed first). Covered by firestore.rules. */
 class FirestoreBlobStore(private val db: FirebaseFirestore = FirebaseFirestore.getInstance()) : BlobStore {
 
     override suspend fun put(path: String, bytes: ByteArray, mime: String, version: Long): Boolean = try {
@@ -76,25 +67,17 @@ class FirestoreBlobStore(private val db: FirebaseFirestore = FirebaseFirestore.g
     }
 }
 
-/**
- * Keeps a copy of every image on the phone, so pictures show instantly, survive restarts and work
- * offline. Each file remembers which version it holds, so it is only downloaded again when the
- * version on the server changes.
- */
+/** Keeps a copy of every image on the phone, so pictures show at once and work offline. Each file remembers its version, so it only downloads again when the version changes. */
 class MediaRepository private constructor(context: Context, private val store: BlobStore = FirestoreBlobStore()) {
     private val directory = File(context.applicationContext.filesDir, "media").apply { mkdirs() }
     private val prefs = context.applicationContext.getSharedPreferences("battle_fitness_media", Context.MODE_PRIVATE)
 
     private fun fileFor(path: String) = File(directory, path.replace('/', '_') + ".jpg")
 
-    /** The cached file for [path], or null if nothing is cached yet. */
+    /** The cached file, or null if there is none. */
     fun cached(path: String): File? = fileFor(path).takeIf { it.exists() && it.length() > 0 }
 
-    /**
-     * Makes sure the phone has version [remoteVersion] of [path] and returns the file. Downloads it
-     * only if the cached copy is missing or older. Returns the old cached file if the download fails
-     * (for example offline), or null if there is nothing at all.
-     */
+    /** Makes sure the phone has this version of the file. Downloads only if the copy is missing or old. If the download fails, returns the old copy (or null). */
     suspend fun ensureLocal(path: String, remoteVersion: Long): File? {
         if (remoteVersion <= 0L) return cached(path)
         val existing = cached(path)
@@ -103,13 +86,13 @@ class MediaRepository private constructor(context: Context, private val store: B
         return write(path, bytes, remoteVersion)
     }
 
-    /** Uploads an image and caches it. Returns the cached file, or null if the upload failed. */
+    /** Uploads an image and caches it. Returns the file, or null if it failed. */
     suspend fun upload(path: String, bytes: ByteArray, version: Long): File? {
         if (!store.put(path, bytes, "image/jpeg", version)) return null
         return write(path, bytes, version)
     }
 
-    /** Removes the image from the server and the phone. */
+    /** Deletes the image from the server and the phone. */
     suspend fun remove(path: String): Boolean {
         val ok = store.delete(path)
         if (ok) {

@@ -27,10 +27,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 
-/**
- * Change-password screen for email accounts. The user types their current password (checked
- * with Firebase before anything changes), then a new one with a live strength hint.
- */
+/** Change password for email accounts. Checks the current password with Firebase, then sets a new one with a live strength hint. */
 class ChangePasswordFragment : Fragment(R.layout.fragment_change_password) {
     private val viewModel: SettingsViewModel by viewModels()
 

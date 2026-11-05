@@ -27,11 +27,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 
-/**
- * The "Log a workout" bottom sheet: exercise (with suggestions from past workouts), sets, reps,
- * duration and notes. Every field is validated with inline messages. Saving writes to the phone
- * first, so it works with no internet.
- */
+/** The Log a workout sheet: exercise (with suggestions), sets, reps, duration and notes. Every field is checked. Saving goes to the phone first, so it works offline. */
 class LogWorkoutSheet : BottomSheetDialogFragment() {
     private val viewModel: WorkoutsViewModel by activityViewModels()
 
@@ -54,16 +50,16 @@ class LogWorkoutSheet : BottomSheetDialogFragment() {
         listOf(exerciseLayout to exercise, setsLayout to sets, repsLayout to reps, durationLayout to duration, notesLayout to notes)
             .forEach { (layout, edit) -> edit.doAfterTextChanged { layout.error = null } }
 
-        // Chosen from the library or the detail screen? Fill it in.
+        // Chosen from the library? Fill it in.
         if (savedInstanceState == null) arguments?.getString(ARG_EXERCISE)?.let { exercise.setText(it, false) }
 
-        // Browse the full library, then come back here with the chosen exercise.
+        // Browse the library, then come back with the chosen exercise.
         view.findViewById<View>(R.id.logBrowse).setOnClickListener {
             parentFragment?.findNavController()?.navigate(R.id.exerciseLibraryFragment, bundleOf(ExercisePicker.ARG_PICK_MODE to true))
             dismiss()
         }
 
-        // Suggestions: exercises you logged before, then the library (or a few common ones if it is not downloaded yet).
+        // Suggestions: past exercises, then the library (or a few common ones if it is not downloaded yet).
         val common = resources.getStringArray(R.array.common_exercises).toList()
         var libraryNames: List<String> = emptyList()
         viewLifecycleOwner.lifecycleScope.launch { libraryNames = ExerciseRepository.get(requireContext()).allNames() }
@@ -110,7 +106,7 @@ class LogWorkoutSheet : BottomSheetDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        // Open fully so the keyboard never hides the Save button.
+        // Open fully so the keyboard never hides Save.
         (dialog as? BottomSheetDialog)?.behavior?.state = BottomSheetBehavior.STATE_EXPANDED
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
@@ -126,14 +122,14 @@ class LogWorkoutSheet : BottomSheetDialogFragment() {
     }
 }
 
-/** Opens the log-workout sheet, optionally with an exercise already filled in. */
+/** Opens the log sheet, optionally with an exercise filled in. */
 fun Fragment.showLogSheet(exercise: String?) {
     if (childFragmentManager.findFragmentByTag(LogWorkoutSheet.SHEET_TAG) == null) {
         LogWorkoutSheet.newInstance(exercise).show(childFragmentManager, LogWorkoutSheet.SHEET_TAG)
     }
 }
 
-/** When an exercise is chosen in the library, reopen the log sheet with it filled in. */
+/** When an exercise is chosen in the library, reopen the log sheet with it. */
 fun Fragment.listenForPickedExercise() {
     parentFragmentManager.setFragmentResultListener(ExercisePicker.RESULT_KEY, viewLifecycleOwner) { _, bundle ->
         showLogSheet(bundle.getString(ExercisePicker.RESULT_NAME))

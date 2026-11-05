@@ -39,11 +39,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 
-/**
- * One club: invite code with Share, the owner's Start league button, and three tabs:
- * Leaderboard (podium for the top 3 then everyone), Fixtures (grouped by round, with status badges)
- * and Members. Shows a celebration when every fixture has been verified. Updates live.
- */
+/** One club: invite code, Start league button for the owner, and tabs for Leaderboard, Fixtures and Members. Updates live. */
 class ClubDetailFragment : Fragment(R.layout.fragment_club_detail) {
     private val viewModel: ClubDetailViewModel by viewModels()
     private val standings = StandingAdapter()
@@ -68,7 +64,7 @@ class ClubDetailFragment : Fragment(R.layout.fragment_club_detail) {
             override fun onTabUnselected(tab: TabLayout.Tab) = Unit
             override fun onTabReselected(tab: TabLayout.Tab) = Unit
         })
-        // After rotation the TabLayout restores its selection; show the matching section.
+        // After rotation, show the section for the selected tab.
         tabViews.forEachIndexed { i, v -> v.visibility = if (i == tabs.selectedTabPosition.coerceAtLeast(0)) View.VISIBLE else View.GONE }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -120,14 +116,14 @@ class ClubDetailFragment : Fragment(R.layout.fragment_club_detail) {
             ConfirmDialog.show(requireContext(), R.string.start_confirm_title, R.string.start_confirm_message, R.string.btn_start_league) { viewModel.startLeague() }
         }
 
-        // League complete banner.
+        // League finished banner.
         val winnerCard = root.findViewById<MaterialCardView>(R.id.winnerCard)
         winnerCard.visibility = if (state.leagueComplete) View.VISIBLE else View.GONE
         if (state.leagueComplete) {
             root.findViewById<TextView>(R.id.winnerText).text = getString(R.string.league_complete, state.championNames.joinToString(" & "))
         }
 
-        // Leaderboard: podium + the rest.
+        // Leaderboard: podium and the rest.
         val started = !club.isOpen
         root.findViewById<View>(R.id.podium).visibility = if (started) View.VISIBLE else View.GONE
         root.findViewById<View>(R.id.leaderboardHeader).visibility = if (started) View.VISIBLE else View.GONE
@@ -171,11 +167,7 @@ class ClubDetailFragment : Fragment(R.layout.fragment_club_detail) {
     }
 }
 
-/**
- * Bottom sheet where the assigned referee enters both scores, optionally attaches a proof photo
- * (gallery or camera), and confirms the result. Only the referee is offered this sheet (the
- * security rules also stop players from changing results).
- */
+/** Bottom sheet where the referee enters both scores, can attach a proof photo and confirms the result. */
 class ResultSheet : BottomSheetDialogFragment() {
     private val viewModel: ClubDetailViewModel by viewModels(ownerProducer = { requireParentFragment() })
     private var proofUri: Uri? = null

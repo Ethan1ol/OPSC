@@ -46,11 +46,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
-/**
- * In-app notifications stored at `users/{uid}/notifications/{id}`. They update in real time through
- * a Firestore listener. Other users' devices create them (the security rules require the sender's
- * own id in `fromUid`), because the free Firebase plan has no server to do it.
- */
+/** In-app notifications at users/{uid}/notifications/{id}. They update live. Other users' phones create them, because the free Firebase plan has no server. */
 class NotificationRepository(private val db: FirebaseFirestore = FirebaseFirestore.getInstance()) {
     private fun collection(uid: String) = db.collection("users").document(uid).collection("notifications")
 
@@ -74,7 +70,7 @@ class NotificationRepository(private val db: FirebaseFirestore = FirebaseFiresto
         }
     }
 
-    /** Adds a notification for [recipientUid] to a batch that is being built. */
+    /** Adds a notification for one person to a batch. */
     fun queue(batch: WriteBatch, recipientUid: String, fromUid: String, type: NotificationType, clubId: String, clubName: String, args: List<String>) {
         val ref: DocumentReference = collection(recipientUid).document()
         batch.set(
@@ -98,7 +94,7 @@ class NotificationRepository(private val db: FirebaseFirestore = FirebaseFiresto
     }
 }
 
-/** Turns a stored notification into text in the phone's current language. */
+/** Turns a stored notification into text in the phone's language. */
 object NotificationRenderer {
     private fun arg(n: InAppNotification, index: Int) = n.args.getOrElse(index) { "" }
 
@@ -119,12 +115,12 @@ object NotificationRenderer {
     }
 }
 
-/** What the notification list and the bell badge show. */
+/** What the notification list and bell badge show. */
 data class NotificationsUiState(val loading: Boolean = true, val error: Boolean = false, val items: List<InAppNotification> = emptyList()) {
     val unread: Int get() = NotificationLogic.unreadCount(items)
 }
 
-/** Live notifications for the signed-in user, shared by the bell badge and the list screen. */
+/** Live notifications for the signed-in user, shared by the badge and the list. */
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotificationsViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = NotificationRepository()
@@ -184,7 +180,7 @@ class NotificationAdapter(private val onClick: (InAppNotification) -> Unit) : Li
     }
 }
 
-/** The notifications screen (opened from the bell, or by tapping a push notification). */
+/** The notifications screen. */
 class NotificationsFragment : Fragment(R.layout.fragment_notifications) {
     private val viewModel: NotificationsViewModel by activityViewModels()
 

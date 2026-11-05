@@ -25,7 +25,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
-/** Maps a validation error to its translated message. */
+/** Maps a validation error to its message. */
 @StringRes
 fun WorkoutError.messageRes(): Int = when (this) {
     WorkoutError.EXERCISE_EMPTY -> R.string.err_exercise_empty
@@ -37,11 +37,7 @@ fun WorkoutError.messageRes(): Int = when (this) {
     WorkoutError.NOTES_TOO_LONG -> R.string.err_notes_long
 }
 
-/**
- * The Workouts tab: monthly goal ring, the list of workouts with Pending sync / Synced badges,
- * a "Sync now" button, and a button to log a new workout. Swipe a workout to delete it (with Undo).
- * Works fully offline: everything shown comes from the phone's database.
- */
+/** The Workouts tab: goal ring, the workout list with Pending and Synced badges, Sync now, and a button to log a workout. Swipe to delete (with Undo). Works offline. */
 class WorkoutsFragment : Fragment(R.layout.fragment_workouts) {
     private val viewModel: WorkoutsViewModel by activityViewModels()
     private val adapter = WorkoutAdapter()
@@ -109,7 +105,7 @@ class WorkoutsFragment : Fragment(R.layout.fragment_workouts) {
 
     private fun showLogSheet() = showLogSheet(null)
 
-    /** Swipe a card left or right to delete it. It disappears at once; "Undo" brings it back until the message goes away. */
+    /** Swipe a card to delete it. It disappears at once and Undo brings it back until the message goes. */
     private fun attachSwipeToDelete(list: RecyclerView, root: View) {
         val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(rv: RecyclerView, vh: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder) = false
@@ -120,7 +116,7 @@ class WorkoutsFragment : Fragment(R.layout.fragment_workouts) {
                 val bar = UiMessages.undo(root, R.string.msg_workout_deleted) { viewModel.undoHide(workout.id) }
                 bar.addCallback(object : Snackbar.Callback() {
                     override fun onDismissed(bar: Snackbar, event: Int) {
-                        // Anything except tapping Undo means the user accepted the delete.
+                        // Anything except Undo means the delete is accepted.
                         if (event != DISMISS_EVENT_ACTION) viewModel.commitDelete(workout.id)
                     }
                 })

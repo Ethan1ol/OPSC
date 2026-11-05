@@ -31,7 +31,7 @@ import java.io.File
 /** Which picture is being changed. */
 enum class MediaTarget(val spec: ImageSpec) { AVATAR(ImageSpec.AVATAR), BANNER(ImageSpec.BANNER) }
 
-/** Everything the profile and edit-profile screens show. */
+/** Everything the profile screens show. */
 data class ProfileUiState(
     val loading: Boolean = true,
     val failed: Boolean = false,
@@ -41,7 +41,7 @@ data class ProfileUiState(
     val workouts: Int = 0,
     val wins: Int = 0,
     val clubs: Int = 0,
-    /** The picture currently being processed and uploaded, if any. */
+    /** The picture being uploaded now, if any. */
     val uploading: MediaTarget? = null
 )
 
@@ -56,10 +56,7 @@ sealed interface ProfileEvent {
 /** Why a picture could not be saved. */
 enum class UploadFailure { UNREADABLE, UPLOAD }
 
-/**
- * The signed-in user's profile: details, pictures (kept on the phone and refreshed when they
- * change), and the numbers shown on the profile (workouts, wins, clubs). Also runs picture uploads.
- */
+/** The user's profile: details, pictures (cached on the phone) and the numbers (workouts, wins, clubs). Also runs picture uploads. */
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
     private val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
@@ -98,10 +95,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _events = Channel<ProfileEvent>(Channel.BUFFERED)
     val events: Flow<ProfileEvent> = _events.receiveAsFlow()
 
-    /** Which picture the next picked or photographed image is for (kept across rotation). */
+    /** Which picture the next image is for. */
     var pendingTarget: MediaTarget = MediaTarget.AVATAR
 
-    /** Where the camera is writing a photo (kept across rotation). */
+    /** Where the camera saves a photo. */
     var pendingCameraUri: Uri? = null
 
     private var lastFailedUpload: Pair<MediaTarget, Uri>? = null
@@ -128,7 +125,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    /** Downloads a picture only if its version on the server is newer than the copy on the phone. */
+    /** Downloads a picture only if the server has a newer version. */
     private suspend fun refreshPictures(owner: String, loaded: UserProfile) {
         media.ensureLocal(MediaRepository.avatarPath(owner), loaded.avatarVersion)?.let { avatar.value = it }
         media.ensureLocal(MediaRepository.bannerPath(owner), loaded.bannerVersion)?.let { banner.value = it }
@@ -142,7 +139,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         _events.trySend(ProfileEvent.DetailsSaved)
     }
 
-    /** Crops, compresses and uploads a picked or photographed picture. Needs a connection. */
+    /** Crops, compresses and uploads a picture. Needs a connection. */
     fun upload(target: MediaTarget, source: Uri) {
         val owner = uid ?: return
         if (uploading.value != null) return
@@ -161,7 +158,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 fail(target, source, UploadFailure.UPLOAD)
                 return@launch
             }
-            // Tell the profile which version is current, so other phones know to download it.
+            // Save the new version, so other phones download the picture.
             profiles.save(owner, mapOf(if (target == MediaTarget.AVATAR) "avatarVersion" to version else "bannerVersion" to version))
             profile.value = profile.value?.let { if (target == MediaTarget.AVATAR) it.copy(avatarVersion = version) else it.copy(bannerVersion = version) }
             if (target == MediaTarget.AVATAR) avatar.value = file else banner.value = file
@@ -175,7 +172,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         lastFailedUpload?.let { (target, uri) -> upload(target, uri) }
     }
 
-    /** Deletes a picture, going back to the default one. */
+    /** Deletes a picture and goes back to the default. */
     fun remove(target: MediaTarget) {
         val owner = uid ?: return
         if (uploading.value != null) return

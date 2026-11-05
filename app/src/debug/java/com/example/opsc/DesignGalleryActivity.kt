@@ -12,11 +12,7 @@ import com.example.opsc.ui.StateLayout
 import com.example.opsc.ui.UiMessages
 import com.google.android.material.textfield.TextInputLayout
 
-/**
- * Debug-only screen that shows every design-system component (type, colour, buttons, inputs,
- * cards, chips, screen states, snackbars, dialog) so the look can be reviewed on a real phone,
- * in light and dark mode. It is not part of release builds.
- */
+/** Debug-only screen that shows every design component, so the look can be checked on a phone. */
 class DesignGalleryActivity : AppCompatActivity() {
     private var inputHasError = false
 
@@ -25,7 +21,7 @@ class DesignGalleryActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_design_gallery)
         val root = findViewById<View>(R.id.galleryRoot)
-        // Keep content clear of the status and navigation bars (edge-to-edge).
+        // Keep content clear of the system bars.
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.galleryScroll)) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)

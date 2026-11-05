@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
-/** What another member's profile screen shows. */
+/** What another member's profile shows. */
 data class MemberProfileUiState(
     val loading: Boolean = true,
     val profile: UserProfile? = null,
@@ -20,10 +20,7 @@ data class MemberProfileUiState(
     val banner: File? = null
 )
 
-/**
- * Loads another member's profile (from the `uid` navigation argument): the text first, then their
- * pictures, which are cached on the phone so they open instantly next time and work offline.
- */
+/** Loads another member's profile (from the uid argument): the text first, then the pictures, which are cached on the phone. */
 class MemberProfileViewModel(application: Application, savedState: SavedStateHandle) : AndroidViewModel(application) {
     private val uid: String? = savedState["uid"]
     private val profiles = ProfileRepository()
@@ -41,7 +38,7 @@ class MemberProfileViewModel(application: Application, savedState: SavedStateHan
         load()
     }
 
-    /** Loads (or reloads) the profile and its pictures. */
+    /** Loads (or reloads) the profile and pictures. */
     fun load() {
         val owner = uid
         if (owner == null) {

@@ -8,11 +8,7 @@ import com.google.android.material.color.MaterialColors
 import com.google.android.material.imageview.ShapeableImageView
 import java.io.File
 
-/**
- * Shows a picture from a file with Coil, or a default when there is none: a person icon for an
- * avatar, nothing (the plain colour behind it) for a banner. Coil caches the decoded image, and the
- * cache key includes the file's age so a replaced picture shows immediately.
- */
+/** Shows a picture from a file with Coil, or a default: a person icon for an avatar, nothing for a banner. The cache key includes the file age, so a replaced picture shows at once. */
 fun ShapeableImageView.showPicture(file: File?, avatar: Boolean) {
     if (file != null) {
         setPadding(0, 0, 0, 0)

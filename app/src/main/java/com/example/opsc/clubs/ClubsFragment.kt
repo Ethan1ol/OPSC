@@ -27,15 +27,12 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 
-/** Opens the club detail screen. */
+/** Opens the club screen. */
 fun Fragment.openClub(clubId: String) {
     findNavController().navigate(R.id.clubDetailFragment, bundleOf("clubId" to clubId))
 }
 
-/**
- * The Clubs tab: your clubs, a "Join with code" box and a "Create club" button.
- * Clubs update live; joining and creating need an internet connection.
- */
+/** The Clubs tab: your clubs, join with a code and create a club. Joining and creating need internet. */
 class ClubsFragment : Fragment(R.layout.fragment_clubs) {
     private val viewModel: ClubsViewModel by activityViewModels()
 
@@ -107,7 +104,7 @@ class ClubsFragment : Fragment(R.layout.fragment_clubs) {
     }
 }
 
-/** Bottom sheet to create a club (name and optional description). */
+/** Bottom sheet to create a club. */
 class CreateClubSheet : BottomSheetDialogFragment() {
     private val viewModel: ClubsViewModel by activityViewModels()
 

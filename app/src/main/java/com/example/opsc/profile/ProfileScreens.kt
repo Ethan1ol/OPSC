@@ -38,11 +38,7 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 import java.io.File
 
-/**
- * The Profile tab: banner, avatar, name, bio and three numbers (workouts, wins, clubs), with
- * buttons for Edit profile, Settings and Log out. Pictures come from the phone's cache, so they
- * show straight away and work offline.
- */
+/** The Profile tab: banner, picture, name, bio and three numbers (workouts, wins, clubs), with Edit profile, Settings and Log out. Pictures come from the phone's cache. */
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val viewModel: ProfileViewModel by activityViewModels()
 
@@ -55,7 +51,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             ConfirmDialog.show(requireContext(), R.string.logout_title, R.string.logout_message, R.string.btn_logout) { logoutToLogin() }
         }
 
-        // Debug-only helpers (not in release builds).
+        // Debug-only helpers.
         if (BuildConfig.DEBUG) {
             view.findViewById<View>(R.id.buttonGallery).apply {
                 visibility = View.VISIBLE
@@ -97,11 +93,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 }
 
-/**
- * Another member's profile (opened by tapping a member in a club). It shows the banner, picture,
- * name, username and bio. Workout counts are private (the security rules only let the owner read
- * workouts), so the numbers and the edit buttons are hidden. Pictures are downloaded once and cached.
- */
+/** Another member's profile, opened from a club. Shows banner, picture, name, username and bio. Workouts are private, so the numbers and edit buttons are hidden. */
 class MemberProfileFragment : Fragment(R.layout.fragment_profile) {
     private val viewModel: MemberProfileViewModel by viewModels()
 
@@ -135,14 +127,11 @@ class MemberProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 }
 
-/**
- * Edit profile: change the banner and profile picture (from the gallery or the camera; they are
- * centre-cropped and compressed before saving), and the name and bio.
- */
+/** Edit profile: change the banner and picture (gallery or camera, cropped and compressed), name and bio. */
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private val viewModel: ProfileViewModel by activityViewModels()
 
-    // The photo picker needs no permission, and neither does taking a photo into our own file.
+    // The photo picker and the camera need no permission.
     private val pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) viewModel.upload(viewModel.pendingTarget, uri)
     }
@@ -225,7 +214,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         }
     }
 
-    /** Asks where the picture should come from: gallery, camera, or remove the current one. */
+    /** Asks where the picture comes from: gallery, camera, or remove. */
     private fun chooseSource(root: View, target: MediaTarget) {
         viewModel.pendingTarget = target
         val hasPicture = (if (target == MediaTarget.AVATAR) viewModel.state.value.avatar else viewModel.state.value.banner) != null
@@ -246,7 +235,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             .show()
     }
 
-    /** Pictures are saved to the online profile, so a connection is needed. */
+    /** Pictures are saved online, so a connection is needed. */
     private fun online(root: View): Boolean {
         val online = ConnectivityMonitor(requireContext()).isOnlineNow()
         if (!online) UiMessages.error(root, R.string.club_err_network)

@@ -18,10 +18,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 
-/**
- * Forgot-password screen. Sends a real Firebase password-reset email, then shows a confirmation.
- * The confirmation is the same whether or not an account exists, so accounts cannot be probed.
- */
+/** Forgot password: sends a reset email and shows the same message whether or not the account exists. */
 class ForgotPasswordFragment : Fragment(R.layout.fragment_forgot_password) {
     private val viewModel: AuthViewModel by activityViewModels()
 
@@ -33,7 +30,7 @@ class ForgotPasswordFragment : Fragment(R.layout.fragment_forgot_password) {
         val form = view.findViewById<View>(R.id.forgotForm)
         val sentCard = view.findViewById<View>(R.id.forgotSentCard)
 
-        // Pre-fill with the email typed on the login screen.
+        // Fill in the email from the login screen.
         if (email.text.isNullOrEmpty()) email.setText(arguments?.getString(ARG_EMAIL).orEmpty())
         email.doAfterTextChanged { emailLayout.error = null }
 
@@ -77,13 +74,12 @@ class ForgotPasswordFragment : Fragment(R.layout.fragment_forgot_password) {
     }
 
     override fun onDestroy() {
-        // Leaving the screen resets the "sent" state so the next visit shows the form again.
+        // Reset the sent state when leaving.
         if (isRemoving) viewModel.resetSent = false
         super.onDestroy()
     }
 
     companion object {
-        /** Bundle key holding the email to pre-fill. */
         const val ARG_EMAIL = "email"
     }
 }
