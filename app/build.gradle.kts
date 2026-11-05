@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.exifinterface)
 
     // Firebase: Auth, Firestore, Storage, Cloud Messaging
     implementation(platform(libs.firebase.bom))
