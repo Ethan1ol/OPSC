@@ -21,9 +21,9 @@
         tools:layout="@layout/fragment_state_placeholder" />
     <fragment
         android:id="@+id/workoutsFragment"
-        android:name="com.example.opsc.app.WorkoutsFragment"
+        android:name="com.example.opsc.workouts.WorkoutsFragment"
         android:label="@string/nav_workouts"
-        tools:layout="@layout/fragment_state_placeholder" />
+        tools:layout="@layout/fragment_workouts" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.opsc.app.ProfileFragment"

@@ -55,6 +55,8 @@ data class UserProfile(
     val weightKg: Double? = null,
     /** "metric" or "imperial": how height and weight are shown. Values are always stored in cm and kg. */
     val units: String = "metric",
+    /** Workouts per month the user aims for (1 to 100). */
+    val monthlyGoal: Int = 12,
     @ServerTimestamp val createdAt: Date? = null
 )
 

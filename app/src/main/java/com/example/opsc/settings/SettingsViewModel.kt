@@ -11,6 +11,7 @@ import com.example.opsc.auth.UserProfile
 import com.example.opsc.profile.ProfileRepository
 import com.example.opsc.profile.Units
 import com.example.opsc.ui.ConnectivityMonitor
+import com.example.opsc.workouts.WorkoutRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -139,9 +140,16 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         if (check is AuthOutcome.Failure) SettingsEvent.Failed(check.error) else delete()
     }
 
-    private suspend fun delete(): SettingsEvent = when (val outcome = auth.deleteAccount()) {
-        is AuthOutcome.Success -> SettingsEvent.AccountDeleted
-        is AuthOutcome.Failure -> SettingsEvent.Failed(outcome.error)
+    private suspend fun delete(): SettingsEvent {
+        val uid = auth.currentUser?.uid
+        return when (val outcome = auth.deleteAccount()) {
+            is AuthOutcome.Success -> {
+                // The account is gone, so remove this user's workouts stored on the phone too.
+                uid?.let { WorkoutRepository.get(getApplication()).clearLocal(it) }
+                SettingsEvent.AccountDeleted
+            }
+            is AuthOutcome.Failure -> SettingsEvent.Failed(outcome.error)
+        }
     }
 
     private fun runAccountTask(label: String, block: suspend () -> SettingsEvent) {

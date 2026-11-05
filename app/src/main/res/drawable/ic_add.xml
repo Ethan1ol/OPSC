@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Battle Fitness icon: plus, 24dp, 2dp round stroke. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:tint="?attr/colorControlNormal"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M12,5 V19"
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M5,12 H19"
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round" />
+</vector>

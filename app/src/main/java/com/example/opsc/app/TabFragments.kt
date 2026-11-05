@@ -34,26 +34,6 @@ abstract class PlaceholderFragment(@StringRes private val messageRes: Int) :
 /** Clubs tab (real screen: clubs and league feature). */
 class ClubsFragment : PlaceholderFragment(R.string.placeholder_clubs)
 
-/** Workouts tab (real screen: Workout Logger feature). */
-class WorkoutsFragment : PlaceholderFragment(R.string.placeholder_workouts)
-
-/** Home tab: greeting now; stats, clubs and next fixture arrive with the dashboard feature. */
-class HomeFragment : Fragment(R.layout.fragment_home) {
-    private val auth = AuthRepository()
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val user = auth.currentUser ?: return
-        val greeting = view.findViewById<TextView>(R.id.textGreeting)
-        greeting.text = getString(R.string.home_greeting, user.displayName ?: user.email.orEmpty())
-        viewLifecycleOwner.lifecycleScope.launch {
-            val profile = auth.loadProfile(user.uid) ?: return@launch
-            if (profile.username.isNotEmpty()) greeting.text = getString(R.string.home_greeting, profile.username)
-            // Restore the language saved in the profile (e.g. after logging in on a new phone).
-            if (profile.language.isNotEmpty()) LanguageManager.apply(profile.language)
-        }
-    }
-}
-
 /** Profile tab: account summary, settings, design gallery (debug builds only) and log out. */
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val auth = AuthRepository()

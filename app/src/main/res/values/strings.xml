@@ -70,10 +70,7 @@
     <string name="offline_banner">You are offline. Changes will sync when you reconnect.</string>
     <string name="home_greeting">Hello, %1$s</string>
     <string name="home_subtitle">What would you like to do today?</string>
-    <string name="home_placeholder_title">Your dashboard</string>
-    <string name="home_placeholder_body">Your stats, clubs and next fixture will appear here as each feature is completed.</string>
     <string name="placeholder_clubs">Clubs are being rebuilt and will appear here soon.</string>
-    <string name="placeholder_workouts">The workout logger is being rebuilt and will appear here soon.</string>
     <string name="logout_title">Log out?</string>
     <string name="logout_message">You will need to log in again to use the app.</string>
     <string name="btn_design_gallery" translatable="false">Design gallery (debug)</string>
@@ -162,4 +159,44 @@
     <string name="reauth_message">Enter your password to delete your account.</string>
     <string name="msg_account_deleted">Your account was deleted</string>
     <string name="auth_err_google_wrong_account">That is a different Google account. Choose the one you are signed in with.</string>
+
+    <!-- Features 4 and 5: workouts, offline sync, dashboard -->
+    <string name="percent_format" translatable="false">%1$d%%</string>
+    <string name="workouts_goal_title">Monthly goal</string>
+    <string name="workouts_goal_progress">%1$d of %2$d workouts</string>
+    <string name="btn_edit_goal">Edit goal</string>
+    <string name="btn_save_goal">Save goal</string>
+    <string name="goal_dialog_hint">Workouts per month</string>
+    <string name="err_goal_range">Enter a number from 1 to 100</string>
+    <string name="btn_log_workout">Log workout</string>
+    <string name="sync_all_synced">All workouts synced</string>
+    <string name="sync_pending_count">%1$d waiting to sync</string>
+    <string name="btn_sync_now">Sync now</string>
+    <string name="msg_sync_done">Workouts synced</string>
+    <string name="msg_sync_offline">No connection. Your workouts are saved and will sync when you are online.</string>
+    <string name="badge_pending">Pending sync</string>
+    <string name="badge_synced">Synced</string>
+    <string name="workout_summary">%1$d sets \u00d7 %2$d reps \u00b7 %3$d min</string>
+    <string name="msg_workout_deleted">Workout deleted</string>
+    <string name="msg_workout_saved">Workout saved</string>
+    <string name="empty_workouts">No workouts yet. Log your first one!</string>
+    <string name="sheet_log_title">Log a workout</string>
+    <string name="field_exercise">Exercise</string>
+    <string name="field_sets">Sets</string>
+    <string name="field_reps">Reps</string>
+    <string name="field_duration">Duration (min)</string>
+    <string name="field_notes">Notes (optional)</string>
+    <string name="err_exercise_empty">Please enter an exercise</string>
+    <string name="err_exercise_long">Use 60 characters or fewer</string>
+    <string name="err_whole_number">Enter a whole number</string>
+    <string name="err_sets_range">Sets must be from 1 to 50</string>
+    <string name="err_reps_range">Reps must be from 1 to 500</string>
+    <string name="err_duration_range">Duration must be from 1 to 600 minutes</string>
+    <string name="err_notes_long">Notes can be at most 500 characters</string>
+    <string name="dash_stat_month">Workouts this month</string>
+    <string name="dash_stat_streak">Day streak</string>
+    <string name="dash_stat_reps">Total reps this month</string>
+    <string name="dash_clubs_title">My clubs</string>
+    <string name="dash_clubs_prompt">You have not joined a club yet. Join one to start competing with friends.</string>
+    <string name="btn_find_club">Find a club</string>
 </resources>
