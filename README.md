@@ -3,7 +3,7 @@
 
 
 USE OF AI: [AI_Use_Declaration.docx](https://github.com/user-attachments/files/34449077/AI_Use_Declaration.docx)
-YoutTube Link: 
+YoutTube Link:https://youtu.be/PhxCVDvSRq0 
 
 
 An Android application built with **Kotlin** and **XML / Material 3 UI components**, designed to let friends join fitness **clubs**, compete in a **round-robin league** with a referee, log workouts **offline**, and stay up to date with **push and in-app notifications**.
