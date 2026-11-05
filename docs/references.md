@@ -53,3 +53,13 @@ Android Developers (2026) *Handle keyboard (IME) insets when using edge-to-edge*
 
 Firebase (2026) *Email enumeration protection*. Available at: https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection (Accessed: 5 November 2026).
 
+Firebase (2026) *Manage users in Firebase: re-authenticate a user, update a password, delete a user*. Available at: https://firebase.google.com/docs/auth/android/manage-users (Accessed: 5 November 2026).
+
+Firebase (2026) *Delete data from Cloud Firestore*. Available at: https://firebase.google.com/docs/firestore/manage-data/delete-data (Accessed: 5 November 2026).
+
+Android Developers (2026) *Fragment results (Fragment Result API)*. Available at: https://developer.android.com/guide/fragments/communicate#fragment-result (Accessed: 5 November 2026).
+
+Material Components for Android (2026) *Switch and toggle button groups*. Available at: https://github.com/material-components/material-components-android/blob/master/docs/components/MaterialSwitch.md (Accessed: 5 November 2026).
+
+Republic of South Africa (2013) *Protection of Personal Information Act 4 of 2013*. Available at: https://www.gov.za/documents/protection-personal-information-act (Accessed: 5 November 2026).
+

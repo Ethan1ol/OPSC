@@ -74,3 +74,12 @@ Entries are appended after every piece.
 - **Bugs debugged:** none found in testing yet.
 - **Images/text generated:** none.
 
+## 2026-11-05 – Feature 3: Settings and languages
+- **Generated:** the Settings screen (`SettingsFragment`, `SettingsViewModel`, layout) with Account, Preferences and About cards; `ChangePasswordFragment`; `PasswordPromptDialog`; `Units.kt` (metric/imperial conversion and unit-aware validation) with 12 unit tests; new validator for "new password must differ" with tests; repository functions for re-authentication, password change and account deletion; a refactor of the Google helper to separate "get a token" from "sign in"; `docs/privacy-policy.md` (a draft); `docs/translation-review.md` (generated from the string files); English, Afrikaans and isiZulu text for every new string. The old Settings activity, legacy theme, styles and drawables were removed.
+- **Reviewed/changed by students:** (to be completed) Ethan specified the sections, the languages, and that settings must save to Firestore.
+- **Translations:** all Afrikaans and isiZulu text is AI-written and unchecked. `docs/translation-review.md` lists every string and flags the ones the AI is least sure of. This must be disclosed in the AI declaration.
+- **Design decisions:** deleting an account always re-checks the user first (password, or the same Google account), and deletes the data before the sign-in so a failure never leaves a profile-less account; the Dark/Light/System switch moved from Profile to Settings.
+- **Bugs debugged:** a script step failed halfway because it expected different manifest text; found by reading the error, fixed by finishing the remaining steps separately. A hack that reused an unrelated error code for "same password" was replaced with a proper validator.
+- **How it was tested:** build, lint (no errors) and 94 unit tests. Not tested: the Settings screens on a device. The emulator froze with "system not responding" dialogs while testing, so no Settings screenshot was captured. Not tested: language switching, saving to Firestore, change password, delete account, the privacy link.
+- **Images/text generated:** all Afrikaans and isiZulu text; the privacy policy draft. No images.
+

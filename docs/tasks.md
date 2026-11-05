@@ -5,7 +5,7 @@ Rebuild plan (replaces Pieces 4 to 10 above where they overlap):
 - [x] Step A: design system and app shell
 - [x] 1 Register and log in (built; needs real-phone test of register/reset)
 - [x] 2 Google SSO (built; needs real-phone test)
-- [ ] 3 Settings and languages
+- [x] 3 Settings and languages (built; needs real-phone test and translation review)
 - [ ] 4 Offline mode with sync
 - [ ] 5 Workout Logger and Dashboard
 - [ ] 6 REST API exercise library
