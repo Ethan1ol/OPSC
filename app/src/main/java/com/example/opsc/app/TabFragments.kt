@@ -19,21 +19,6 @@ import com.example.opsc.ui.ConfirmDialog
 import com.example.opsc.ui.StateLayout
 import kotlinx.coroutines.launch
 
-/**
- * Base for tabs whose real screen is built in a later feature. It shows the shared
- * empty state so the tab is not blank and the navigation can be tried end to end.
- */
-abstract class PlaceholderFragment(@StringRes private val messageRes: Int) :
-    Fragment(R.layout.fragment_state_placeholder) {
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        view.findViewById<StateLayout>(R.id.stateLayout).showEmpty(R.drawable.ic_state_empty, messageRes)
-    }
-}
-
-/** Clubs tab (real screen: clubs and league feature). */
-class ClubsFragment : PlaceholderFragment(R.string.placeholder_clubs)
-
 /** Profile tab: account summary, settings, design gallery (debug builds only) and log out. */
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val auth = AuthRepository()

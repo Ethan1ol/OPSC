@@ -16,9 +16,18 @@
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/clubsFragment"
-        android:name="com.example.opsc.app.ClubsFragment"
+        android:name="com.example.opsc.clubs.ClubsFragment"
         android:label="@string/nav_clubs"
-        tools:layout="@layout/fragment_state_placeholder" />
+        tools:layout="@layout/fragment_clubs" />
+    <fragment
+        android:id="@+id/clubDetailFragment"
+        android:name="com.example.opsc.clubs.ClubDetailFragment"
+        android:label="@string/nav_clubs"
+        tools:layout="@layout/fragment_club_detail">
+        <argument
+            android:name="clubId"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/workoutsFragment"
         android:name="com.example.opsc.workouts.WorkoutsFragment"
@@ -39,4 +48,23 @@
         android:name="com.example.opsc.settings.ChangePasswordFragment"
         android:label="@string/settings_change_password"
         tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/exerciseLibraryFragment"
+        android:name="com.example.opsc.exercises.ExerciseLibraryFragment"
+        android:label="@string/btn_browse_library"
+        tools:layout="@layout/fragment_exercise_library">
+        <argument
+            android:name="pickMode"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/exerciseDetailFragment"
+        android:name="com.example.opsc.exercises.ExerciseDetailFragment"
+        android:label="@string/field_exercise"
+        tools:layout="@layout/fragment_exercise_detail">
+        <argument
+            android:name="exerciseId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

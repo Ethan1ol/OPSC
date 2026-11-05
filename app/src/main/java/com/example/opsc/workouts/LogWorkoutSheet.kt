@@ -7,7 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ArrayAdapter
+import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.opsc.exercises.ExercisePicker
+import com.example.opsc.exercises.ExerciseRepository
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -49,8 +54,19 @@ class LogWorkoutSheet : BottomSheetDialogFragment() {
         listOf(exerciseLayout to exercise, setsLayout to sets, repsLayout to reps, durationLayout to duration, notesLayout to notes)
             .forEach { (layout, edit) -> edit.doAfterTextChanged { layout.error = null } }
 
-        // Suggestions: exercises you logged before, then a few common ones.
+        // Chosen from the library or the detail screen? Fill it in.
+        if (savedInstanceState == null) arguments?.getString(ARG_EXERCISE)?.let { exercise.setText(it, false) }
+
+        // Browse the full library, then come back here with the chosen exercise.
+        view.findViewById<View>(R.id.logBrowse).setOnClickListener {
+            parentFragment?.findNavController()?.navigate(R.id.exerciseLibraryFragment, bundleOf(ExercisePicker.ARG_PICK_MODE to true))
+            dismiss()
+        }
+
+        // Suggestions: exercises you logged before, then the library (or a few common ones if it is not downloaded yet).
         val common = resources.getStringArray(R.array.common_exercises).toList()
+        var libraryNames: List<String> = emptyList()
+        viewLifecycleOwner.lifecycleScope.launch { libraryNames = ExerciseRepository.get(requireContext()).allNames() }
         val suggestions = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1)
         exercise.setAdapter(suggestions)
         exercise.threshold = 1
@@ -58,7 +74,7 @@ class LogWorkoutSheet : BottomSheetDialogFragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.recentExercises.collect { recent ->
                     suggestions.clear()
-                    suggestions.addAll((recent + common).distinctBy { it.lowercase() })
+                    suggestions.addAll((recent + libraryNames.ifEmpty { common }).distinctBy { it.lowercase() })
                 }
             }
         }
@@ -99,7 +115,27 @@ class LogWorkoutSheet : BottomSheetDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
-    private companion object {
-        const val TAG = "LogWorkoutSheet"
+    companion object {
+        private const val TAG = "LogWorkoutSheet"
+        const val SHEET_TAG = "log_workout_sheet"
+        const val ARG_EXERCISE = "exercise"
+
+        fun newInstance(exercise: String?) = LogWorkoutSheet().apply {
+            arguments = bundleOf(ARG_EXERCISE to exercise)
+        }
+    }
+}
+
+/** Opens the log-workout sheet, optionally with an exercise already filled in. */
+fun Fragment.showLogSheet(exercise: String?) {
+    if (childFragmentManager.findFragmentByTag(LogWorkoutSheet.SHEET_TAG) == null) {
+        LogWorkoutSheet.newInstance(exercise).show(childFragmentManager, LogWorkoutSheet.SHEET_TAG)
+    }
+}
+
+/** When an exercise is chosen in the library, reopen the log sheet with it filled in. */
+fun Fragment.listenForPickedExercise() {
+    parentFragmentManager.setFragmentResultListener(ExercisePicker.RESULT_KEY, viewLifecycleOwner) { _, bundle ->
+        showLogSheet(bundle.getString(ExercisePicker.RESULT_NAME))
     }
 }

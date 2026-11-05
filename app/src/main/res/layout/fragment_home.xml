@@ -158,7 +158,18 @@
                     android:text="@string/dash_clubs_title"
                     android:textAppearance="@style/TextAppearance.Battle.Title" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/dashClubsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
                 <TextView
+                    android:id="@+id/dashClubsPrompt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_xs"

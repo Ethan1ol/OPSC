@@ -75,3 +75,17 @@ Material Components for Android (2026) *Bottom sheets, progress indicators and f
 
 Firebase (2026) *Offline capabilities and the document id as an idempotency key (Cloud Firestore data model)*. Available at: https://firebase.google.com/docs/firestore/data-model (Accessed: 5 November 2026).
 
+wger Workout Manager (2026) *REST API documentation: exercise, exercise-translation, exercisecategory, muscle and equipment endpoints*. Available at: https://wger.de/en/software/api (Accessed: 5 November 2026).
+
+wger Workout Manager (2026) *Exercise data, licensed under CC-BY-SA 4.0*. Available at: https://wger.de/en/software/api (Accessed: 5 November 2026).
+
+Square (2026) *Retrofit: a type-safe HTTP client for Android and Java*. Available at: https://square.github.io/retrofit/ (Accessed: 5 November 2026).
+
+Firebase (2026) *Cloud Firestore: query data and listen for real-time updates*. Available at: https://firebase.google.com/docs/firestore/query-data/listen (Accessed: 5 November 2026).
+
+Firebase (2026) *Cloud Firestore: transactions and batched writes*. Available at: https://firebase.google.com/docs/firestore/manage-data/transactions (Accessed: 5 November 2026).
+
+Firebase (2026) *Security Rules: usage and limits (access calls per request)*. Available at: https://firebase.google.com/docs/firestore/security/rules-structure (Accessed: 5 November 2026).
+
+Material Components for Android (2026) *Tabs and filter chips*. Available at: https://github.com/material-components/material-components-android/tree/master/docs/components (Accessed: 5 November 2026).
+

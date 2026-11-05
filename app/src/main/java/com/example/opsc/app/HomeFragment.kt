@@ -9,11 +9,17 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.opsc.R
 import com.example.opsc.auth.AuthRepository
 import com.example.opsc.profile.LanguageManager
 import com.example.opsc.ui.UiMessages
-import com.example.opsc.workouts.LogWorkoutSheet
+import com.example.opsc.clubs.ClubAdapter
+import com.example.opsc.clubs.ClubsViewModel
+import com.example.opsc.clubs.openClub
+import com.example.opsc.workouts.listenForPickedExercise
+import com.example.opsc.workouts.showLogSheet
 import com.example.opsc.workouts.WorkoutEvent
 import com.example.opsc.workouts.WorkoutsViewModel
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -27,6 +33,7 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private val auth = AuthRepository()
     private val viewModel: WorkoutsViewModel by activityViewModels()
+    private val clubsViewModel: ClubsViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val user = auth.currentUser ?: return
@@ -39,9 +46,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (profile.language.isNotEmpty()) LanguageManager.apply(profile.language)
         }
 
-        view.findViewById<View>(R.id.dashLogWorkout).setOnClickListener {
-            if (childFragmentManager.findFragmentByTag(SHEET_TAG) == null) LogWorkoutSheet().show(childFragmentManager, SHEET_TAG)
-        }
+        view.findViewById<View>(R.id.dashLogWorkout).setOnClickListener { showLogSheet(null) }
+        listenForPickedExercise()
         view.findViewById<View>(R.id.dashFindClub).setOnClickListener { findNavController().navigate(R.id.clubsFragment) }
 
         val statMonth = view.findViewById<TextView>(R.id.statMonth)
@@ -50,8 +56,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val goalText = view.findViewById<TextView>(R.id.dashGoalText)
         val goalBar = view.findViewById<LinearProgressIndicator>(R.id.dashGoalBar)
 
+        // My clubs as horizontal cards (or the join-a-club prompt).
+        val clubsList = view.findViewById<RecyclerView>(R.id.dashClubsList)
+        val clubsPrompt = view.findViewById<TextView>(R.id.dashClubsPrompt)
+        val clubAdapter = ClubAdapter(R.layout.item_club_card) { openClub(it.id) }
+        clubsList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        clubsList.adapter = clubAdapter
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    clubsViewModel.state.collect { clubsState ->
+                        val has = clubsState.clubs.isNotEmpty()
+                        clubAdapter.submitList(clubsState.clubs)
+                        clubsList.visibility = if (has) View.VISIBLE else View.GONE
+                        clubsPrompt.visibility = if (has) View.GONE else View.VISIBLE
+                    }
+                }
                 launch {
                     viewModel.state.collect { state ->
                         val stats = state.stats
@@ -73,7 +94,4 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private companion object {
-        const val SHEET_TAG = "log_workout_sheet"
-    }
 }

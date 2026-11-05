@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/min_touch_target"
+    android:orientation="horizontal"
+    android:paddingVertical="@dimen/space_xs">
+
+    <TextView
+        android:id="@+id/standingRank"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Battle.Title" />
+
+    <TextView
+        android:id="@+id/standingName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.Battle.Body" />
+
+    <TextView
+        android:id="@+id/standingStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_sm"
+        android:textAppearance="@style/TextAppearance.Battle.Caption" />
+
+    <TextView
+        android:id="@+id/standingPoints"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.Battle.Title" />
+</LinearLayout>

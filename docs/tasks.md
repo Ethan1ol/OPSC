@@ -8,8 +8,8 @@ Rebuild plan (replaces Pieces 4 to 10 above where they overlap):
 - [x] 3 Settings and languages (built; needs real-phone test and translation review)
 - [x] 4 Offline mode with sync (built; needs real-phone airplane-mode test)
 - [x] 5 Workout Logger and Dashboard (built; needs real-phone test)
-- [ ] 6 REST API exercise library
-- [ ] 7 Clubs and league
+- [x] 6 REST API exercise library (built; needs real-phone test)
+- [x] 7 Clubs and league (UD4; built; needs 3-account test and republished Firestore rules)
 - [ ] 8 Profile customisation
 - [ ] 9 Push notifications
 - [ ] 10 App icon and image assets

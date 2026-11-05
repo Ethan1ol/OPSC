@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -63,6 +64,8 @@ class WorkoutsFragment : Fragment(R.layout.fragment_workouts) {
             if (childFragmentManager.findFragmentByTag(GOAL_TAG) == null) GoalDialogFragment().show(childFragmentManager, GOAL_TAG)
         }
         view.findViewById<MaterialButton>(R.id.syncNow).setOnClickListener { viewModel.syncNow() }
+        view.findViewById<MaterialButton>(R.id.browseExercises).setOnClickListener { findNavController().navigate(R.id.exerciseLibraryFragment) }
+        listenForPickedExercise()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -104,9 +107,7 @@ class WorkoutsFragment : Fragment(R.layout.fragment_workouts) {
         }
     }
 
-    private fun showLogSheet() {
-        if (childFragmentManager.findFragmentByTag(SHEET_TAG) == null) LogWorkoutSheet().show(childFragmentManager, SHEET_TAG)
-    }
+    private fun showLogSheet() = showLogSheet(null)
 
     /** Swipe a card left or right to delete it. It disappears at once; "Undo" brings it back until the message goes away. */
     private fun attachSwipeToDelete(list: RecyclerView, root: View) {
@@ -137,7 +138,6 @@ class WorkoutsFragment : Fragment(R.layout.fragment_workouts) {
     }
 
     private companion object {
-        const val SHEET_TAG = "log_workout_sheet"
         const val GOAL_TAG = "goal_dialog"
     }
 }
