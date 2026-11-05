@@ -2,24 +2,39 @@ package com.example.opsc
 
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.icu.util.Calendar
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.opsc.auth.AuthOutcome
+import com.example.opsc.auth.AuthRepository
+import com.example.opsc.auth.FormField
+import com.example.opsc.auth.RegistrationData
+import com.example.opsc.auth.SimpleDate
+import com.example.opsc.auth.Validators
+import com.example.opsc.auth.messageRes
+import kotlinx.coroutines.launch
+import java.util.Calendar
 
-
+/**
+ * Second sign-up step. Collects name, surname, birth date, username and password,
+ * validates every field at once, then creates the Firebase account and Firestore profile.
+ */
 class signUpDetailsActivity : AppCompatActivity() {
+    private val repository = AuthRepository()
     private lateinit var emailDisplay: EditText
-    private lateinit var nameInput:EditText
-    private lateinit var surnameInput:EditText
-    private lateinit var usernameInput:EditText
+    private lateinit var nameInput: EditText
+    private lateinit var surnameInput: EditText
+    private lateinit var usernameInput: EditText
     private lateinit var passwordInput: EditText
-    private lateinit var birthDateInput:EditText
-    private lateinit var confirmedPasswordInput:EditText
-    private lateinit var loginButton:Button
+    private lateinit var birthDateInput: EditText
+    private lateinit var confirmedPasswordInput: EditText
+    private lateinit var signUpButton: Button
+    private var busy = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,94 +47,99 @@ class signUpDetailsActivity : AppCompatActivity() {
         usernameInput = findViewById(R.id.textUserName)
         passwordInput = findViewById(R.id.textPasswordDetails)
         confirmedPasswordInput = findViewById(R.id.textConfirmPassword)
-        loginButton = findViewById(R.id.signUpbutton)
+        signUpButton = findViewById(R.id.signUpbutton)
 
-        val userEmail = intent.getStringExtra("USER_EMAIL")
-        emailDisplay.setText(userEmail)
+        emailDisplay.setText(intent.getStringExtra("USER_EMAIL").orEmpty())
 
-        loginButton.setOnClickListener {
-            validateAndSubmit(userEmail ?: "")
+        // Birth date is chosen with a date picker rather than typed, so the format is always valid.
+        birthDateInput.isFocusable = false
+        birthDateInput.isFocusableInTouchMode = false
+        birthDateInput.setOnClickListener { showDate() }
+
+        signUpButton.setOnClickListener { validateAndSubmit() }
+    }
+
+    private fun showDate() {
+        val calendar = Calendar.getInstance()
+        val picker = DatePickerDialog(
+            this,
+            { _, year, monthOfYear, dayOfMonth ->
+                birthDateInput.setText(String.format("%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth))
+                birthDateInput.error = null
+            },
+            calendar.get(Calendar.YEAR) - 18,
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        picker.datePicker.maxDate = calendar.timeInMillis
+        picker.show()
+    }
+
+    private fun validateAndSubmit() {
+        if (busy) return
+        val data = RegistrationData(
+            email = emailDisplay.text.toString().trim(),
+            password = passwordInput.text.toString(),
+            name = nameInput.text.toString().trim(),
+            surname = surnameInput.text.toString().trim(),
+            username = usernameInput.text.toString().trim(),
+            birthDate = birthDateInput.text.toString().trim()
+        )
+        val cal = Calendar.getInstance()
+        val today = SimpleDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH))
+
+        val errors = Validators.validateRegistration(
+            data.email, data.name, data.surname, data.birthDate,
+            data.username, data.password, confirmedPasswordInput.text.toString(), today
+        )
+        // Clear old errors, then show every current one.
+        listOf(emailDisplay, nameInput, surnameInput, birthDateInput, usernameInput, passwordInput, confirmedPasswordInput)
+            .forEach { it.error = null }
+        if (errors.isNotEmpty()) {
+            Log.d(TAG, "Registration form invalid: ${errors.keys}")
+            var firstBad: EditText? = null
+            for ((field, error) in errors) {
+                val view = viewFor(field)
+                view.error = getString(error.messageRes())
+                if (firstBad == null) firstBad = view
+            }
+            firstBad?.requestFocus()
+            return
+        }
+
+        busy = true
+        signUpButton.isEnabled = false
+        signUpButton.setText(R.string.msg_signing_up)
+        lifecycleScope.launch {
+            val outcome = repository.register(data)
+            busy = false
+            signUpButton.isEnabled = true
+            signUpButton.setText(R.string.signupButton)
+            when (outcome) {
+                is AuthOutcome.Success -> {
+                    Toast.makeText(this@signUpDetailsActivity, getString(R.string.msg_welcome_user, data.username), Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this@signUpDetailsActivity, HomeActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    })
+                    finish()
+                }
+                is AuthOutcome.Failure ->
+                    Toast.makeText(this@signUpDetailsActivity, outcome.error.messageRes, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
-    private fun showDate(){
-        val calendar = Calendar.getInstance()
-        val currentYear = calendar.get(Calendar.YEAR)
-        val currentMonth = calendar.get(Calendar.MONTH)
-        val currentDate = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val datePickerDialog = DatePickerDialog(this,
-            { _, year,monthOfYear, dayOfMonth ->
-            val formattedDate = String.format("%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth)
-                birthDateInput.setText(formattedDate)
-                birthDateInput.error =null},
-            currentYear - 18,
-            currentMonth,
-            currentDate)
-
-        datePickerDialog.datePicker.maxDate = calendar.timeInMillis
-        datePickerDialog.show()
-
-
+    private fun viewFor(field: FormField): EditText = when (field) {
+        FormField.EMAIL -> emailDisplay
+        FormField.NAME -> nameInput
+        FormField.SURNAME -> surnameInput
+        FormField.BIRTH_DATE -> birthDateInput
+        FormField.USERNAME -> usernameInput
+        FormField.PASSWORD -> passwordInput
+        FormField.CONFIRM_PASSWORD -> confirmedPasswordInput
     }
 
-        private fun validateAndSubmit(email:String){
-            val name =nameInput.text.toString().trim()
-            val surname =surnameInput.text.toString().trim()
-            val username =usernameInput.text.toString().trim()
-            val dateBirth =birthDateInput.text.toString()
-            val password =passwordInput.text.toString()
-            val confirmPassword =confirmedPasswordInput.text.toString()
-
-
-     if (name.isEmpty()){
-         nameInput.error = "Please enter your name"
-         nameInput.requestFocus()
-         return
-     }
-
-            if (name.isEmpty()){
-                nameInput.error = "Please enter your name"
-                nameInput.requestFocus()
-                return
-            }
-            if (surname.isEmpty()){
-                surnameInput.error = "Please enter your surname"
-                surnameInput.requestFocus()
-                return
-            }
-            if (username.isEmpty()){
-                usernameInput.error = "Please enter your username"
-                usernameInput.requestFocus()
-                return
-            }
-            if (dateBirth.isEmpty()){
-                birthDateInput.error = "Username need more than 3 characters"
-                birthDateInput.requestFocus()
-                return
-            }
-            if (username.length<3){
-                usernameInput.error = "Username need more than 3 characters"
-                usernameInput.requestFocus()
-                return
-            }
-            if (password.length<6){
-                passwordInput.error = "Password need more than 6 characters"
-                passwordInput.requestFocus()
-                return
-            }
-            if (password != confirmPassword){
-                confirmedPasswordInput.error = "Password does not match"
-                confirmedPasswordInput.requestFocus()
-                return
-            }
-
-            Toast.makeText(this, "Welcome, @$username!", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, HomeActivity::class.java).apply{
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK}
-            startActivity(intent)
-            finish()
-            }
+    private companion object {
+        const val TAG = "SignUpDetails"
     }
-
-
+}
