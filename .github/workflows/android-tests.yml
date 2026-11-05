@@ -1,25 +1,38 @@
 name: Android CI - Build and Test
 
-# Runs on every push to the main branches and the part3 branch, and on pull requests.
+# Runs on every push to the main branches and the part3 branch, on pull requests,
+# and on demand from the Actions tab (Run workflow button).
 on:
   push:
     branches: [ "main", "master", "dev", "part3" ]
   pull_request:
     branches: [ "main", "master" ]
+  workflow_dispatch:
+
+# Only read access is needed. Starting a new run cancels an older run of the same branch.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      # The project pins the Gradle daemon to JDK 21 (gradle/gradle-daemon-jvm.properties),
+      # so CI uses JDK 21 too. JDK 17 would make Gradle hunt for or download a second JDK.
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Setup Gradle (with dependency cache)
         uses: gradle/actions/setup-gradle@v4
@@ -27,17 +40,52 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # google-services.json is never committed. It is stored as the GitHub secret
-      # GOOGLE_SERVICES_JSON (Settings > Secrets and variables > Actions).
-      - name: Create google-services.json from secret
+      # google-services.json is never committed. The real file is stored as the GitHub
+      # secret GOOGLE_SERVICES_JSON (Settings > Secrets and variables > Actions).
+      # If the secret is missing (for example on a fork or a pull request from a fork) the
+      # build uses a placeholder file so the tests and the build can still run. The
+      # placeholder app cannot talk to Firebase, so a warning is shown on the run.
+      - name: Create google-services.json
         env:
           GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: |
-          if [ -z "$GOOGLE_SERVICES" ]; then
-            echo "::error::The GOOGLE_SERVICES_JSON secret is missing. Add it in the repository settings."
-            exit 1
+          if [ -n "$GOOGLE_SERVICES" ]; then
+            printf '%s\n' "$GOOGLE_SERVICES" > app/google-services.json
+            if ! python3 -m json.tool app/google-services.json > /dev/null; then
+              echo "::error::GOOGLE_SERVICES_JSON is not valid JSON. Paste the whole file contents into the secret."
+              exit 1
+            fi
+            if ! grep -q '"package_name": *"com.battlefitness.app"' app/google-services.json; then
+              echo "::error::GOOGLE_SERVICES_JSON does not contain the package com.battlefitness.app. Download the file for that app from Firebase."
+              exit 1
+            fi
+            echo "Using the real google-services.json from the repository secret."
+          else
+            echo "::warning::GOOGLE_SERVICES_JSON secret is not available. Building with a placeholder Firebase config. Add the secret for a real build."
+            cat > app/google-services.json <<'JSON'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "placeholder-ci",
+              "storage_bucket": "placeholder-ci.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
+                  "android_client_info": { "package_name": "com.battlefitness.app" }
+                },
+                "oauth_client": [
+                  { "client_id": "000000000000-placeholder.apps.googleusercontent.com", "client_type": 3 }
+                ],
+                "api_key": [ { "current_key": "placeholder-ci-key" } ],
+                "services": { "appinvite_service": { "other_platform_oauth_client": [] } }
+              }
+            ],
+            "configuration_version": "1"
+          }
+          JSON
           fi
-          echo "$GOOGLE_SERVICES" > app/google-services.json
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --continue
@@ -54,6 +102,7 @@ jobs:
         with:
           name: unit-test-report
           path: app/build/reports/tests/testDebugUnitTest/
+          if-no-files-found: warn
 
       - name: Upload lint report
         if: always()
@@ -61,9 +110,11 @@ jobs:
         with:
           name: lint-report
           path: app/build/reports/lint-results-debug.html
+          if-no-files-found: warn
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
           name: battle-fitness-debug-apk
           path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
