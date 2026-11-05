@@ -1,0 +1,8 @@
+# Normalise line endings so gradlew works on the Linux CI runner.
+* text=auto
+*.sh text eol=lf
+gradlew text eol=lf
+*.bat text eol=crlf
+*.png binary
+*.webp binary
+*.jar binary

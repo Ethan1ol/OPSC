@@ -13,3 +13,12 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# --- Secrets: must never be committed (CI gets them from GitHub Secrets) ---
+google-services.json
+keystore.properties
+*.jks
+*.keystore
+*.zip
+*.aab
+/app/release
