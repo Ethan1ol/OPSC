@@ -4,7 +4,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-/** Example local unit test. */
+/** A simple example unit test that runs on the computer. */
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
