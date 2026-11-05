@@ -1,6 +1,11 @@
 
 # Battle Fitness (OPSC Mobile Application)
 
+
+USE OF AI: [AI_Use_Declaration.docx](https://github.com/user-attachments/files/34449077/AI_Use_Declaration.docx)
+YoutTube Link: 
+
+
 An Android application built with **Kotlin** and **XML / Material 3 UI components**, designed to let friends join fitness **clubs**, compete in a **round-robin league** with a referee, log workouts **offline**, and stay up to date with **push and in-app notifications**.
 
 This project was developed as part of practical software engineering coursework (OPSC6312 Portfolio of Evidence, Part 3) to demonstrate secure authentication with single sign-on, a NoSQL cloud database, offline-first storage with background sync, a public REST API, multi-language support, and preparation of an app for the Google Play Store.
