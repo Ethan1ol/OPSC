@@ -14,3 +14,9 @@ Entries are appended after every piece.
 - **Reviewed/changed by students:** (to be completed by Ethan after review)
 - **Bugs debugged:** missing `google-gms-google-services` catalog entry; Kotlin metadata mismatch (Coil 3.6.x, Firebase BoM 35.x and googleid 1.2.1 are built with Kotlin 2.4, AGP's built-in compiler is 2.2), solved by pinning Coil 3.3.0, BoM 34.19.0, googleid 1.2.0.
 - **Images/text generated:** none.
+
+## 2026-11-05 – Extra: firestore.rules
+- **Generated:** `firestore.rules` (security rules and the Firestore data model they assume).
+- **Reviewed/changed by students:** (to be completed)
+- **Bugs debugged:** none. Rules are not yet tested in the Firebase Rules Playground.
+- **Images/text generated:** none.
