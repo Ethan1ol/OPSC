@@ -75,6 +75,24 @@ class ValidatorsTest {
         assertEquals(FieldError.PASSWORD_MISMATCH, errors[FormField.CONFIRM_PASSWORD])
     }
 
+    @Test fun height_blankIsOptional() = assertNull(Validators.validateHeightCm("  "))
+    @Test fun height_valid() = assertNull(Validators.validateHeightCm("175"))
+    @Test fun height_decimalComma() = assertNull(Validators.validateHeightCm("175,5"))
+    @Test fun height_notNumber() = assertEquals(FieldError.NUMBER_INVALID, Validators.validateHeightCm("tall"))
+    @Test fun height_tooSmall() = assertEquals(FieldError.HEIGHT_OUT_OF_RANGE, Validators.validateHeightCm("10"))
+    @Test fun height_tooBig() = assertEquals(FieldError.HEIGHT_OUT_OF_RANGE, Validators.validateHeightCm("300"))
+    @Test fun height_boundaries() {
+        assertNull(Validators.validateHeightCm("50"))
+        assertNull(Validators.validateHeightCm("260"))
+    }
+    @Test fun height_rejectsNaN() = assertEquals(FieldError.NUMBER_INVALID, Validators.validateHeightCm("NaN"))
+    @Test fun weight_blankIsOptional() = assertNull(Validators.validateWeightKg(""))
+    @Test fun weight_valid() = assertNull(Validators.validateWeightKg("72.5"))
+    @Test fun weight_notNumber() = assertEquals(FieldError.NUMBER_INVALID, Validators.validateWeightKg("abc"))
+    @Test fun weight_negative() = assertEquals(FieldError.WEIGHT_OUT_OF_RANGE, Validators.validateWeightKg("-5"))
+    @Test fun weight_tooBig() = assertEquals(FieldError.WEIGHT_OUT_OF_RANGE, Validators.validateWeightKg("401"))
+    @Test fun weight_rejectsInfinity() = assertEquals(FieldError.NUMBER_INVALID, Validators.validateWeightKg("Infinity"))
+
     @Test fun usernameFromEmail_sanitises() = assertEquals("john_smith", Validators.usernameFromEmail("john.smith@x.com"))
     @Test fun usernameFromEmail_padsShort() = assertEquals("a__", Validators.usernameFromEmail("a@x.com"))
     @Test fun usernameFromEmail_truncates() = assertEquals(20, Validators.usernameFromEmail("a".repeat(40) + "@x.com").length)

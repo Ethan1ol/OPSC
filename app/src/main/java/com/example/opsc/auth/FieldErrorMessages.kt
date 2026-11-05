@@ -23,4 +23,7 @@ fun FieldError.messageRes(): Int = when (this) {
     FieldError.BIRTH_INVALID -> R.string.err_birth_invalid
     FieldError.BIRTH_IN_FUTURE -> R.string.err_birth_future
     FieldError.BIRTH_TOO_YOUNG -> R.string.err_birth_young
+    FieldError.NUMBER_INVALID -> R.string.err_number_invalid
+    FieldError.HEIGHT_OUT_OF_RANGE -> R.string.err_height_range
+    FieldError.WEIGHT_OUT_OF_RANGE -> R.string.err_weight_range
 }

@@ -7,7 +7,8 @@ enum class FieldError {
     NAME_EMPTY, NAME_INVALID,
     SURNAME_EMPTY, SURNAME_INVALID,
     USERNAME_EMPTY, USERNAME_TOO_SHORT, USERNAME_TOO_LONG, USERNAME_BAD_CHARS,
-    BIRTH_EMPTY, BIRTH_INVALID, BIRTH_IN_FUTURE, BIRTH_TOO_YOUNG
+    BIRTH_EMPTY, BIRTH_INVALID, BIRTH_IN_FUTURE, BIRTH_TOO_YOUNG,
+    NUMBER_INVALID, HEIGHT_OUT_OF_RANGE, WEIGHT_OUT_OF_RANGE
 }
 
 /** The fields on the registration form, used to attach an error to the right input. */
@@ -26,6 +27,10 @@ object Validators {
     const val MIN_USERNAME_LENGTH = 3
     const val MAX_USERNAME_LENGTH = 20
     const val MIN_AGE_YEARS = 13
+    const val MIN_HEIGHT_CM = 50.0
+    const val MAX_HEIGHT_CM = 260.0
+    const val MIN_WEIGHT_KG = 20.0
+    const val MAX_WEIGHT_KG = 400.0
 
     private val EMAIL_REGEX = Regex("^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9\\-]+(\\.[A-Za-z0-9\\-]+)*\\.[A-Za-z]{2,}$")
     private val NAME_REGEX = Regex("^\\p{L}[\\p{L} '\\-]{1,29}$")
@@ -80,6 +85,24 @@ object Validators {
             !USERNAME_REGEX.matches(value) -> FieldError.USERNAME_BAD_CHARS
             else -> null
         }
+    }
+
+    /** Parses a decimal typed by the user; accepts "1,75" and "1.75". Returns null if it is not a finite number. */
+    fun parseDecimal(text: String): Double? =
+        text.trim().replace(',', '.').toDoubleOrNull()?.takeIf { it.isFinite() }
+
+    /** Height is optional (blank is fine). When given it must be a number from 50 to 260 cm. */
+    fun validateHeightCm(text: String): FieldError? {
+        if (text.isBlank()) return null
+        val value = parseDecimal(text) ?: return FieldError.NUMBER_INVALID
+        return if (value in MIN_HEIGHT_CM..MAX_HEIGHT_CM) null else FieldError.HEIGHT_OUT_OF_RANGE
+    }
+
+    /** Weight is optional (blank is fine). When given it must be a number from 20 to 400 kg. */
+    fun validateWeightKg(text: String): FieldError? {
+        if (text.isBlank()) return null
+        val value = parseDecimal(text) ?: return FieldError.NUMBER_INVALID
+        return if (value in MIN_WEIGHT_KG..MAX_WEIGHT_KG) null else FieldError.WEIGHT_OUT_OF_RANGE
     }
 
     /** Parses an ISO date such as "2005-03-27". Returns null if the text is not a real calendar date. */
