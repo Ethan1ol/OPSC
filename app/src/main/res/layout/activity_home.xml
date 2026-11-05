@@ -1,52 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/gradient_background"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     tools:context=".HomeActivity">
 
-    <TextView
-        android:id="@+id/textWelcomeHome"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/buttonSettings"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <Button
-        android:id="@+id/buttonSettings"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/loginbutton"
-        android:text="@string/btn_settings"
-        app:layout_constraintBottom_toTopOf="@+id/buttonLogout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textWelcomeHome" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-    <Button
-        android:id="@+id/buttonLogout"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/loginbutton"
-        android:text="@string/btn_logout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonSettings" />
+            <!-- Top row: greeting and log out -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/textWelcomeHome"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/buttonLogout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="8dp"
+                    android:text="@string/btn_logout"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/home_subtitle"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <!-- Feature tiles -->
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:columnCount="2">
+
+                <LinearLayout
+                    android:id="@+id/tileWorkouts"
+                    style="@style/BattleTile">
+
+                    <TextView
+                        style="@style/BattleTileIcon"
+                        android:text="@string/icon_workouts" />
+
+                    <TextView
+                        style="@style/BattleTileLabel"
+                        android:text="@string/tile_workouts" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tileExercises"
+                    style="@style/BattleTile">
+
+                    <TextView
+                        style="@style/BattleTileIcon"
+                        android:text="@string/icon_exercises" />
+
+                    <TextView
+                        style="@style/BattleTileLabel"
+                        android:text="@string/tile_exercises" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tileClubs"
+                    style="@style/BattleTile">
+
+                    <TextView
+                        style="@style/BattleTileIcon"
+                        android:text="@string/icon_clubs" />
+
+                    <TextView
+                        style="@style/BattleTileLabel"
+                        android:text="@string/tile_clubs" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tileProfile"
+                    style="@style/BattleTile">
+
+                    <TextView
+                        style="@style/BattleTileIcon"
+                        android:text="@string/icon_profile" />
+
+                    <TextView
+                        style="@style/BattleTileLabel"
+                        android:text="@string/tile_profile" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tileNotifications"
+                    style="@style/BattleTile">
+
+                    <TextView
+                        style="@style/BattleTileIcon"
+                        android:text="@string/icon_notifications" />
+
+                    <TextView
+                        style="@style/BattleTileLabel"
+                        android:text="@string/tile_notifications" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tileSettings"
+                    style="@style/BattleTile">
+
+                    <TextView
+                        style="@style/BattleTileIcon"
+                        android:text="@string/icon_settings" />
+
+                    <TextView
+                        style="@style/BattleTileLabel"
+                        android:text="@string/btn_settings" />
+                </LinearLayout>
+            </GridLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

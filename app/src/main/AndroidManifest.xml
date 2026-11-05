@@ -16,6 +16,9 @@
         android:theme="@style/Theme.OPSC"
         tools:targetApi="31">
         <activity
+            android:name=".FeaturePlaceholderActivity"
+            android:exported="false" />
+        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity

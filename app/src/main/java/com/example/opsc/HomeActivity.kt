@@ -3,7 +3,7 @@ package com.example.opsc
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
+import android.view.View
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -53,10 +53,23 @@ class HomeActivity : AppCompatActivity() {
             if (profile.language.isNotEmpty()) LanguageManager.apply(profile.language)
         }
 
-        findViewById<Button>(R.id.buttonSettings).setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+        // Dashboard tiles. Screens that are not built yet open the "Coming soon" page.
+        findViewById<View>(R.id.tileSettings).setOnClickListener { open(SettingsActivity::class.java) }
+        comingSoon(R.id.tileWorkouts, R.string.tile_workouts)
+        comingSoon(R.id.tileExercises, R.string.tile_exercises)
+        comingSoon(R.id.tileClubs, R.string.tile_clubs)
+        comingSoon(R.id.tileProfile, R.string.tile_profile)
+        comingSoon(R.id.tileNotifications, R.string.tile_notifications)
+        findViewById<View>(R.id.buttonLogout).setOnClickListener { logout() }
+    }
+
+    private fun open(target: Class<*>) = startActivity(Intent(this, target))
+
+    private fun comingSoon(tileId: Int, titleRes: Int) {
+        findViewById<View>(tileId).setOnClickListener {
+            startActivity(Intent(this, FeaturePlaceholderActivity::class.java)
+                .putExtra(FeaturePlaceholderActivity.EXTRA_TITLE_RES, titleRes))
         }
-        findViewById<Button>(R.id.buttonLogout).setOnClickListener { logout() }
     }
 
     private fun logout() {

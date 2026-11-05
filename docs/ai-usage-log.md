@@ -40,3 +40,9 @@ Entries are appended after every piece.
 - **Bugs debugged:** AAPT failure because style names with a dot (`Battle.Label`) implied a missing parent style; fixed by renaming. Switched theme from DayNight to Light because layouts use fixed black text on white.
 - **Images/text generated:** all translated UI text (Afrikaans, isiZulu).
 
+## 2026-11-05 – UI fix: sign-up form and dashboard (user feedback from phone testing)
+- **Generated:** rewrote `activity_sign_up_details.xml` as a clean scrolling card layout; new dashboard `activity_home.xml` with feature tiles; `FeaturePlaceholderActivity` ("Coming soon" page); tile styles and `card_background.xml`; extra strings in English, Afrikaans and isiZulu.
+- **Reviewed/changed by students:** Ethan found these problems while testing on the phone (labels not matching boxes, surname hidden like a password, Home only showing Settings and Log out) and requested the fix.
+- **Bugs debugged:** surname field had `inputType="textPassword"`; labels and boxes drifted apart because of fragile ConstraintLayout bias offsets; an apostrophe escape lost in the Afrikaans string caused a resource compile error.
+- **Images/text generated:** new UI text and translations; dashboard tile icons are Unicode emoji characters, not generated images.
+

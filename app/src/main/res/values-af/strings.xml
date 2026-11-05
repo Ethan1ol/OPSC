@@ -75,4 +75,14 @@
     <string name="btn_save">Stoor veranderinge</string>
     <string name="btn_back">Terug</string>
     <string name="msg_saved">Instellings gestoor. Dit sal sinkroniseer wanneer jy weer aanlyn is.</string>
+
+    <string name="home_subtitle">Wat wil jy vandag doen?</string>
+    <string name="tile_workouts">Oefensessies</string>
+    <string name="tile_exercises">Oefeninge</string>
+    <string name="tile_clubs">Klubs</string>
+    <string name="tile_profile">Profiel</string>
+    <string name="tile_notifications">Kennisgewings</string>
+    <string name="coming_soon">Binnekort</string>
+    <string name="coming_soon_message">Hierdie funksie word nog gebou en sal in \'n latere opdatering beskikbaar wees.</string>
+    <string name="confirm_password_label">Bevestig wagwoord:</string>
 </resources>

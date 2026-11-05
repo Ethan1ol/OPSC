@@ -75,4 +75,14 @@
     <string name="btn_save">Londoloza izinguquko</string>
     <string name="btn_back">Emuva</string>
     <string name="msg_saved">Izilungiselelo zilondoloziwe. Ziyovumelanisa uma usubuyele ku-inthanethi.</string>
+
+    <string name="home_subtitle">Ungathanda ukwenzani namuhla?</string>
+    <string name="tile_workouts">Izivivinyo</string>
+    <string name="tile_exercises">Ukuzivocavoca</string>
+    <string name="tile_clubs">Amaklabhu</string>
+    <string name="tile_profile">Iphrofayela</string>
+    <string name="tile_notifications">Izaziso</string>
+    <string name="coming_soon">Kuyeza maduzane</string>
+    <string name="coming_soon_message">Lesi sici sisakhiwa futhi sizofika ekuvuseleleni kwakamuva.</string>
+    <string name="confirm_password_label">Qinisekisa iphasiwedi:</string>
 </resources>
