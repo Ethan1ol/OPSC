@@ -43,7 +43,8 @@ Text sizes are in `sp`, so they follow the phone's font-size setting.
 8dp grid: 4, 8, 16, 24, 32 dp (`space_xs` to `space_xl`). Screen padding 16dp. Cards 16dp radius with 2dp elevation. Buttons and inputs 12dp radius. Sheets 28dp. Minimum touch target 48dp.
 
 ## Components
-- **Buttons:** `Widget.Battle.Button` (primary, default), `.Secondary` (outlined), `.Text`. 48dp tall.
+- **Buttons:** `Widget.Battle.Button` (primary, default), `.Secondary` (tonal: filled with the soft orange container colour), `.Text`. 48dp tall.
+- **Appearance:** dark mode is the default. Profile has a Dark / Light / System switch; the choice is saved (`ThemeManager`).
 - **Text input:** `TextInputLayout` with inline error text under the field.
 - **Cards:** `MaterialCardView` (default style is the Battle card).
 - **Chips:** Material 3 filter and assist chips (fixture status, category filters).

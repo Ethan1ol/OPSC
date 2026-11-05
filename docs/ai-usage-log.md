@@ -52,3 +52,9 @@ Entries are appended after every piece.
 - **Bugs debugged:** (1) lint errors for `lineHeight` and `textFontWeight` needing API 28; (2) gallery content touching the screen edge because `fitsSystemWindows` replaced the padding; (3) all text weights rendering as Regular and chips as Roboto. Found by installing on the emulator, screenshotting, and measuring stroke thickness against the Poppins font files; root cause was a theme-level `android:fontFamily` overriding the text styles and Material's parent styles setting the app-namespace `fontFamily`. (4) a missing `style` parent causing an AAPT link error.
 - **Images/text generated:** no images. Icons are hand-written vector paths. Screenshots in `docs/images` are real emulator screenshots of the app, not generated.
 
+
+## 2026-11-05 – Design tweaks after review
+- **Generated:** `ThemeMode`/`ThemeManager`/`BattleFitnessApp` (dark by default, saved choice), Dark/Light/System switch on Profile, tonal secondary button style, translations of the four new labels.
+- **Reviewed/changed by students:** Ethan asked for dark mode as the standard with an option to change back, and for the thin-bordered Profile buttons to be a different, clearer colour.
+- **Bugs debugged:** none.
+- **Images/text generated:** none (screenshot is a real emulator capture).
