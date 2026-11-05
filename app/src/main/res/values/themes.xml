@@ -1,63 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Light theme only: the screens use fixed orange/white artwork with black text. -->
-    <style name="Theme.OPSC" parent="Theme.MaterialComponents.Light.NoActionBar" />
+    <!--
+      The Battle Fitness theme (Material 3, light and dark). All colours come from the
+      md_* / bf_* tokens in colors.xml, which switch automatically in dark mode.
+    -->
+    <style name="Theme.BattleFitness" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Colour roles -->
+        <item name="colorPrimary">@color/md_primary</item>
+        <item name="colorOnPrimary">@color/md_on_primary</item>
+        <item name="colorPrimaryContainer">@color/md_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/md_on_primary_container</item>
+        <item name="colorSecondary">@color/md_secondary</item>
+        <item name="colorOnSecondary">@color/md_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/md_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/md_on_secondary_container</item>
+        <item name="android:colorBackground">@color/md_background</item>
+        <item name="colorOnBackground">@color/md_on_background</item>
+        <item name="colorSurface">@color/md_surface</item>
+        <item name="colorOnSurface">@color/md_on_surface</item>
+        <item name="colorSurfaceVariant">@color/md_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/md_on_surface_variant</item>
+        <item name="colorSurfaceContainerLowest">@color/md_surface_container_lowest</item>
+        <item name="colorSurfaceContainerLow">@color/md_surface_container_low</item>
+        <item name="colorSurfaceContainer">@color/md_surface_container</item>
+        <item name="colorSurfaceContainerHigh">@color/md_surface_container_high</item>
+        <item name="colorOutline">@color/md_outline</item>
+        <item name="colorOutlineVariant">@color/md_outline_variant</item>
+        <item name="colorError">@color/md_error</item>
+        <item name="colorOnError">@color/md_on_error</item>
+        <item name="colorErrorContainer">@color/md_error_container</item>
+        <item name="colorOnErrorContainer">@color/md_on_error_container</item>
+        <item name="colorSuccess">@color/bf_success</item>
+        <item name="colorOnSuccess">@color/bf_on_success</item>
+        <item name="colorSuccessContainer">@color/bf_success_container</item>
+        <item name="colorOnSuccessContainer">@color/bf_on_success_container</item>
+        <item name="colorBrand">@color/bf_brand</item>
 
-    <!-- Shared widget styles so every screen looks the same. -->
-    <style name="BattleLabel">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">16dp</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">16sp</item>
+        <!--
+          One font family everywhere (Poppins), applied through the text appearances below.
+          Do NOT set android:fontFamily on the theme: it overrides the weight chosen by a
+          text appearance (every style would render as Regular).
+        -->
+        <item name="android:textAppearance">@style/TextAppearance.Battle.Body</item>
+
+        <!-- Type scale: Headline / Title / Body / Caption (+ Label for buttons) -->
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Battle.Headline</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.Battle.Headline</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.Battle.Title</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Battle.Title</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Battle.Body</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Battle.Body</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.Battle.Caption</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.Battle.Label</item>
+
+        <!-- Shapes: 12dp controls, 16dp cards, 28dp sheets -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Battle.Control</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Battle.Card</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Battle.Sheet</item>
+
+        <!-- Default component styles -->
+        <item name="materialButtonStyle">@style/Widget.Battle.Button</item>
+        <item name="textInputStyle">@style/Widget.Battle.TextInputLayout</item>
+        <item name="materialCardViewStyle">@style/Widget.Battle.Card</item>
     </style>
 
-    <style name="BattleInput">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:layout_marginTop">4dp</item>
-        <item name="android:background">@drawable/border</item>
-        <item name="android:paddingStart">12dp</item>
-        <item name="android:paddingEnd">12dp</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textColorHint">@color/grey</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="BattleSpinner">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:layout_marginTop">4dp</item>
-        <item name="android:background">@drawable/border</item>
-    </style>
-
-    <!-- Dashboard tiles -->
-    <style name="BattleTile">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">130dp</item>
-        <item name="android:layout_columnWeight">1</item>
-        <item name="android:layout_margin">8dp</item>
-        <item name="android:background">@drawable/card_background</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:gravity">center</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-        <item name="android:foreground">?attr/selectableItemBackground</item>
-    </style>
-
-    <style name="BattleTileIcon">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">36sp</item>
-    </style>
-
-    <style name="BattleTileLabel">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
+    <!--
+      Used only by the older screens that have not been rebuilt yet (they have fixed orange
+      artwork and black text). Removed screen by screen as the features are rebuilt.
+    -->
+    <style name="Theme.BattleFitness.Legacy" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">#A94A00</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="fontFamily">@font/poppins</item>
     </style>
 </resources>

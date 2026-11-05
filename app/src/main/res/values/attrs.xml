@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Success (green) colours, which Material 3 does not provide. Set in the theme. -->
+    <attr name="colorSuccess" format="color" />
+    <attr name="colorOnSuccess" format="color" />
+    <attr name="colorSuccessContainer" format="color" />
+    <attr name="colorOnSuccessContainer" format="color" />
+    <!-- Logo orange for decoration (never for small text) -->
+    <attr name="colorBrand" format="color" />
+
+    <!-- Attributes of the StateLayout view -->
+    <declare-styleable name="StateLayout">
+        <attr name="stateLoadingDescription" format="reference|string" />
+    </declare-styleable>
+</resources>
